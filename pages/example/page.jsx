@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   container: {},
 }));
 
-export default function Projects() {
+export default function Page() {
   const classes = useStyles();
 
   return (
