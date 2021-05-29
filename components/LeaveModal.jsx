@@ -1,11 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Button,
-  Modal,
-  Fade,
-  Backdrop,
-} from "@material-ui/core";
+import { Button, Modal, Fade, Backdrop } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -52,3 +49,10 @@ export default function LeaveModal({ url, open, handleOpen, handleClose }) {
     </Modal>
   );
 }
+
+LeaveModal.propTypes = {
+  url: PropTypes.string.isRequired,
+  open: PropTypes.func.isRequired,
+  handleOpen: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+};
