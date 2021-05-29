@@ -6,12 +6,23 @@ on:
       - master
 
 jobs:
-  build:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install NPM dependencies
+        run: yarn -i
+      - name: Run Tests
+        run: yarn test
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "really-smart-food-app"
+          heroku_app_name: "food-app-frontend"
           heroku_email: "xhe123@hotmail.co.uk"
