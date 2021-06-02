@@ -21,18 +21,19 @@ export default function Layout({ title = "Really Smart Food App", children }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta charSet="utf-8" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
       </Head>
 
       <main className={styles.main}>{children}</main>
 
       <footer className={styles.footer}>
-        Really Smart Food App || Group 47
+        A Really Smart Food App
       </footer>
     </div>
   );
 }
 
 Layout.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   children: PropTypes.any,
 };
