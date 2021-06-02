@@ -4,6 +4,7 @@ import styles from "../styles/Home.module.css";
 import Layout from "../components/_Layout";
 import { TextField, Button, Typography, IconButton } from "@material-ui/core";
 import ClearIcon from "@material-ui/icons/Clear";
+import Link from "next/link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,9 +63,9 @@ export default function Home() {
     }
   };
 
-  const handleShowMeRecipes = () => {
-    console.log("Show me recipes pressed");
-  };
+  // const handleShowMeRecipes = () => {
+  //   console.log("Show me recipes pressed");
+  // };
 
   const handleRemoveIngredient = (e, index) => {
     const newIngredientList = ingredientList;
@@ -86,7 +87,9 @@ export default function Home() {
           className={classes.textField}
         />
         {ingredientList.length > 0 && (
-          <Button onClick={handleShowMeRecipes}>Show me recipes!</Button>
+          <Link href="/valid-recipes">
+            <Button>Show me recipes!</Button>
+          </Link>
         )}
       </div>
       {ingredientList.length > 0 && (
