@@ -8,7 +8,7 @@ import { IconButton } from "@material-ui/core";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 
-export default function Layout({ title = "Really Smart Food App", children }) {
+export default function Layout({ title = "A Really Smart Food App", children }) {
   const redirect = (url) => {
     console.log(url);
     window.location = url;
