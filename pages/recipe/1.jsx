@@ -7,6 +7,8 @@ import { Grid, Typography, Box, ThemeProvider } from "@material-ui/core";
 import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
+import { withStyles } from "@material-ui/core/styles";
+import LocalDiningIcon from "@material-ui/icons/LocalDining";
 
 export async function getStaticProps() {
   const res = await fetch(
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid black",
   },
   title: {
-    marginBottom: "4rem",
+    marginBottom: "1`rem",
   },
   iconsAndText: {
     display: "flex",
@@ -61,7 +63,29 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  iconsAndText: {
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  ingredients: {
+    "& ul": {
+      "& li": {
+        marginBottom: "1rem",
+      },
+    },
+  },
 }));
+
+const StyledRating = withStyles({
+  iconFilled: {
+    color: "#ff6d75",
+  },
+  iconHover: {
+    color: "#ff3d47",
+  },
+})(Rating);
 
 export default function Recipe({ recipe }) {
   const classes = useStyles();
@@ -79,13 +103,24 @@ export default function Recipe({ recipe }) {
       <Typography className={classes.title} variant="h2">
         {recipe.name}
       </Typography>
+      <Typography className={classes.iconsAndText}>
+        <StyledRating
+          value={recipe.rating}
+          precision={0.5}
+          readOnly
+          name="customized-color"
+          size="large"
+          icon={<LocalDiningIcon fontSize="inherit" />}
+        />
+        &nbsp;({recipe.no_reviews})
+      </Typography>
       <Grid
         container
         alignItems="flex-start"
         spacing={10}
         className={classes.container}
       >
-        <Grid item xs={12} sm={3}>
+        <Grid item className={classes.ingredients} xs={12} sm={3}>
           <Typography variant="h2" className={classes.ingredientsSubtitle}>
             Ingredients
           </Typography>
