@@ -1,11 +1,13 @@
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
 import React from "react";
 import Rating from "@material-ui/lab/Rating";
 import { Grid, Typography } from "@material-ui/core";
 import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
+import LocalDiningIcon from '@material-ui/icons/LocalDining';
 
 function secondsToHm(d) {
   d = Number(d);
@@ -43,6 +45,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const StyledRating = withStyles({
+  iconFilled: {
+    color: '#ff6d75',
+  },
+  iconHover: {
+    color: '#ff3d47',
+  },
+})(Rating);
+
 export default function Tile(props) {
   const classes = useStyles();
   const { recipe } = props;
@@ -65,7 +76,11 @@ export default function Tile(props) {
         className={classes.preview}
       />
       <Typography className={classes.iconsAndText}>
-        <Rating name="read-only" value={recipe.rating} readOnly />
+        <StyledRating
+          value={recipe.rating} precision={0.5} readOnly
+          name="customized-color"
+          icon={<LocalDiningIcon fontSize="inherit" />}
+        />
         &nbsp;({recipe.no_reviews})
       </Typography>
       <Typography className={classes.iconsAndText} variant="h6">
