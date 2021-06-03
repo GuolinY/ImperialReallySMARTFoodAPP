@@ -26,9 +26,8 @@ const useStyles = makeStyles((theme) => ({
     margin: "2rem",
     textAlign: "center",
   },
-  preview: {
-    borderRadius: "50%",
-    border: "2px solid black",
+  image: {
+    width: "100%",
   },
   title: {
     marginBottom: "4rem",
@@ -54,6 +53,13 @@ const useStyles = makeStyles((theme) => ({
   ingredientsSubtitle: {
     margin: theme.spacing(2, 0, 0, 0),
   },
+  method: {
+    "& ol": {
+      "& li": {
+        marginBottom: "1rem",
+      },
+    },
+  },
 }));
 
 export default function Recipe({ recipe }) {
@@ -61,29 +67,25 @@ export default function Recipe({ recipe }) {
   console.log(recipe);
 
   return (
-    <Layout title="Available Recipes">
+    <Layout title={recipe.name}>
+      <Image
+        src={recipe.image_link}
+        width={200}
+        height={200}
+        alt="balkan suprise"
+        className={classes.image}
+      />
       <Typography className={classes.title} variant="h2">
-        Balkan Surprise
+        {recipe.name}
       </Typography>
       <Grid
         container
-        alignItems="center"
+        alignItems="flex-start"
         justify="center"
         spacing={10}
         className={classes.container}
       >
-        <Grid item container xs={12} sm={3}>
-          <Image
-            src={recipe.image_link}
-            width={200}
-            height={200}
-            alt="balkan suprise"
-            className={classes.preview}
-          />
-          <Typography className={classes.iconsAndText}>
-            <Rating name="read-only" value={recipe.rating} readOnly />
-            &nbsp;({recipe.no_reviews})
-          </Typography>
+        <Grid item xs={12} sm={3}>
           <Typography variant="h5" className={classes.ingredientsSubtitle}>
             Ingredients
           </Typography>
@@ -93,14 +95,14 @@ export default function Recipe({ recipe }) {
             })}
           </ul>
         </Grid>
-        <Grid item xs={9}>
+        <Grid className={classes.method} item xs={9}>
           <Typography variant="h3">Method</Typography>
-          <div>
-            <p>1. First you have to have cheese</p>
-            <p>2. Second, you have to have bread</p>
-            <p>3. Now, grab your nearest watermelon and mash 'em together</p>
-            <p>4. You have now made the balkan suprise</p>
-          </div>
+          <ol>
+            <li>First grab your cheese</li>
+            <li>Now get your bread</li>
+            <li>Grab your nearest watermlon and mash 'em together</li>
+            <li>You have now made the Balkan suprise</li>
+          </ol>
         </Grid>
       </Grid>
     </Layout>
