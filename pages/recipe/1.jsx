@@ -27,7 +27,8 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   image: {
-    width: "100%",
+    borderRadius: "50%",
+    border: "2px solid black",
   },
   title: {
     marginBottom: "4rem",
@@ -81,12 +82,11 @@ export default function Recipe({ recipe }) {
       <Grid
         container
         alignItems="flex-start"
-        justify="center"
         spacing={10}
         className={classes.container}
       >
         <Grid item xs={12} sm={3}>
-          <Typography variant="h5" className={classes.ingredientsSubtitle}>
+          <Typography variant="h2" className={classes.ingredientsSubtitle}>
             Ingredients
           </Typography>
           <ul>
@@ -96,7 +96,7 @@ export default function Recipe({ recipe }) {
           </ul>
         </Grid>
         <Grid className={classes.method} item xs={9}>
-          <Typography variant="h3">Method</Typography>
+          <Typography variant="h2">Method</Typography>
           <ol>
             <li>First grab your cheese</li>
             <li>Now get your bread</li>
