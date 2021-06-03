@@ -1,14 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
-import { IconButton } from "@material-ui/core";
-import GitHubIcon from "@material-ui/icons/GitHub";
-import LinkedInIcon from "@material-ui/icons/LinkedIn";
 
-export default function Layout({ title = "A Really Smart Food App", children }) {
+
+export default function Layout({ title = "A Really Smart Food App", children, home }) {
   const redirect = (url) => {
     console.log(url);
     window.location = url;
@@ -26,10 +23,12 @@ export default function Layout({ title = "A Really Smart Food App", children }) 
 
       <main className={styles.main}>{children}</main>
 
+      {!home && <Link href='/'><a>Back to Ingredients List</a></Link>}
+
       <footer className={styles.footer}>
         A Really Smart Food App
       </footer>
-    </div>
+    </div >
   );
 }
 
