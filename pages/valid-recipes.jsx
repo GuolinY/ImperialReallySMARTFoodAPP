@@ -7,6 +7,7 @@ import { Grid, Typography, Box } from "@material-ui/core";
 import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
+import Link from "next/link";
 
 export async function getStaticProps() {
   const res = await fetch(
@@ -62,52 +63,58 @@ function Tile(props) {
   const { recipe } = props;
 
   return (
-    <Grid
-      alignContent="center"
-      justify="center"
-      className={classes.tile}
-      item
-      xs={11}
-      sm={6}
-      xl={4}
-    >
-      <Typography variant="h4">{recipe.name}</Typography>
-      <Image
-        src={recipe.image_link}
-        width={200}
-        height={200}
-        alt="balkan suprise"
-        className={classes.preview}
-      />
-      <Typography className={classes.iconsAndText}>
-        <Rating name="read-only" value={recipe.rating} readOnly />
-        &nbsp;({recipe.no_reviews})
-      </Typography>
-      <Typography className={classes.iconsAndText} variant="h6">
-        <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; | &nbsp;
-        {Array(recipe.difficulty + 1).fill(<WhatshotIcon />)}
-      </Typography>
-      <Typography variant="body1">{recipe.description}</Typography>
-      <Typography className={classes.nutrition} variant="body2">
-        Calories:
-        <span className={classes.nutritionalData}>
-          {recipe.nutrition.calories}
-        </span>
-        <br />
-        Carbohyrdates:
-        <span className={classes.nutritionalData}>
-          {recipe.nutrition.carbohydrates}
-        </span>
-        <br />
-        Protein:
-        <span className={classes.nutritionalData}>
-          {recipe.nutrition.protein}
-        </span>
-        <br />
-        Fat:
-        <span className={classes.nutritionalData}>{recipe.nutrition.fats}</span>
-      </Typography>
-    </Grid>
+    <Link href={`recipe/${recipe.id}`}>
+      <Grid
+        alignContent="center"
+        justify="center"
+        className={classes.tile}
+        item
+        xs={11}
+        sm={6}
+        xl={4}
+        style={{ cursor: 'pointer'}}
+      >
+        <Typography variant="h4">{recipe.name}</Typography>
+        <Image
+          src={recipe.image_link}
+          width={200}
+          height={200}
+          alt="balkan suprise"
+          className={classes.preview}
+        />
+        <Typography className={classes.iconsAndText}>
+          <Rating name="read-only" value={recipe.rating} readOnly />
+          &nbsp;({recipe.no_reviews})
+        </Typography>
+        <Typography className={classes.iconsAndText} variant="h6">
+          <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; |
+          &nbsp;
+          {Array(recipe.difficulty + 1).fill(<WhatshotIcon />)}
+        </Typography>
+        <Typography variant="body1">{recipe.description}</Typography>
+        <Typography className={classes.nutrition} variant="body2">
+          Calories:
+          <span className={classes.nutritionalData}>
+            {recipe.nutrition.calories}
+          </span>
+          <br />
+          Carbohyrdates:
+          <span className={classes.nutritionalData}>
+            {recipe.nutrition.carbohydrates}
+          </span>
+          <br />
+          Protein:
+          <span className={classes.nutritionalData}>
+            {recipe.nutrition.protein}
+          </span>
+          <br />
+          Fat:
+          <span className={classes.nutritionalData}>
+            {recipe.nutrition.fats}
+          </span>
+        </Typography>
+      </Grid>
+    </Link>
   );
 }
 
