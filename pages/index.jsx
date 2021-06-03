@@ -74,7 +74,7 @@ export default function Home() {
   };
 
   return (
-    <Layout>
+    <Layout title='A Really Smart Food App' home>
       <h2 className={styles.title}>A Really Smart Food App</h2>
       <p>Here to suggest you recipes for the food in your kitchen!</p>
       <div className={classes.ingredientInput}>

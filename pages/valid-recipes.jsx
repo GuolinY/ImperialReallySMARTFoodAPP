@@ -21,7 +21,7 @@ function secondsToHm(d) {
 const useStyles = makeStyles((theme) => ({
     tile: {
         outline: "3px solid black",
-        //borderRadius: '5px',
+        borderRadius: '5px',
         color: theme.palette.text.primary,
         margin: '2rem',
         textAlign: 'center',
@@ -33,6 +33,18 @@ const useStyles = makeStyles((theme) => ({
     title: {
         marginBottom: '4rem',
     },
+    iconsAndText: {
+        display: 'flex',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
+    nutrition: {
+        textAlign: 'left',
+    },
+    nutritionalData: {
+        float: 'right',
+    }
 }));
 
 function Tile(props) {
@@ -42,17 +54,19 @@ function Tile(props) {
     return (
         <Grid alignContent='center' justify='center' className={classes.tile} item xs={12} md={6} xl={3}>
             <Typography variant="h4">{recipe.name}</Typography>
-            <Image src={recipe.img} width={200} height={200} alt="balkan suprise" className={classes.preview} />
-            <Rating name="read-only" value={recipe.rating} readOnly />({recipe.review_number})
-            <Typography variant='h6' className={classes.info}>
-                <TimerIcon /> {secondsToHm(recipe.cooking_time)} | <ChildCareIcon />
+            <Image src={recipe.img} width={150} height={150} alt="balkan suprise" className={classes.preview} />
+            <Typography className={classes.iconsAndText}>
+                <Rating name="read-only" value={recipe.rating} readOnly />&nbsp;({recipe.review_number})
+            </Typography>
+            <Typography className={classes.iconsAndText} variant='h6'>
+                <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; | &nbsp; <ChildCareIcon />
             </Typography>
             <Typography variant='body1'>{recipe.description}</Typography>
-            <Typography variant='body2'>
-                Calories: {recipe.nutrition.calories}<br />
-                Carbohyrdates: {recipe.nutrition.carbohydrates}<br />
-                Protein: {recipe.nutrition.protein}<br />
-                Fat: {recipe.nutrition.fat}
+            <Typography className={classes.nutrition} variant='body2'>
+                Calories: <span className={classes.nutritionalData}>{recipe.nutrition.calories}</span><br />
+                Carbohyrdates: <span className={classes.nutritionalData}>{recipe.nutrition.carbohydrates}</span><br />
+                Protein: <span className={classes.nutritionalData}>{recipe.nutrition.protein}</span><br />
+                Fat: <span className={classes.nutritionalData}>{recipe.nutrition.fat}</span>
             </Typography>
         </Grid>
     );
@@ -112,7 +126,10 @@ export default function ValidRecipes() {
             cooking_time: 1200, // time measured in seconds
             difficulty: "easy",
             description: "Bread, cheese and one 'special' ingredient",
-            dietary_requirements: ["halal"],
+            halal: true,
+            gluten_free: true,
+            vegetarian: true,
+            vegan: true,
             nutrition: {
                 calories: 200,
                 carbohydrates: "200g",
