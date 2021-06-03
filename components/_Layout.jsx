@@ -4,7 +4,6 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
 
-
 export default function Layout({ title = "A Really Smart Food App", children, home }) {
   const redirect = (url) => {
     console.log(url);

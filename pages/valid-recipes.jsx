@@ -6,7 +6,15 @@ import Rating from "@material-ui/lab/Rating";
 import { Grid, Typography, Box } from "@material-ui/core";
 import Image from 'next/image'
 import TimerIcon from '@material-ui/icons/Timer';
-import ChildCareIcon from '@material-ui/icons/ChildCare';
+import WhatshotIcon from '@material-ui/icons/Whatshot';
+
+export async function getStaticProps() {
+    const res = await fetch(`http://smart-food-app-backend.herokuapp.com/recipe/cheese_bread_watermelon`)
+    const recipes = await res.json()
+    return {
+        props: { recipes }, // will be passed to the page component as props
+    }
+}
 
 function secondsToHm(d) {
     d = Number(d);
@@ -54,19 +62,19 @@ function Tile(props) {
     return (
         <Grid alignContent='center' justify='center' className={classes.tile} item xs={12} md={6} xl={3}>
             <Typography variant="h4">{recipe.name}</Typography>
-            <Image src={recipe.img} width={150} height={150} alt="balkan suprise" className={classes.preview} />
+            <Image src={recipe.image_link} width={200} height={200} alt="balkan suprise" className={classes.preview} />
             <Typography className={classes.iconsAndText}>
-                <Rating name="read-only" value={recipe.rating} readOnly />&nbsp;({recipe.review_number})
+                <Rating name="read-only" value={recipe.rating} readOnly />&nbsp;({recipe.no_reviews})
             </Typography>
             <Typography className={classes.iconsAndText} variant='h6'>
-                <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; | &nbsp; <ChildCareIcon />
+                <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; | &nbsp; {Array(recipe.difficulty).fill(<WhatshotIcon />)}
             </Typography>
             <Typography variant='body1'>{recipe.description}</Typography>
             <Typography className={classes.nutrition} variant='body2'>
                 Calories: <span className={classes.nutritionalData}>{recipe.nutrition.calories}</span><br />
                 Carbohyrdates: <span className={classes.nutritionalData}>{recipe.nutrition.carbohydrates}</span><br />
                 Protein: <span className={classes.nutritionalData}>{recipe.nutrition.protein}</span><br />
-                Fat: <span className={classes.nutritionalData}>{recipe.nutrition.fat}</span>
+                Fat: <span className={classes.nutritionalData}>{recipe.nutrition.fats}</span>
             </Typography>
         </Grid>
     );
@@ -76,68 +84,9 @@ Tile.propTypes = {
     recipe: PropTypes.object.isRequired,
 };
 
-export default function ValidRecipes() {
+export default function ValidRecipes({ recipes }) {
     const classes = useStyles();
-    const recipes = [
-        // fake api response
-        {
-            id: 1,
-            name: "Balkan surprise",
-            img: '/images/balkan-suprise.jpg', // TODO add image
-            rating: 2.5,
-            reviews: null, // TODO add link to fetch reviews
-            review_number: 9,
-            cooking_time: 1200, // time measured in seconds
-            difficulty: "easy",
-            description: "Bread, cheese and one 'special' ingredient",
-            dietary_requirements: ["halal"],
-            nutrition: {
-                calories: 200,
-                carbohydrates: "200g",
-                protein: "200g",
-                fat: "20g",
-            },
-        },
-        {
-            id: 1,
-            name: "Balkan surprise",
-            img: '/images/balkan-suprise.jpg', // TODO add image
-            rating: 2.5,
-            reviews: null, // TODO add link to fetch reviews
-            review_number: 9,
-            cooking_time: 1200, // time measured in seconds
-            difficulty: "easy",
-            description: "Bread, cheese and one 'special' ingredient",
-            dietary_requirements: ["halal"],
-            nutrition: {
-                calories: 200,
-                carbohydrates: "200g",
-                protein: "200g",
-                fat: "20g",
-            },
-        },
-        {
-            id: 1,
-            name: "Balkan surprise",
-            img: '/images/balkan-suprise.jpg', // TODO add image
-            rating: 2.5,
-            reviews: null, // TODO add link to fetch reviews
-            review_number: 9,
-            cooking_time: 1200, // time measured in seconds
-            difficulty: "easy",
-            description: "Bread, cheese and one 'special' ingredient",
-            halal: true,
-            gluten_free: true,
-            vegetarian: true,
-            vegan: true,
-            nutrition: {
-                calories: 200,
-                carbohydrates: "200g",
-                protein: "200g",
-                fat: "20g",
-            },
-        },
-    ];
+    console.log({ recipes })
 
     return (
         <Layout title="Available Recipes">
@@ -150,3 +99,4 @@ export default function ValidRecipes() {
         </Layout>
     );
 }
+

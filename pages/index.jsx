@@ -88,7 +88,7 @@ export default function Home() {
         />
         {ingredientList.length > 0 && (
           <Link href="/valid-recipes">
-            <Button>Show me recipes!</Button>
+            <Button onClick={localStorage.setItem('ingredients', ingredientList)}>Show me recipes!</Button>
           </Link>
         )}
       </div>
