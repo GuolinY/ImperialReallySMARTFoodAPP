@@ -87,8 +87,8 @@ export default function Home() {
           className={classes.textField}
         />
         {ingredientList.length > 0 && (
-          <Link href="/valid-recipes">
-            <Button onClick={localStorage.setItem('ingredients', ingredientList)}>Show me recipes!</Button>
+          <Link href={`/valid-recipes?ingredientList=${ingredientList.join('_')}`}>
+            <Button>Show me recipes!</Button>
           </Link>
         )}
       </div>
