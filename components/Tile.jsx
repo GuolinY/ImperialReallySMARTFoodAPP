@@ -6,6 +6,7 @@ import { Grid, Typography } from "@material-ui/core";
 import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
+import Link from "next/link";
 
 function secondsToHm(d) {
   d = Number(d);
@@ -48,6 +49,7 @@ export default function Tile(props) {
   const { recipe } = props;
 
   return (
+    <Link href={`recipe/${recipe.id}`}>
     <Grid
       alignContent="center"
       className={classes.tile}
@@ -55,6 +57,7 @@ export default function Tile(props) {
       xs={11}
       sm={6}
       xl={4}
+      style={{ cursor: 'pointer'}}
     >
       <Typography variant="h4">{recipe.name}</Typography>
       <Image
@@ -93,6 +96,7 @@ export default function Tile(props) {
         <span className={classes.nutritionalData}>{recipe.nutrition.fats}</span>
       </Typography>
     </Grid>
+    </Link>
   );
 }
 
