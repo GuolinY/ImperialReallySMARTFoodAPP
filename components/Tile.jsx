@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
 import React from "react";
 import Rating from "@material-ui/lab/Rating";
 import { Grid, Typography } from "@material-ui/core";
@@ -8,7 +8,7 @@ import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import Link from "next/link";
-import LocalDiningIcon from '@material-ui/icons/LocalDining';
+import LocalDiningIcon from "@material-ui/icons/LocalDining";
 
 function secondsToHm(d) {
   d = Number(d);
@@ -48,10 +48,10 @@ const useStyles = makeStyles((theme) => ({
 
 const StyledRating = withStyles({
   iconFilled: {
-    color: '#ff6d75',
+    color: "#ff6d75",
   },
   iconHover: {
-    color: '#ff3d47',
+    color: "#ff3d47",
   },
 })(Rating);
 
@@ -61,56 +61,60 @@ export default function Tile(props) {
 
   return (
     <Link href={`recipe/${recipe.id}`}>
-    <Grid
-      alignContent="center"
-      className={classes.tile}
-      item
-      xs={11}
-      sm={6}
-      xl={4}
-      style={{ cursor: 'pointer'}}
-    >
-      <Typography variant="h4">{recipe.name}</Typography>
-      <Image
-        src={recipe.image_link}
-        width={200}
-        height={200}
-        alt="balkan suprise"
-        className={classes.preview}
-      />
-      <Typography className={classes.iconsAndText}>
-        <StyledRating
-          value={recipe.rating} precision={0.5} readOnly
-          name="customized-color"
-          icon={<LocalDiningIcon fontSize="inherit" />}
+      <Grid
+        className={classes.tile}
+        item
+        xs={11}
+        sm={6}
+        xl={4}
+        style={{ cursor: "pointer" }}
+      >
+        <Typography variant="h4">{recipe.name}</Typography>
+        <Image
+          src={recipe.image_link}
+          width={200}
+          height={200}
+          alt="balkan suprise"
+          className={classes.preview}
         />
-        &nbsp;({recipe.no_reviews})
-      </Typography>
-      <Typography className={classes.iconsAndText} variant="h6">
-        <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; | &nbsp;
-        {Array(recipe.difficulty + 1).fill(<WhatshotIcon />)}
-      </Typography>
-      <Typography variant="body1">{recipe.description}</Typography>
-      <Typography className={classes.nutrition} variant="body2">
-        Calories:
-        <span className={classes.nutritionalData}>
-          {recipe.nutrition.calories}
-        </span>
-        <br />
-        Carbohyrdates:
-        <span className={classes.nutritionalData}>
-          {recipe.nutrition.carbohydrates}
-        </span>
-        <br />
-        Protein:
-        <span className={classes.nutritionalData}>
-          {recipe.nutrition.protein}
-        </span>
-        <br />
-        Fat:
-        <span className={classes.nutritionalData}>{recipe.nutrition.fats}</span>
-      </Typography>
-    </Grid>
+        <Typography className={classes.iconsAndText}>
+          <StyledRating
+            value={recipe.rating}
+            precision={0.5}
+            readOnly
+            name="customized-color"
+            icon={<LocalDiningIcon fontSize="inherit" />}
+          />
+          &nbsp;({recipe.no_reviews})
+        </Typography>
+        <Typography className={classes.iconsAndText} variant="h6">
+          <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; |
+          &nbsp;
+          {Array(recipe.difficulty + 1).fill(<WhatshotIcon />)}
+        </Typography>
+        <Typography variant="body1">{recipe.description}</Typography>
+        <Typography className={classes.nutrition} variant="body2">
+          Calories:
+          <span className={classes.nutritionalData}>
+            {recipe.nutrition.calories}
+          </span>
+          <br />
+          Carbohyrdates:
+          <span className={classes.nutritionalData}>
+            {recipe.nutrition.carbohydrates}
+          </span>
+          <br />
+          Protein:
+          <span className={classes.nutritionalData}>
+            {recipe.nutrition.protein}
+          </span>
+          <br />
+          Fat:
+          <span className={classes.nutritionalData}>
+            {recipe.nutrition.fats}
+          </span>
+        </Typography>
+      </Grid>
     </Link>
   );
 }
