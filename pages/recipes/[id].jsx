@@ -1,17 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Layout from "../../components/_Layout";
 import { makeStyles } from "@material-ui/core/styles";
-import Rating from "@material-ui/lab/Rating";
 import { Grid, Typography, Box, ThemeProvider } from "@material-ui/core";
 import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
-import WhatshotIcon from "@material-ui/icons/Whatshot";
-import { withStyles } from "@material-ui/core/styles";
-import LocalDiningIcon from "@material-ui/icons/LocalDining";
 import RatingAndReviews from "../../components/RatingAndReviews";
 
-export async function getStaticPaths(context) {
+export async function getStaticPaths() {
   const res = await fetch(
     `http://smart-food-app-backend.herokuapp.com/recipe/bread`
   );
@@ -40,19 +35,12 @@ export async function getStaticProps(context) {
 }
 
 const useStyles = makeStyles((theme) => ({
-  tile: {
-    outline: "3px solid black",
-    borderRadius: "5px",
-    color: theme.palette.text.primary,
-    margin: "2rem",
-    textAlign: "center",
+  title: {
+    fontFamily: "Abril Fatface",
   },
   image: {
     borderRadius: "50%",
     border: "2px solid black",
-  },
-  title: {
-    marginBottom: "1`rem",
   },
   iconsAndText: {
     display: "flex",
@@ -109,7 +97,7 @@ export default function Recipe({ recipe }) {
         alt="balkan suprise"
         className={classes.image}
       />
-      <Typography className={classes.title} variant="h2">
+      <Typography className={classes.title} variant="h2" gutterBottom>
         {recipe.name}
       </Typography>
       <RatingAndReviews recipe={recipe} />
@@ -120,7 +108,11 @@ export default function Recipe({ recipe }) {
         className={classes.container}
       >
         <Grid item className={classes.ingredients} xs={12} sm={3}>
-          <Typography variant="h2" className={classes.ingredientsSubtitle}>
+          <Typography
+            variant="h2"
+            className={classes.ingredientsSubtitle}
+            gutterBottom
+          >
             Ingredients
           </Typography>
           <ul>
@@ -130,7 +122,9 @@ export default function Recipe({ recipe }) {
           </ul>
         </Grid>
         <Grid className={classes.method} item xs={9}>
-          <Typography variant="h2">Method</Typography>
+          <Typography variant="h2" gutterBottom>
+            Method
+          </Typography>
           <ol>
             {recipe.method.split(".").map((step, i) => (
               <li key={i}>{step}</li>

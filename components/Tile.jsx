@@ -8,7 +8,6 @@ import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import Link from "next/link";
-import LocalDiningIcon from "@material-ui/icons/LocalDining";
 import { useRouter } from "next/router";
 
 function secondsToHm(d) {
@@ -68,7 +67,7 @@ export default function Tile(props) {
         xl={3}
         style={{ cursor: "pointer" }}
       >
-        <Typography noWrap variant="h4">
+        <Typography noWrap gutterBottom variant="h4">
           {recipe.name}
         </Typography>
         <Image
@@ -79,12 +78,14 @@ export default function Tile(props) {
           className={classes.preview}
         />
         <RatingAndReviews recipe={recipe} />
-        <Typography className={classes.iconsAndText} variant="h6">
+        <Typography className={classes.iconsAndText} variant="h6" gutterBottom>
           <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)}&nbsp;|&nbsp;
           {Array(recipe.difficulty).fill(<WhatshotIcon />)}
         </Typography>
-        <Typography variant="body1">{recipe.description}</Typography>
-        <Typography className={classes.nutrition} variant="body2">
+        <Typography variant="body1" gutterBottom>
+          {recipe.description}
+        </Typography>
+        <Typography className={classes.nutrition} variant="body2" gutterBottom>
           Calories:
           <span className={classes.nutritionalData}>
             {recipe.nutrition.calories}
