@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       width: "90%",
     },
+    marginBottom: "1rem",
   },
   ingredientInput: {
     display: "flex",
@@ -74,11 +75,15 @@ export default function Home() {
   };
 
   return (
-    <Layout title='A Really Smart Food App' home>
-      <h2 className={styles.title}>A Really Smart Food App</h2>
+    <Layout title="A Really Smart Food App" home>
+      <Typography variant="h1" className={styles.title}>
+        A Really Smart Food App
+      </Typography>
       <p>Here to suggest you recipes for the food in your kitchen!</p>
       <div className={classes.ingredientInput}>
         <TextField
+          variant="outlined"
+          color="secondary"
           id="ingredient-input"
           label="What ingredients do you have?"
           value={ingredientInput}
@@ -87,7 +92,9 @@ export default function Home() {
           className={classes.textField}
         />
         {ingredientList.length > 0 && (
-          <Link href={`/valid-recipes?ingredientList=${ingredientList.join('_')}`}>
+          <Link
+            href={`/valid-recipes?ingredientList=${ingredientList.join("_")}`}
+          >
             <Button>Show me recipes!</Button>
           </Link>
         )}

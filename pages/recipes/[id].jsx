@@ -9,10 +9,29 @@ import TimerIcon from "@material-ui/icons/Timer";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import { withStyles } from "@material-ui/core/styles";
 import LocalDiningIcon from "@material-ui/icons/LocalDining";
+import RatingAndReviews from "../../components/RatingAndReviews";
 
-export async function getStaticProps() {
+export async function getStaticPaths(context) {
   const res = await fetch(
-    `http://smart-food-app-backend.herokuapp.com/recipe/2`
+    `http://smart-food-app-backend.herokuapp.com/recipe/bread`
+  );
+  const data = await res.json();
+
+  const paths = data.map((recipe) => {
+    return {
+      params: { id: recipe.id.toString() },
+    };
+  });
+
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps(context) {
+  const res = await fetch(
+    `http://smart-food-app-backend.herokuapp.com/recipe/${context.params.id}`
   );
   const recipe = await res.json();
   return {
@@ -52,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       padding: theme.spacing(1),
     },
+    width: "90%",
   },
   ingredientsSubtitle: {},
   method: {
@@ -76,15 +96,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StyledRating = withStyles({
-  iconFilled: {
-    color: "#ff6d75",
-  },
-  iconHover: {
-    color: "#ff3d47",
-  },
-})(Rating);
-
 export default function Recipe({ recipe }) {
   const classes = useStyles();
   console.log(recipe);
@@ -95,23 +106,13 @@ export default function Recipe({ recipe }) {
         src={recipe.image_link}
         width={200}
         height={200}
-        alt="balkan surprise"
+        alt="balkan suprise"
         className={classes.image}
       />
       <Typography className={classes.title} variant="h2">
         {recipe.name}
       </Typography>
-      <Typography className={classes.iconsAndText}>
-        <StyledRating
-          value={recipe.rating}
-          precision={0.5}
-          readOnly
-          name="customized-color"
-          size="large"
-          icon={<LocalDiningIcon fontSize="inherit" />}
-        />
-        &nbsp;({recipe.no_reviews})
-      </Typography>
+      <RatingAndReviews recipe={recipe} />
       <Grid
         container
         alignItems="flex-start"
@@ -131,16 +132,12 @@ export default function Recipe({ recipe }) {
         <Grid className={classes.method} item xs={9}>
           <Typography variant="h2">Method</Typography>
           <ol>
-            <li>First get your bread</li>
-            <li>Grab your nearest watermelon and mash 'em together</li>
-            <li>You have now made the Balkan surprise (without cheese)</li>
+            {recipe.method.split(".").map((step, i) => (
+              <li key={i}>{step}</li>
+            ))}
           </ol>
         </Grid>
       </Grid>
     </Layout>
   );
 }
-
-Recipe.propTypes = {
-  recipes: PropTypes.object.isRequired,
-};

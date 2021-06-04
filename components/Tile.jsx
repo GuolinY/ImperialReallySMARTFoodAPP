@@ -2,13 +2,14 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 import React from "react";
-import Rating from "@material-ui/lab/Rating";
+import RatingAndReviews from "./RatingAndReviews";
 import { Grid, Typography } from "@material-ui/core";
 import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import Link from "next/link";
 import LocalDiningIcon from "@material-ui/icons/LocalDining";
+import { useRouter } from "next/router";
 
 function secondsToHm(d) {
   d = Number(d);
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     outline: "3px solid black",
     borderRadius: "5px",
     color: theme.palette.text.primary,
-    margin: "2rem",
+    margin: "3rem 2rem 0",
     textAlign: "center",
   },
   preview: {
@@ -46,30 +47,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StyledRating = withStyles({
-  iconFilled: {
-    color: "#ff6d75",
-  },
-  iconHover: {
-    color: "#ff3d47",
-  },
-})(Rating);
-
 export default function Tile(props) {
   const classes = useStyles();
-  const { recipe } = props;
+  const router = useRouter();
+
+  const recipe = props.recipe;
+  const ingredientsList = props.ingredientList;
+  console.log(ingredientsList);
 
   return (
-    <Link href={`recipe/${recipe.id}`}>
+    <Link
+      href={`recipes/${recipe.id}?ingredientList=${router.query.ingredientList}`}
+      key={recipe.id}
+    >
       <Grid
         className={classes.tile}
         item
-        xs={11}
-        sm={6}
-        xl={4}
+        xs={6}
+        sm={4}
+        xl={3}
         style={{ cursor: "pointer" }}
       >
-        <Typography variant="h4">{recipe.name}</Typography>
+        <Typography noWrap variant="h4">
+          {recipe.name}
+        </Typography>
         <Image
           src={recipe.image_link}
           width={200}
@@ -77,19 +78,9 @@ export default function Tile(props) {
           alt="balkan suprise"
           className={classes.preview}
         />
-        <Typography className={classes.iconsAndText}>
-          <StyledRating
-            value={recipe.rating}
-            precision={0.5}
-            readOnly
-            name="customized-color"
-            icon={<LocalDiningIcon fontSize="inherit" />}
-          />
-          &nbsp;({recipe.no_reviews})
-        </Typography>
+        <RatingAndReviews recipe={recipe} />
         <Typography className={classes.iconsAndText} variant="h6">
-          <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; |
-          &nbsp;
+          <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)}&nbsp;|&nbsp;
           {Array(recipe.difficulty).fill(<WhatshotIcon />)}
         </Typography>
         <Typography variant="body1">{recipe.description}</Typography>
