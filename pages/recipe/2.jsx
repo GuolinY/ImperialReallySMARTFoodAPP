@@ -53,9 +53,7 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(1),
     },
   },
-  ingredientsSubtitle: {
-    margin: theme.spacing(2, 0, 0, 0),
-  },
+  ingredientsSubtitle: {},
   method: {
     "& ol": {
       "& li": {
@@ -97,7 +95,7 @@ export default function Recipe({ recipe }) {
         src={recipe.image_link}
         width={200}
         height={200}
-        alt="balkan suprise"
+        alt="balkan surprise"
         className={classes.image}
       />
       <Typography className={classes.title} variant="h2">
@@ -135,7 +133,7 @@ export default function Recipe({ recipe }) {
           <ol>
             <li>First get your bread</li>
             <li>Grab your nearest watermelon and mash 'em together</li>
-            <li>You have now made the Balkan suprise (without cheese)</li>
+            <li>You have now made the Balkan surprise (without cheese)</li>
           </ol>
         </Grid>
       </Grid>
