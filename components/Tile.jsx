@@ -90,7 +90,7 @@ export default function Tile(props) {
         <Typography className={classes.iconsAndText} variant="h6">
           <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; |
           &nbsp;
-          {Array(recipe.difficulty + 1).fill(<WhatshotIcon />)}
+          {Array(recipe.difficulty).fill(<WhatshotIcon />)}
         </Typography>
         <Typography variant="body1">{recipe.description}</Typography>
         <Typography className={classes.nutrition} variant="body2">
