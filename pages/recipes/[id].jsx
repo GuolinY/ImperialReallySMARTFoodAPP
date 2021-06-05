@@ -101,7 +101,6 @@ export default function Recipe({ recipe }) {
       </div>
       <Grid
         container
-        alignItems="center"
         spacing={10}
         className={classes.container}
       >

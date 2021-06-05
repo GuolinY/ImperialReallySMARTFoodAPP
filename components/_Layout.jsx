@@ -32,11 +32,11 @@ export default function Layout({
       </Head>
 
       <main className={styles.main}>{children}</main>
-      <footer className={styles.footer}>
+      {/* <footer className={styles.footer}>
         <Typography style={{ textAlign: "center" }} variant="body1">
           A Really Smart Food App{" "}
         </Typography>
-      </footer>
+      </footer> */}
     </div>
   );
 }

@@ -126,7 +126,7 @@ export default function Home() {
             alignItems="flex-start"
           >
             {ingredientList.map((ingredient, i) => (
-              <Grid item>
+              <Grid item key={i}>
                 <Typography key={i} className={classes.enteredIngredient}>
                   <IconButton
                     aria-label="delete ingredient"
