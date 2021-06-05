@@ -47,7 +47,11 @@ export default function ValidRecipes({ recipes }) {
           </Typography>
         </Grid>
         <Grid item>
-          <BackButton href="/" message="Edit Ingredients" />
+          <BackButton
+            href="/"
+            message="Edit Ingredients"
+            ingredientList={router.query.ingredientList}
+          />
         </Grid>
       </Grid>
       <Grid
