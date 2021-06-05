@@ -18,25 +18,25 @@ const useStyles = makeStyles((theme) => ({
 
 const StyledRating = withStyles({
   iconFilled: {
-    color: "#03DAC6",
+    color: "#6b5b95",
   },
   iconHover: {
     color: "#ff3d47",
   },
 })(Rating);
 
-export default function RatingAndReviews({ recipe }) {
+export default function RatingAndReviews({ recipe, size = "small" }) {
   const classes = useStyles();
 
   return (
     <Link href={`/reviews/${recipe.id}`}>
-      <Typography variant="h5" className={classes.iconsAndText}>
+      <Typography variant="body1" className={classes.iconsAndText}>
         <StyledRating
           value={recipe.rating}
           precision={0.5}
           readOnly
           name="Recipe Rating"
-          size="large"
+          size={size}
           icon={<LocalDiningIcon fontSize="inherit" />}
         />
         &nbsp;({recipe.no_reviews})

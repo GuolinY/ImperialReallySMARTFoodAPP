@@ -105,7 +105,7 @@ export default function Recipe({ recipe }) {
         <Typography className={classes.title} variant="h2" gutterBottom>
           {recipe.name}
         </Typography>
-        <RatingAndReviews recipe={recipe} />
+        <RatingAndReviews recipe={recipe} size='large' />
       </div>
       <Grid
         container
