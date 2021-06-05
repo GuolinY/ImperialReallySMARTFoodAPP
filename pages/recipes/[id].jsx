@@ -114,7 +114,7 @@ export default function Recipe({ recipe }) {
           <List>
             {recipe.ingredients.map((ingredient, i) => {
               return (
-                <ListItem>
+                <ListItem key={i}>
                   <ListItemIcon>
                     <FastfoodIcon />
                   </ListItemIcon>
@@ -130,7 +130,7 @@ export default function Recipe({ recipe }) {
           </Typography>
           <List component="ol">
             {recipe.method.split(". ").map((step, i) => (
-              <ListItem>
+              <ListItem key={i}>
                 <ListItemIcon>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
