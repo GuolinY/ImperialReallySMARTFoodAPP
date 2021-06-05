@@ -9,6 +9,7 @@ import TimerIcon from "@material-ui/icons/Timer";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import Link from "next/link";
 import LocalDiningIcon from "@material-ui/icons/LocalDining";
+import RatingAndReviews from "./RatingAndReviews";
 
 function secondsToHm(d) {
   d = Number(d);
@@ -60,7 +61,7 @@ export default function Tile(props) {
   const { recipe } = props;
 
   return (
-    <Link href={`recipe/${recipe.id}`}>
+    <Link href={`recipes/${recipe.id}`}>
       <Grid
         className={classes.tile}
         item
@@ -77,20 +78,11 @@ export default function Tile(props) {
           alt="balkan suprise"
           className={classes.preview}
         />
-        <Typography className={classes.iconsAndText}>
-          <StyledRating
-            value={recipe.rating}
-            precision={0.5}
-            readOnly
-            name="customized-color"
-            icon={<LocalDiningIcon fontSize="inherit" />}
-          />
-          &nbsp;({recipe.no_reviews})
-        </Typography>
+        <RatingAndReviews recipe={recipe} />
         <Typography className={classes.iconsAndText} variant="h6">
           <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; |
           &nbsp;
-          {Array(recipe.difficulty + 1).fill(<WhatshotIcon />)}
+          {Array(recipe.difficulty).fill(<WhatshotIcon />)}
         </Typography>
         <Typography variant="body1">{recipe.description}</Typography>
         <Typography className={classes.nutrition} variant="body2">
