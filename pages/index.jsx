@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Layout from "../components/_Layout";
 import {
@@ -16,6 +16,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import { DeleteOutlined } from "@material-ui/icons";
+import { useIngredients, useIngredientsUpdate } from "../contexts/ingredients";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -73,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Home() {
+
   const classes = useStyles();
   const router = useRouter();
 
@@ -84,6 +86,9 @@ export default function Home() {
       ? router?.query?.ingredientList.split("_")
       : []
   );
+
+  const ingredients = useIngredients();
+  const ingredientsUpdate = useIngredientsUpdate();
 
   const handleIngredientInput = (e) => {
     setIngredientInput(e.target.value);
