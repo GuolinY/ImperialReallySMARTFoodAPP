@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import styles from "../styles/Home.module.css";
 import Layout from "../components/_Layout";
 import {
   TextField,
@@ -100,7 +99,10 @@ export default function Home() {
         />
         {ingredientList.length > 0 && (
           <Link
-            href={`/valid-recipes?ingredientList=${ingredientList.join("_")}`}
+            href={{
+              pathname: "/valid-recipes",
+              query: { ingredientLisst: ingredientList.join("-") },
+            }}
           >
             <Button variant="outlined">Show me recipes!</Button>
           </Link>

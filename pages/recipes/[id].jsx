@@ -19,13 +19,13 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 export async function getStaticPaths() {
   const res = await fetch(
-    `http://smart-food-app-backend.herokuapp.com/recipe/bread`
+    `http://smart-food-app-backend.herokuapp.com/recipes/all`
   );
   const data = await res.json();
 
-  const paths = data.map((recipe) => {
+  const paths = data.ids.map((id) => {
     return {
-      params: { id: recipe.id.toString() },
+      params: { id: id.toString() },
     };
   });
 
@@ -37,7 +37,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context) {
   const res = await fetch(
-    `http://smart-food-app-backend.herokuapp.com/recipe/${context.params.id}`
+    `http://smart-food-app-backend.herokuapp.com/recipes/${context.params.id}`
   );
   const recipe = await res.json();
   return {
@@ -114,7 +114,7 @@ export default function Recipe({ recipe }) {
           <List>
             {recipe.ingredients.map((ingredient, i) => {
               return (
-                <ListItem>
+                <ListItem key={i}>
                   <ListItemIcon>
                     <FastfoodIcon />
                   </ListItemIcon>
@@ -130,7 +130,7 @@ export default function Recipe({ recipe }) {
           </Typography>
           <List component="ol">
             {recipe.method.split(". ").map((step, i) => (
-              <ListItem>
+              <ListItem key={i}>
                 <ListItemIcon>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
