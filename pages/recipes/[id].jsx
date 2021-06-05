@@ -16,6 +16,8 @@ import TimerIcon from "@material-ui/icons/Timer";
 import RatingAndReviews from "../../components/RatingAndReviews";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import BackButton from "../../components/BackButton";
+import { useRouter } from "next/router";
 
 export async function getStaticPaths() {
   const res = await fetch(
@@ -82,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Recipe({ recipe }) {
   const classes = useStyles();
+  const router = useRouter();
   console.log(recipe);
 
   return (
@@ -93,9 +96,21 @@ export default function Recipe({ recipe }) {
         alt="balkan suprise"
         className={classes.image}
       />
-      <Typography className={classes.title} variant="h2" gutterBottom>
-        {recipe.name}
-      </Typography>
+      <Grid
+        container
+        direction="row"
+        justify="space-evenly"
+        alignItems="center"
+      >
+        <Grid item>
+          <Typography className={classes.title} variant="h1" gutterBottom>
+            {recipe.name}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <BackButton href="/valid-recipes" message="Back to Recipes" />
+        </Grid>
+      </Grid>
       <RatingAndReviews recipe={recipe} />
       <Grid
         container

@@ -6,6 +6,7 @@ import Tile from "../components/Tile";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
+import BackButton from "../components/BackButton";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -31,9 +32,21 @@ export default function ValidRecipes({ recipes }) {
 
   return (
     <Layout title="Recipes you can make...">
-      <Typography className={classes.title} variant="h1" gutterBottom>
-        Recipes you can make...
-      </Typography>
+      <Grid
+        container
+        direction="row"
+        justify="space-evenly"
+        alignItems="center"
+      >
+        <Grid item>
+          <Typography className={classes.title} variant="h1" gutterBottom>
+            Recipes you can make...
+          </Typography>
+        </Grid>
+        <Grid item>
+          <BackButton href="/" message="Edit Ingredients" />
+        </Grid>
+      </Grid>
       <Grid
         style={{ width: "90%" }}
         container

@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import ClearIcon from "@material-ui/icons/Clear";
 import Link from "next/link";
+import { Router, useRouter } from "next/router";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -55,11 +56,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
+  const router = useRouter();
 
   const KEYCODE_ENTER = 13;
 
   const [ingredientInput, setIngredientInput] = useState("");
-  const [ingredientList, setIngredientList] = useState([]);
+  const [ingredientList, setIngredientList] = useState(
+    router.query.ingredientList ? router.query.ingredientList.split("_") : []
+  );
 
   const handleIngredientInput = (e) => {
     setIngredientInput(e.target.value);
@@ -101,7 +105,7 @@ export default function Home() {
           <Link
             href={{
               pathname: "/valid-recipes",
-              query: { ingredientLisst: ingredientList.join("-") },
+              query: { ingredientList: ingredientList.join("_") },
             }}
           >
             <Button variant="outlined">Show me recipes!</Button>

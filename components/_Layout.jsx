@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
+import IconButton from "@material-ui/core/IconButton";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { useRouter } from "next/router";
+import { Typography } from "@material-ui/core";
 
 export default function Layout({
   title = "A Really Smart Food App",
@@ -28,14 +32,11 @@ export default function Layout({
       </Head>
 
       <main className={styles.main}>{children}</main>
-
-      {!home && (
-        <Link href="/">
-          <a>Back to Ingredients List</a>
-        </Link>
-      )}
-
-      <footer className={styles.footer}>A Really Smart Food App</footer>
+      <footer className={styles.footer}>
+        <Typography style={{ textAlign: "center" }} variant="body1">
+          A Really Smart Food App{" "}
+        </Typography>
+      </footer>
     </div>
   );
 }
