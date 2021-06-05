@@ -12,6 +12,14 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: "Abril Fatface",
   },
+  recipeTileContainer: {
+    margin: 0,
+    width: "90%",
+    maxWidth: theme.spacing(180),
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
+  },
 }));
 
 export async function getServerSideProps(context) {
@@ -32,12 +40,7 @@ export default function ValidRecipes({ recipes }) {
 
   return (
     <Layout title="Recipes you can make...">
-      <Grid
-        container
-        direction="row"
-        justify="space-evenly"
-        alignItems="center"
-      >
+      <Grid container justify="space-evenly" alignItems="center">
         <Grid item>
           <Typography className={classes.title} variant="h1" gutterBottom>
             Recipes you can make...
@@ -48,17 +51,17 @@ export default function ValidRecipes({ recipes }) {
         </Grid>
       </Grid>
       <Grid
-        style={{ width: "90%" }}
         container
         alignItems="stretch"
         justify="center"
         spacing={10}
+        className={classes.recipeTileContainer}
       >
         {recipes.map((recipe, i) => (
           <Tile
-            key={i}
             recipe={recipe}
             ingredientList={router.query.ingredientList}
+            key={i}
           />
         ))}
       </Grid>

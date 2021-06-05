@@ -65,9 +65,10 @@ export default function Tile(props) {
       <Grid
         className={classes.tile}
         item
-        xs={11}
+        xs={12}
         sm={6}
-        xl={4}
+        lg={4}
+        xl={3}
         style={{ cursor: "pointer" }}
       >
         <Typography variant="h4">{recipe.name}</Typography>

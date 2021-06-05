@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   nutritionalData: {
     float: "right",
   },
-  container: {
+  recipeTileContainer: {
     padding: theme.spacing(4),
     width: "90%",
     maxWidth: theme.spacing(180),
