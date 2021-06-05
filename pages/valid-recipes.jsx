@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 export async function getServerSideProps(context) {
   console.log(context);
   const res = await fetch(
-    `http://smart-food-app-backend.herokuapp.com/recipe/${context.query.ingredientList}`
+    `http://smart-food-app-backend.herokuapp.com/recipes/${context.query.ingredientList}`
   );
   const recipes = await res.json();
   return {

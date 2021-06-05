@@ -4,9 +4,6 @@ import { withStyles } from "@material-ui/core/styles";
 import React from "react";
 import Rating from "@material-ui/lab/Rating";
 import { Grid, Typography } from "@material-ui/core";
-import Image from "next/image";
-import TimerIcon from "@material-ui/icons/Timer";
-import WhatshotIcon from "@material-ui/icons/Whatshot";
 import Link from "next/link";
 import LocalDiningIcon from "@material-ui/icons/LocalDining";
 
