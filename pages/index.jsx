@@ -62,7 +62,7 @@ export default function Home() {
 
   const [ingredientInput, setIngredientInput] = useState("");
   const [ingredientList, setIngredientList] = useState(
-    router.query.ingredientList ? router.query.ingredientList.split("_") : []
+    router?.query?.ingredientList ? router?.query?.ingredientList.split("_") : []
   );
 
   const handleIngredientInput = (e) => {
