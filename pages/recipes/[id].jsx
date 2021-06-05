@@ -67,6 +67,15 @@ const useStyles = makeStyles((theme) => ({
   nutritionalData: {
     float: "right",
   },
+  container: {
+    padding: theme.spacing(4),
+    width: "90%",
+    maxWidth: theme.spacing(180),
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+      padding: theme.spacing(1),
+    },
+  },
   recipeTileContainer: {
     padding: theme.spacing(4),
     width: "90%",
@@ -75,7 +84,6 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
       padding: theme.spacing(1),
     },
-    
   },
 }));
 
@@ -111,6 +119,7 @@ export default function Recipe({ recipe }) {
           alignItems="flex-start"
           xs={12}
           md={5}
+          lg={4}
         >
           <Typography variant="h2" gutterBottom>
             Ingredients
@@ -133,6 +142,7 @@ export default function Recipe({ recipe }) {
           container
           xs={12}
           md={7}
+          lg={8}
           direction="column"
           alignItems="flex-start"
         >
