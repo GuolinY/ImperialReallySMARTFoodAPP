@@ -29,12 +29,7 @@ export default function RatingAndReviews({ recipe }) {
   const classes = useStyles();
 
   return (
-    <Link
-      href={{
-        pathname: "/reviews",
-        query: { recipe: recipe.id },
-      }}
-    >
+    <Link href={`/reviews/${recipe.id}`}>
       <Typography variant="h5" className={classes.iconsAndText}>
         <StyledRating
           value={recipe.rating}
