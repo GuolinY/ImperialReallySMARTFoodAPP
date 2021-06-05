@@ -3,7 +3,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 import React from "react";
 import Rating from "@material-ui/lab/Rating";
-import { Grid, Typography } from "@material-ui/core";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Grid,
+  Typography,
+  Button,
+} from "@material-ui/core";
 import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
@@ -22,13 +31,6 @@ function secondsToHm(d) {
 }
 
 const useStyles = makeStyles((theme) => ({
-  tile: {
-    outline: "3px solid black",
-    borderRadius: "5px",
-    color: theme.palette.text.primary,
-    margin: "2rem",
-    textAlign: "center",
-  },
   preview: {
     borderRadius: "50%",
     border: "2px solid black",
@@ -44,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
   },
   nutritionalData: {
     float: "right",
+  },
+  media: {
+    height: 0,
+    paddingTop: "56.25%", // 16:9
   },
 }));
 
@@ -61,28 +67,21 @@ export default function Tile(props) {
   const { recipe } = props;
 
   return (
-    <Link href={`recipes/${recipe.id}`}>
-      <Grid
-        className={classes.tile}
-        item
-        xs={11}
-        sm={6}
-        xl={4}
-        style={{ cursor: "pointer" }}
-      >
-        <Typography variant="h4">{recipe.name}</Typography>
-        <Image
-          src={recipe.image_link}
-          width={200}
-          height={200}
-          alt="balkan suprise"
-          className={classes.preview}
-        />
-        <RatingAndReviews recipe={recipe} />
+    <Card>
+      <CardHeader
+        title={recipe.name}
+        titleTypographyProps={{ variant: "h4" }}
+      />
+      <CardMedia
+        className={classes.media}
+        image={recipe.image_link}
+        title={recipe.name}
+      />
+      <CardContent>
         <Typography className={classes.iconsAndText} variant="h6">
           <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; |
           &nbsp;
-          {Array(recipe.difficulty).fill(<WhatshotIcon />)}
+          {Array(recipe.difficulty + 1).fill(<WhatshotIcon />)}
         </Typography>
         <Typography variant="body1">{recipe.description}</Typography>
         <Typography className={classes.nutrition} variant="body2">
@@ -106,8 +105,14 @@ export default function Tile(props) {
             {recipe.nutrition.fats}
           </span>
         </Typography>
-      </Grid>
-    </Link>
+      </CardContent>
+      <CardActions>
+        <Link href={`/recipes/${recipe.id}`} passHref>
+          <Button>Learn More</Button>
+        </Link>
+        <RatingAndReviews recipe={recipe} />
+      </CardActions>
+    </Card>
   );
 }
 
