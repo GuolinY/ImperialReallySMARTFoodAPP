@@ -69,16 +69,13 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     padding: theme.spacing(4),
+    width: "90%",
+    maxWidth: theme.spacing(180),
     [theme.breakpoints.down("xs")]: {
+      width: "100%",
       padding: theme.spacing(1),
     },
-    width: "90%",
-  },
-  iconsAndText: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-    justifyContent: "center",
+    
   },
 }));
 
@@ -89,41 +86,34 @@ export default function Recipe({ recipe }) {
 
   return (
     <Layout title={recipe.name}>
-      <Image
-        src={recipe.image_link}
-        width={200}
-        height={200}
-        alt="balkan suprise"
-        className={classes.image}
-      />
+      <div>
+        <Image
+          src={recipe.image_link}
+          width={200}
+          height={200}
+          alt="balkan suprise"
+          className={classes.image}
+        />
+        <Typography className={classes.title} variant="h2" gutterBottom>
+          {recipe.name}
+        </Typography>
+        <RatingAndReviews recipe={recipe} />
+      </div>
       <Grid
         container
-        direction="row"
-        justify="space-evenly"
         alignItems="center"
-      >
-        <Grid item>
-          <Typography className={classes.title} variant="h1" gutterBottom>
-            {recipe.name}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <BackButton href="/valid-recipes" message="Back to Recipes" />
-        </Grid>
-      </Grid>
-      <RatingAndReviews recipe={recipe} />
-      <Grid
-        container
-        alignItems="flex-start"
         spacing={10}
         className={classes.container}
       >
-        <Grid item className={classes.ingredients} xs={12} sm={3}>
-          <Typography
-            variant="h2"
-            className={classes.ingredientsSubtitle}
-            gutterBottom
-          >
+        <Grid
+          item
+          container
+          direction="column"
+          alignItems="flex-start"
+          xs={12}
+          md={5}
+        >
+          <Typography variant="h2" gutterBottom>
             Ingredients
           </Typography>
           <List>
@@ -139,7 +129,14 @@ export default function Recipe({ recipe }) {
             })}
           </List>
         </Grid>
-        <Grid item xs={9}>
+        <Grid
+          item
+          container
+          xs={12}
+          md={7}
+          direction="column"
+          alignItems="flex-start"
+        >
           <Typography variant="h2" gutterBottom>
             Method
           </Typography>
