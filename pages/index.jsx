@@ -62,7 +62,9 @@ export default function Home() {
 
   const [ingredientInput, setIngredientInput] = useState("");
   const [ingredientList, setIngredientList] = useState(
-    router?.query?.ingredientList ? router?.query?.ingredientList.split("_") : []
+    router?.query?.ingredientList
+      ? router?.query?.ingredientList.split("_")
+      : []
   );
 
   const handleIngredientInput = (e) => {
@@ -86,10 +88,12 @@ export default function Home() {
 
   return (
     <Layout title="A Really Smart Food App" home>
-      <Typography variant="h1" className={classes.title}>
+      <Typography variant="h1" className={classes.title} gutterBottom>
         A Really Smart Food App
       </Typography>
-      <p>Here to suggest you recipes for the food in your kitchen!</p>
+      <Typography gutterBottom>
+        Here to suggest you recipes for the food in your kitchen!
+      </Typography>
       <div className={classes.ingredientInput}>
         <TextField
           variant="outlined"
