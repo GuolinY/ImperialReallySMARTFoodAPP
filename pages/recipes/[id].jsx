@@ -1,10 +1,21 @@
 import React from "react";
 import Layout from "../../components/_Layout";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Box, ThemeProvider } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  Box,
+  ThemeProvider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+} from "@material-ui/core";
 import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
 import RatingAndReviews from "../../components/RatingAndReviews";
+import FastfoodIcon from "@material-ui/icons/Fastfood";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 export async function getStaticPaths() {
   const res = await fetch(
@@ -61,26 +72,11 @@ const useStyles = makeStyles((theme) => ({
     },
     width: "90%",
   },
-  ingredientsSubtitle: {},
-  method: {
-    "& ol": {
-      "& li": {
-        marginBottom: "1rem",
-      },
-    },
-  },
   iconsAndText: {
     display: "flex",
     alignItems: "center",
     flexWrap: "wrap",
     justifyContent: "center",
-  },
-  ingredients: {
-    "& ul": {
-      "& li": {
-        marginBottom: "1rem",
-      },
-    },
   },
 }));
 
@@ -115,21 +111,33 @@ export default function Recipe({ recipe }) {
           >
             Ingredients
           </Typography>
-          <ul>
+          <List>
             {recipe.ingredients.map((ingredient, i) => {
-              return <li key={i}>{ingredient}</li>;
+              return (
+                <ListItem>
+                  <ListItemIcon>
+                    <FastfoodIcon />
+                  </ListItemIcon>
+                  <ListItemText key={i} primary={ingredient} />
+                </ListItem>
+              );
             })}
-          </ul>
+          </List>
         </Grid>
-        <Grid className={classes.method} item xs={9}>
+        <Grid item xs={9}>
           <Typography variant="h2" gutterBottom>
             Method
           </Typography>
-          <ol>
-            {recipe.method.split(".").map((step, i) => (
-              <li key={i}>{step}</li>
+          <List component="ol">
+            {recipe.method.split(". ").map((step, i) => (
+              <ListItem>
+                <ListItemIcon>
+                  <ArrowForwardIosIcon />
+                </ListItemIcon>
+                <ListItemText key={i} primary={step} />
+              </ListItem>
             ))}
-          </ol>
+          </List>
         </Grid>
       </Grid>
     </Layout>
