@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Roboto:wght@100&display=swap');
+
 .container {
   min-height: 100vh;
   padding: 0 0.5rem;
@@ -37,6 +39,7 @@
 .title a {
   color: #0070f3;
   text-decoration: none;
+  font-family: 'Abril Fatface';
 }
 
 .title a:hover,
@@ -49,6 +52,7 @@
   margin: 0;
   line-height: 1.15;
   font-size: 3.5rem;
+  font-family: 'Abril Fatface';
 }
 
 .title,

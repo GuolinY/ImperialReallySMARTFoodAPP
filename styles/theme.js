@@ -17,6 +17,14 @@ const theme = createMuiTheme({
       default: "#fff",
     },
   },
+  typography: {
+    "& h1": {
+      fontFamily: "Abril Fatface",
+    },
+    "& h2": {
+      fontFamily: "Roberto Mono",
+    },
+  },
 });
 
 export default theme;

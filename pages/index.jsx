@@ -2,11 +2,20 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "../styles/Home.module.css";
 import Layout from "../components/_Layout";
-import { TextField, Button, Typography, IconButton } from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Typography,
+  IconButton,
+  Grid,
+} from "@material-ui/core";
 import ClearIcon from "@material-ui/icons/Clear";
 import Link from "next/link";
 
 const useStyles = makeStyles((theme) => ({
+  title: {
+    fontFamily: "Abril Fatface",
+  },
   root: {
     width: "100%",
   },
@@ -16,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       width: "90%",
     },
+    marginBottom: "1rem",
   },
   ingredientInput: {
     display: "flex",
@@ -25,7 +35,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
   },
   enteredIngredient: {
-    margin: theme.spacing(0, 3),
+    margin: theme.spacing(0, 4),
+    //width: theme.spacing(16),
+    //maxWidth: theme.spacing(16),
   },
   removeEnteredIngredientButton: {
     padding: theme.spacing(0.5),
@@ -35,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexFlow: "row wrap",
     width: "60%",
-    maxWidth: theme.spacing(64),
+    maxWidth: theme.spacing(120),
     [theme.breakpoints.down("sm")]: {
       width: "90%",
     },
@@ -63,10 +75,6 @@ export default function Home() {
     }
   };
 
-  // const handleShowMeRecipes = () => {
-  //   console.log("Show me recipes pressed");
-  // };
-
   const handleRemoveIngredient = (e, index) => {
     const newIngredientList = ingredientList;
     newIngredientList.splice(index, 1);
@@ -74,11 +82,15 @@ export default function Home() {
   };
 
   return (
-    <Layout title='A Really Smart Food App' home>
-      <h2 className={styles.title}>A Really Smart Food App</h2>
+    <Layout title="A Really Smart Food App" home>
+      <Typography variant="h1" className={classes.title}>
+        A Really Smart Food App
+      </Typography>
       <p>Here to suggest you recipes for the food in your kitchen!</p>
       <div className={classes.ingredientInput}>
         <TextField
+          variant="outlined"
+          color="secondary"
           id="ingredient-input"
           label="What ingredients do you have?"
           value={ingredientInput}
@@ -87,28 +99,41 @@ export default function Home() {
           className={classes.textField}
         />
         {ingredientList.length > 0 && (
-          <Link href={`/valid-recipes?ingredientList=${ingredientList.join('_')}`}>
-            <Button>Show me recipes!</Button>
+          <Link
+            href={`/valid-recipes?ingredientList=${ingredientList.join("_")}`}
+          >
+            <Button variant="outlined">Show me recipes!</Button>
           </Link>
         )}
       </div>
       {ingredientList.length > 0 && (
         <>
-          <Typography variant="subtitle1">You have entered:</Typography>
-          <div className={classes.enteredIngredients}>
+          <Typography variant="body1" gutterBottom>
+            You have entered:
+          </Typography>
+          <Grid
+            container
+            className={classes.enteredIngredients}
+            spacing={2}
+            direction="row"
+            justify="flex-start"
+            alignItems="flex-start"
+          >
             {ingredientList.map((ingredient, i) => (
-              <div key={i} className={classes.enteredIngredient}>
-                {ingredient}
-                <IconButton
-                  aria-label="delete ingredient"
-                  onClick={(e) => handleRemoveIngredient(e, i)}
-                  className={classes.removeEnteredIngredientButton}
-                >
-                  <ClearIcon />
-                </IconButton>
-              </div>
+              <Grid item>
+                <Typography key={i} className={classes.enteredIngredient}>
+                  <IconButton
+                    aria-label="delete ingredient"
+                    onClick={(e) => handleRemoveIngredient(e, i)}
+                    className={classes.removeEnteredIngredientButton}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                  {ingredient}
+                </Typography>
+              </Grid>
             ))}
-          </div>
+          </Grid>
         </>
       )}
     </Layout>
