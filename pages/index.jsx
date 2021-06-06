@@ -124,7 +124,7 @@ export default function Home() {
               className={classes.textField}
             />
           </Grid>
-          {ingredients.length > 0 && (
+          {ingredients?.length > 0 && (
             <Grid className={classes.showRecipeButton} item>
               <Link
                 href="/valid-recipes"
@@ -135,7 +135,7 @@ export default function Home() {
             </Grid>
           )}
         </Grid>
-        {ingredients.length > 0 && (
+        {ingredients?.length > 0 && (
           <Grid
             item
             container
