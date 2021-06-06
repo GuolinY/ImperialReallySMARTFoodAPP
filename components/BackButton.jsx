@@ -1,3 +1,5 @@
+import React from "react";
+import PropTypes from "prop-types";
 import Link from "next/link";
 import Button from "@material-ui/core/Button";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -5,14 +7,15 @@ import { Typography } from "@material-ui/core";
 
 export default function BackButton({
   href = "/",
-  ingredientList = "",
-  message = "",
+  message = "Back",
+  style,
+  query,
 }) {
   return (
     <Link
       href={{
-        pathname: "/",
-        query: { ingredientList: ingredientList },
+        pathname: href,
+        query: query,
       }}
       passHref
     >
@@ -20,9 +23,17 @@ export default function BackButton({
         variant="outlined"
         color="secondary"
         startIcon={<ArrowBackIcon />}
+        style={style}
       >
         {message}
       </Button>
     </Link>
   );
 }
+
+BackButton.propTypes = {
+  href: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired,
+  style: PropTypes.object,
+  query: PropTypes.object,
+};
