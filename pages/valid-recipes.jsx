@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
-import { Grid, Typography, Box, Container } from "@material-ui/core";
+import { Grid, Typography, Container } from "@material-ui/core";
 import Tile from "../components/Tile";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/core/styles";
 import BackButton from "../components/BackButton";
 import Masonry from "react-masonry-css";
+import axios from "axios";
+import { useIngredients } from "../contexts/ingredients";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: "Abril Fatface",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 72,
+    },
   },
   recipeTileContainer: {
     margin: 0,
@@ -23,21 +28,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export async function getServerSideProps(context) {
-  console.log(context);
-  const res = await fetch(
-    `http://smart-food-app-backend.herokuapp.com/recipes/${context.query.ingredientList}`
-  );
-  const recipes = await res.json();
-  return {
-    props: { recipes }, // will be passed to the page component as props
-  };
-}
-
-export default function ValidRecipes({ recipes }) {
+export default function ValidRecipes() {
   const classes = useStyles();
   const router = useRouter();
-  console.log(recipes);
+
+  const ingredients = useIngredients();
+  const [loading, setLoading] = useState(true);
+  const [recipes, setRecipes] = useState({ id: -1 });
 
   const breakpoints = {
     default: 4,
@@ -45,14 +42,55 @@ export default function ValidRecipes({ recipes }) {
     900: 2,
   };
 
+  useEffect(async () => {
+    if (ingredients?.length > 0) {
+      const newRecipes = await axios
+        .get(
+          `http://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
+            "_"
+          )}`
+        )
+        .then((res) => {
+          setLoading(false);
+          return res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      setRecipes(newRecipes);
+    }
+    setLoading(false);
+  }, []);
+
   const hasValidRecipes = Array.isArray(recipes);
+
+  const LoadingRecipe = () => {
+    return (
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <Skeleton variant="rect" animation="wave" height={200} />
+        </Grid>
+        <Grid item xs={6}>
+          <Skeleton variant="rect" animation="wave" height={200} />
+        </Grid>
+        <Grid item xs={6}>
+          <Skeleton variant="rect" animation="wave" height={200} />
+        </Grid>
+        <Grid item xs={6}>
+          <Skeleton variant="rect" animation="wave" height={200} />
+        </Grid>
+      </Grid>
+    );
+  };
 
   return (
     <Layout title="Recipes you can make...">
       <Grid container justify="space-evenly" alignItems="center">
         <Grid item>
           <Typography className={classes.title} variant="h1" gutterBottom>
-            {hasValidRecipes
+            {loading
+              ? "Loading..."
+              : hasValidRecipes
               ? `Recipes you can make...`
               : `No recipes found :(`}
           </Typography>
@@ -67,7 +105,9 @@ export default function ValidRecipes({ recipes }) {
       </Grid>
 
       <Container style={{ marginTop: 20 }}>
-        {hasValidRecipes ? (
+        {loading ? (
+          <LoadingRecipe />
+        ) : hasValidRecipes ? (
           <Masonry
             breakpointCols={breakpoints}
             className="my-masonry-grid"
@@ -90,7 +130,3 @@ export default function ValidRecipes({ recipes }) {
     </Layout>
   );
 }
-
-ValidRecipes.propTypes = {
-  recipes: PropTypes.array.isRequired,
-};
