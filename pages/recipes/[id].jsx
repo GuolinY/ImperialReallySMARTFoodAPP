@@ -148,7 +148,11 @@ export default function Recipe({ recipe }) {
           <List component="ol">
             {recipe.method.split("\n").map((step, i) => (
               <ListItem key={i}>
-                <ListItemText key={i} primary={step} />
+                <ListItemText
+                  key={i}
+                  primary={step}
+                  primaryTypographyProps={{ paragraph: true }}
+                />
               </ListItem>
             ))}
           </List>
