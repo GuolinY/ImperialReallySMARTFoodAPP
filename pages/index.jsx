@@ -102,7 +102,7 @@ export default function Home() {
   };
 
   return (
-    <Layout title="A Really Smart Food App" home>
+    <Layout title="A Really Smart Food App" flex>
       <Grid container justify="center" alignItems="center">
         <Grid item xs={12}>
           <Typography variant="h1" className={classes.title} gutterBottom>

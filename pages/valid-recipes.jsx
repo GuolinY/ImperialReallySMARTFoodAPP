@@ -99,7 +99,6 @@ export default function ValidRecipes() {
           <BackButton
             href="/"
             message="Edit Ingredients"
-            ingredientList={router.query.ingredientList}
           />
         </Grid>
       </Grid>

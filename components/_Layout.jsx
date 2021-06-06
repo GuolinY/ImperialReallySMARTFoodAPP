@@ -10,8 +10,8 @@ import { Typography } from "@material-ui/core";
 
 export default function Layout({
   title = "A Really Smart Food App",
+  flex = false,
   children,
-  home,
 }) {
   const redirect = (url) => {
     console.log(url);
@@ -19,7 +19,7 @@ export default function Layout({
   };
 
   return (
-    <div className={styles.container}>
+    <div className={flex ? styles.flexContainer : styles.container}>
       <Head>
         <title>{title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -42,6 +42,7 @@ export default function Layout({
 }
 
 Layout.propTypes = {
-  title: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  flex: PropTypes.bool,
   children: PropTypes.any,
 };
