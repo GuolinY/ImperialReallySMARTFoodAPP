@@ -29,18 +29,16 @@ export default function RatingAndReviews({ recipe, size = "small" }) {
   const classes = useStyles();
 
   return (
-    <Link href={`/reviews/${recipe.id}`}>
-      <Typography variant="body1" className={classes.iconsAndText}>
-        <StyledRating
-          value={recipe.rating}
-          precision={0.5}
-          readOnly
-          name="Recipe Rating"
-          size={size}
-          icon={<LocalDiningIcon fontSize="inherit" />}
-        />
-        &nbsp;({recipe.no_reviews})
-      </Typography>
-    </Link>
+    <Typography variant="body1" className={classes.iconsAndText}>
+      <StyledRating
+        value={recipe.rating}
+        precision={0.5}
+        readOnly
+        name="Recipe Rating"
+        size={size}
+        icon={<LocalDiningIcon fontSize="inherit" />}
+      />
+      &nbsp;({recipe.no_reviews})
+    </Typography>
   );
 }

@@ -19,6 +19,7 @@ import WhatshotIcon from "@material-ui/icons/Whatshot";
 import Link from "next/link";
 import LocalDiningIcon from "@material-ui/icons/LocalDining";
 import RatingAndReviews from "./RatingAndReviews";
+import ReviewsModal from "./ReviewsModal";
 
 function secondsToHm(d) {
   d = Number(d);
@@ -67,7 +68,7 @@ export default function Tile(props) {
   const { recipe } = props;
 
   return (
-    <Card>
+    <Card variant="outlined">
       <CardHeader
         title={recipe.name}
         titleTypographyProps={{ variant: "h4" }}
@@ -108,9 +109,11 @@ export default function Tile(props) {
       </CardContent>
       <CardActions>
         <Link href={`/recipes/${recipe.id}`} passHref>
-          <Button>Learn More</Button>
+          <Button color="secondary" variant="contained">
+            Learn More
+          </Button>
         </Link>
-        <RatingAndReviews recipe={recipe} />
+        <ReviewsModal recipe={recipe} />
       </CardActions>
     </Card>
   );
