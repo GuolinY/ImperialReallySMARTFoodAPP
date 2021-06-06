@@ -25,5 +25,5 @@ export default function IngredientsProvider({ children }) {
 }
 
 IngredientsProvider.propTypes = {
-  children: PropTypes.elementType.isRequired,
+  children: PropTypes.object.isRequired,
 };
