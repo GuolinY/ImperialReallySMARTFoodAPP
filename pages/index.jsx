@@ -67,9 +67,6 @@ const useStyles = makeStyles((theme) => ({
   showRecipeButton: {
     marginBottom: "1rem",
   },
-  cardHeaderAction: {
-    marginTop: "0",
-  },
 }));
 
 export default function Home() {
@@ -160,10 +157,8 @@ export default function Home() {
             {ingredientList.map((ingredient, i) => (
               <Grid item xs={12} sm={6} md={3} key={i}>
                 <Card variant="outlined">
-                  <CardHeader
-                    title={ingredient}
-                    titleTypographyProps={{ variant: "h6", noWrap: true }}
-                    action={
+                  <CardContent>
+                    <Typography variant="h6" noWrap>
                       <IconButton
                         aria-label="delete ingredient"
                         onClick={(e) => handleRemoveIngredient(e, i)}
@@ -171,11 +166,9 @@ export default function Home() {
                       >
                         <DeleteOutlined />
                       </IconButton>
-                    }
-                    classes={{
-                      action: classes.cardHeaderAction,
-                    }}
-                  />
+                      {ingredient}
+                    </Typography>
+                  </CardContent>
                 </Card>
               </Grid>
             ))}
