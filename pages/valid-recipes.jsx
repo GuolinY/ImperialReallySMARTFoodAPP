@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
 import { Grid, Typography, Container } from "@material-ui/core";
@@ -8,8 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import BackButton from "../components/BackButton";
 import Masonry from "react-masonry-css";
 import axios from "axios";
-import { useIngredients, useIngredientsUpdate } from "../contexts/ingredients";
-import useSWR from "swr";
+import { useIngredients } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +32,9 @@ export default function ValidRecipes() {
   const classes = useStyles();
   const router = useRouter();
 
+  const ingredients = useIngredients();
   const [loading, setLoading] = useState(true);
+  const [recipes, setRecipes] = useState({ id: -1 });
 
   const breakpoints = {
     default: 4,
@@ -41,31 +42,41 @@ export default function ValidRecipes() {
     900: 2,
   };
 
-  const ingredients = useIngredients();
-  const fetcher = (url) =>
-    axios.get(url).then((res) => {
-      setLoading(false);
-      return res.data;
-    });
-  const { data, error } = useSWR(
-    `http://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
-      "_"
-    )}`,
-    fetcher
-  );
-  const recipes = data;
+  useEffect(async () => {
+    if (ingredients?.length > 0) {
+      const newRecipes = await axios
+        .get(
+          `http://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
+            "_"
+          )}`
+        )
+        .then((res) => {
+          setLoading(false);
+          return res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      setRecipes(newRecipes);
+    }
+    setLoading(false);
+  }, []);
+
   const hasValidRecipes = Array.isArray(recipes);
 
   const LoadingRecipe = () => {
     return (
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <Skeleton variant="rect" animation="wave" height={200} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <Skeleton variant="rect" animation="wave" height={200} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
+          <Skeleton variant="rect" animation="wave" height={200} />
+        </Grid>
+        <Grid item xs={6}>
           <Skeleton variant="rect" animation="wave" height={200} />
         </Grid>
       </Grid>

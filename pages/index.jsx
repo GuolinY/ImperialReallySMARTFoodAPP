@@ -17,6 +17,9 @@ import { useIngredients, useIngredientsUpdate } from "../contexts/ingredients";
 const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: "Abril Fatface",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 64,
+    },
   },
   root: {
     width: "100%",
@@ -126,10 +129,7 @@ export default function Home() {
           </Grid>
           {ingredients?.length > 0 && (
             <Grid className={classes.showRecipeButton} item>
-              <Link
-                href="/valid-recipes"
-                passHref
-              >
+              <Link href="/valid-recipes" passHref>
                 <Button variant="outlined">Show me recipes!</Button>
               </Link>
             </Grid>
