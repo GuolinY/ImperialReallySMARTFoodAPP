@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
 import { Grid, Typography, Container } from "@material-ui/core";
@@ -10,10 +10,14 @@ import Masonry from "react-masonry-css";
 import axios from "axios";
 import { useIngredients, useIngredientsUpdate } from "../contexts/ingredients";
 import useSWR from "swr";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: "Abril Fatface",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 72,
+    },
   },
   recipeTileContainer: {
     margin: 0,
@@ -25,10 +29,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export default function ValidRecipes() {
   const classes = useStyles();
   const router = useRouter();
+
+  const [loading, setLoading] = useState(true);
 
   const breakpoints = {
     default: 4,
@@ -37,22 +42,44 @@ export default function ValidRecipes() {
   };
 
   const ingredients = useIngredients();
-  const fetcher = (url) => axios.get(url).then((res) => res.data);
+  const fetcher = (url) =>
+    axios.get(url).then((res) => {
+      setLoading(false);
+      return res.data;
+    });
   const { data, error } = useSWR(
     `http://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
       "_"
     )}`,
     fetcher
   );
-  const recipes = data
+  const recipes = data;
   const hasValidRecipes = Array.isArray(recipes);
+
+  const LoadingRecipe = () => {
+    return (
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Skeleton variant="rect" animation="wave" height={200} />
+        </Grid>
+        <Grid item xs={12}>
+          <Skeleton variant="rect" animation="wave" height={200} />
+        </Grid>
+        <Grid item xs={12}>
+          <Skeleton variant="rect" animation="wave" height={200} />
+        </Grid>
+      </Grid>
+    );
+  };
 
   return (
     <Layout title="Recipes you can make...">
       <Grid container justify="space-evenly" alignItems="center">
         <Grid item>
           <Typography className={classes.title} variant="h1" gutterBottom>
-            {hasValidRecipes
+            {loading
+              ? "Loading..."
+              : hasValidRecipes
               ? `Recipes you can make...`
               : `No recipes found :(`}
           </Typography>
@@ -67,7 +94,9 @@ export default function ValidRecipes() {
       </Grid>
 
       <Container style={{ marginTop: 20 }}>
-        {hasValidRecipes ? (
+        {loading ? (
+          <LoadingRecipe />
+        ) : hasValidRecipes ? (
           <Masonry
             breakpointCols={breakpoints}
             className="my-masonry-grid"
