@@ -7,19 +7,19 @@ import {
   Typography,
   IconButton,
   Grid,
-  Paper,
   Card,
-  CardContent,
   CardHeader,
 } from "@material-ui/core";
-import ClearIcon from "@material-ui/icons/Clear";
 import Link from "next/link";
-import { Router, useRouter } from "next/router";
 import { DeleteOutlined } from "@material-ui/icons";
+import { useIngredients, useIngredientsUpdate } from "../contexts/ingredients";
 
 const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: "Abril Fatface",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 64,
+    },
   },
   root: {
     width: "100%",
@@ -71,16 +71,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
-  const router = useRouter();
 
   const KEYCODE_ENTER = 13;
 
   const [ingredientInput, setIngredientInput] = useState("");
-  const [ingredientList, setIngredientList] = useState(
-    router?.query?.ingredientList
-      ? router?.query?.ingredientList.split("_")
-      : []
-  );
+
+  const ingredients = useIngredients();
+  const setIngredients = useIngredientsUpdate();
 
   const handleIngredientInput = (e) => {
     setIngredientInput(e.target.value);
@@ -89,20 +86,20 @@ export default function Home() {
   const handleIngredientInputEntry = (e) => {
     if (e.keyCode == KEYCODE_ENTER) {
       if (ingredientInput) {
-        setIngredientList([...ingredientList, ingredientInput]);
+        setIngredients([...ingredients, ingredientInput]);
         setIngredientInput("");
       }
     }
   };
 
   const handleRemoveIngredient = (e, index) => {
-    const newIngredientList = ingredientList;
-    newIngredientList.splice(index, 1);
-    setIngredientList([...newIngredientList]);
+    const newIngredients = ingredients;
+    newIngredients.splice(index, 1);
+    setIngredients([...newIngredients]);
   };
 
   return (
-    <Layout title="A Really Smart Food App" home>
+    <Layout title="A Really Smart Food App" flex>
       <Grid container justify="center" alignItems="center">
         <Grid item xs={12}>
           <Typography variant="h1" className={classes.title} gutterBottom>
@@ -127,21 +124,15 @@ export default function Home() {
               className={classes.textField}
             />
           </Grid>
-          {ingredientList.length > 0 && (
+          {ingredients?.length > 0 && (
             <Grid className={classes.showRecipeButton} item>
-              <Link
-                href={{
-                  pathname: "/valid-recipes",
-                  query: { ingredientList: ingredientList.join("_") },
-                }}
-                passHref
-              >
+              <Link href="/valid-recipes" passHref>
                 <Button variant="outlined">Show me recipes!</Button>
               </Link>
             </Grid>
           )}
         </Grid>
-        {ingredientList.length > 0 && (
+        {ingredients?.length > 0 && (
           <Grid
             item
             container
@@ -154,7 +145,7 @@ export default function Home() {
             <Grid item className={classes.youHaveEntered} xs={12}>
               <Typography gutterBottom>You have entered:</Typography>
             </Grid>
-            {ingredientList.map((ingredient, i) => (
+            {ingredients.map((ingredient, i) => (
               <Grid item xs={12} sm={6} md={3} key={i}>
                 <Card variant="outlined">
                   <CardContent>
