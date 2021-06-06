@@ -105,13 +105,9 @@ export default function Recipe({ recipe }) {
         <Typography className={classes.title} variant="h2" gutterBottom>
           {recipe.name}
         </Typography>
-        <RatingAndReviews recipe={recipe} size='large' />
+        <RatingAndReviews recipe={recipe} size="large" />
       </div>
-      <Grid
-        container
-        spacing={10}
-        className={classes.container}
-      >
+      <Grid container spacing={10} className={classes.container}>
         <Grid
           item
           container
@@ -150,11 +146,8 @@ export default function Recipe({ recipe }) {
             Method
           </Typography>
           <List component="ol">
-            {recipe.method.split(". ").map((step, i) => (
+            {recipe.method.split("\n").map((step, i) => (
               <ListItem key={i}>
-                <ListItemIcon>
-                  <ArrowForwardIosIcon />
-                </ListItemIcon>
                 <ListItemText key={i} primary={step} />
               </ListItem>
             ))}
