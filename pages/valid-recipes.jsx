@@ -45,12 +45,16 @@ export default function ValidRecipes({ recipes }) {
     900: 2,
   };
 
+  const hasValidRecipes = Array.isArray(recipes);
+
   return (
     <Layout title="Recipes you can make...">
       <Grid container justify="space-evenly" alignItems="center">
         <Grid item>
           <Typography className={classes.title} variant="h1" gutterBottom>
-            Recipes you can make...
+            {hasValidRecipes
+              ? `Recipes you can make...`
+              : `No recipes found :(`}
           </Typography>
         </Grid>
         <Grid item>
@@ -62,22 +66,26 @@ export default function ValidRecipes({ recipes }) {
         </Grid>
       </Grid>
 
-      <Container>
-        <Masonry
-          breakpointCols={breakpoints}
-          className="my-masonry-grid"
-          columnClassName="my-masonry-grid_column"
-        >
-          {recipes.map((recipe, i) => (
-            <div key={recipe.id}>
-              <Tile
-                recipe={recipe}
-                ingredientList={router.query.ingredientList}
-                key={i}
-              />
-            </div>
-          ))}
-        </Masonry>
+      <Container style={{ marginTop: 20 }}>
+        {hasValidRecipes ? (
+          <Masonry
+            breakpointCols={breakpoints}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+          >
+            {recipes.map((recipe, i) => (
+              <div key={recipe.id}>
+                <Tile
+                  recipe={recipe}
+                  ingredientList={router.query.ingredientList}
+                  key={i}
+                />
+              </div>
+            ))}
+          </Masonry>
+        ) : (
+          `Unfortunately, we weren't able to find recipes for all your ingredients this time. Please try again with other ingredients.`
+        )}
       </Container>
     </Layout>
   );
