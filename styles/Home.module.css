@@ -7,6 +7,18 @@
   text-align: center;
 }
 
+.flexContainer {
+  min-height: 100vh;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+
 .main {
   padding: 5rem 0;
   flex: 1;
