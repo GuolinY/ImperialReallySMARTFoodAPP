@@ -151,7 +151,7 @@ export default function Home() {
             style={{ maxWidth: "60%" }}
             spacing={3}
           >
-            <Grid item className={classes.youHaveEntered}>
+            <Grid item className={classes.youHaveEntered} xs={12}>
               <Typography gutterBottom>You have entered:</Typography>
             </Grid>
             {ingredientList.map((ingredient, i) => (
