@@ -108,7 +108,7 @@ export default function Home() {
   }, [loading]);
 
   return (
-    <Layout title="A Really Smart Food App" flex>
+    <Layout title="A Really Smart Food App" flex home>
       <Grid container justify="center" alignItems="center">
         <Link href="/login">Login</Link>
         <Grid item xs={12}>

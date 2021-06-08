@@ -93,7 +93,7 @@ export default function Recipe({ recipe }) {
   console.log(recipe);
 
   return (
-    <Layout title={recipe.name}>
+    <Layout title={recipe.name} recipe>
       <BackButton
         href="/valid-recipes"
         message="Back to recipes"
@@ -163,10 +163,7 @@ export default function Recipe({ recipe }) {
           </List>
         </Grid>
         <Grid item xs={12}>
-          <BackButton
-            href="/"
-            message="Edit ingredients"
-          />
+          <BackButton href="/" message="Edit ingredients" />
         </Grid>
       </Grid>
     </Layout>
