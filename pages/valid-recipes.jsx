@@ -84,7 +84,7 @@ export default function ValidRecipes() {
   };
 
   return (
-    <Layout title="Recipes you can make...">
+    <Layout title="Recipes you can make..." validRecipes>
       <Grid container justify="space-evenly" alignItems="center">
         <Grid item>
           <Typography className={classes.title} variant="h1" gutterBottom>
@@ -96,10 +96,7 @@ export default function ValidRecipes() {
           </Typography>
         </Grid>
         <Grid item>
-          <BackButton
-            href="/"
-            message="Edit Ingredients"
-          />
+          <BackButton href="/" message="Edit Ingredients" />
         </Grid>
       </Grid>
 

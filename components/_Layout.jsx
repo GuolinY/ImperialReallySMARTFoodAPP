@@ -7,15 +7,82 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useRouter } from "next/router";
 import { Typography } from "@material-ui/core";
+import clsx from "clsx";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Divider from "@material-ui/core/Divider";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import PersonIcon from "@material-ui/icons/Person";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+
+const drawerWidth = 240;
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
+  hide: {
+    display: "none",
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: "nowrap",
+  },
+  drawerOpen: {
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerClose: {
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: "hidden",
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up("sm")]: {
+      width: theme.spacing(9) + 1,
+    },
+  },
+  toolbar: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+  },
+}));
 
 export default function Layout({
   title = "A Really Smart Food App",
   flex = false,
   children,
+  home,
+  validRecipes,
+  recipe,
 }) {
-  const redirect = (url) => {
-    console.log(url);
-    window.location = url;
+  const classes = useStyles();
+  const theme = useTheme();
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -30,6 +97,61 @@ export default function Layout({
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
       </Head>
+
+      <Drawer
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          }),
+        }}
+      >
+        <div className={classes.toolbar}>
+          <IconButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          <ListItem button component="a" href="/login">
+            <ListItemIcon>
+              <PersonIcon />
+            </ListItemIcon>
+            <ListItemText primary="Login" />
+          </ListItem>
+
+          <ListItem button divider component="a" href="/new-recipe">
+            <ListItemIcon>
+              <AddCircleOutlineIcon />
+            </ListItemIcon>
+            <ListItemText primary="New Recipe" />
+          </ListItem>
+
+          <ListItem button disabled={home} component="a" href="/">
+            <ListItemIcon>
+              <ChevronLeftIcon />
+            </ListItemIcon>
+            <ListItemText primary="Back to Ingredients" />
+          </ListItem>
+
+          <ListItem
+            button
+            disabled={!recipe}
+            component="a"
+            href="/valid-recipes"
+          >
+            <ListItemIcon>
+              <ChevronLeftIcon />
+            </ListItemIcon>
+            <ListItemText primary="Back to Recipes" />
+          </ListItem>
+        </List>
+      </Drawer>
 
       <main className={styles.main}>{children}</main>
       {/* <footer className={styles.footer}>
