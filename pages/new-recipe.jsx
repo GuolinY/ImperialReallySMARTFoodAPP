@@ -59,7 +59,7 @@ export default function NewRecipe() {
     ingredients: ingredientList.split(","),
     method: method,
     time: hMToS(time),
-    difficulty: difficulty == "easy" ? 1 : difficulty == "medium" ? 2 : 3,
+    difficulty: parseInt(difficulty),
     halal: checked.halal,
     vegetarian: checked.vegetarian,
     vegan: checked.vegan,
@@ -176,17 +176,17 @@ export default function NewRecipe() {
                   row
                 >
                   <FormControlLabel
-                    value="easy"
+                    value="1"
                     control={<Radio />}
                     label="Easy"
                   />
                   <FormControlLabel
-                    value="medium"
+                    value="2"
                     control={<Radio />}
                     label="Medium"
                   />
                   <FormControlLabel
-                    value="hard"
+                    value="3"
                     control={<Radio />}
                     label="Hard"
                   />
