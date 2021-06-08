@@ -85,20 +85,13 @@ export default function ValidRecipes() {
 
   return (
     <Layout title="Recipes you can make..." validRecipes>
-      <Grid container justify="space-evenly" alignItems="center">
-        <Grid item>
-          <Typography className={classes.title} variant="h1" gutterBottom>
-            {loading
-              ? "Loading..."
-              : hasValidRecipes
-              ? `Recipes you can make...`
-              : `No recipes found :(`}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <BackButton href="/" message="Edit Ingredients" />
-        </Grid>
-      </Grid>
+      <Typography className={classes.title} variant="h1" gutterBottom>
+        {loading
+          ? "Loading..."
+          : hasValidRecipes
+          ? `Recipes you can make...`
+          : `No recipes found :(`}
+      </Typography>
 
       <Container style={{ marginTop: 20 }}>
         {loading ? (

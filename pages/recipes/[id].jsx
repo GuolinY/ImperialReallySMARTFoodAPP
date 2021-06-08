@@ -94,11 +94,6 @@ export default function Recipe({ recipe }) {
 
   return (
     <Layout title={recipe.name} recipe>
-      <BackButton
-        href="/valid-recipes"
-        message="Back to recipes"
-        style={{ marginBottom: 16 }}
-      />
       <div>
         <Image
           src={recipe.image_link}
@@ -161,9 +156,6 @@ export default function Recipe({ recipe }) {
               </ListItem>
             ))}
           </List>
-        </Grid>
-        <Grid item xs={12}>
-          <BackButton href="/" message="Edit ingredients" />
         </Grid>
       </Grid>
     </Layout>

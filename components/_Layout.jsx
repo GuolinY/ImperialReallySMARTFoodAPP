@@ -71,6 +71,7 @@ export default function Layout({
   home,
   validRecipes,
   recipe,
+  other,
 }) {
   const classes = useStyles();
   const theme = useTheme();
@@ -136,7 +137,7 @@ export default function Layout({
             <ListItemIcon>
               <ChevronLeftIcon />
             </ListItemIcon>
-            <ListItemText primary="Back to Ingredients" />
+            <ListItemText primary={other ? "Home" : "Back to Ingredients"} />
           </ListItem>
 
           <ListItem
