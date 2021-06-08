@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
-import { Grid, Typography, Container } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  Container,
+  Button,
+  TextField,
+} from "@material-ui/core";
 import Tile from "../components/Tile";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +17,8 @@ import Masonry from "react-masonry-css";
 import axios from "axios";
 import { useIngredients } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -83,6 +92,61 @@ export default function ValidRecipes() {
     );
   };
 
+  const validationSchema = yup.object({
+    email: yup
+      .string("Enter your email")
+      .email("Enter a valid email")
+      .required("Email is required"),
+    password: yup
+      .string("Enter your password")
+      .min(8, "Password should be of minimum 8 characters length")
+      .required("Password is required"),
+  });
+
+  const Filter = () => {
+    const formik = useFormik({
+      initialValues: {
+        email: "foobar@example.com",
+        password: "foobar",
+      },
+      validationSchema: validationSchema,
+      onSubmit: (values) => {
+        alert(JSON.stringify(values, null, 2));
+      },
+    });
+
+    return (
+      <div>
+        <form onSubmit={formik.handleSubmit}>
+          <TextField
+            fullWidth
+            id="email"
+            name="email"
+            label="Email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+          />
+          <TextField
+            fullWidth
+            id="password"
+            name="password"
+            label="Password"
+            type="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+          />
+          <Button color="primary" variant="contained" fullWidth type="submit">
+            Submit
+          </Button>
+        </form>
+      </div>
+    );
+  };
+
   return (
     <Layout title="Recipes you can make...">
       <Grid container justify="space-evenly" alignItems="center">
@@ -96,13 +160,10 @@ export default function ValidRecipes() {
           </Typography>
         </Grid>
         <Grid item>
-          <BackButton
-            href="/"
-            message="Edit Ingredients"
-          />
+          <BackButton href="/" message="Edit Ingredients" />
         </Grid>
       </Grid>
-
+      <Filter />
       <Container style={{ marginTop: 20 }}>
         {loading ? (
           <LoadingRecipe />
