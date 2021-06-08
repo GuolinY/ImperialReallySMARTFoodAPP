@@ -8,6 +8,11 @@ import {
   Container,
   Button,
   TextField,
+  Slider,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  CheckboxIcon,
 } from "@material-ui/core";
 import Tile from "../components/Tile";
 import { useRouter } from "next/router";
@@ -17,7 +22,7 @@ import Masonry from "react-masonry-css";
 import axios from "axios";
 import { useIngredients } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { useFormik } from "formik";
+import { useFormik, Form, Formik, Field } from "formik";
 import * as yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +36,13 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     width: "90%",
     maxWidth: theme.spacing(180),
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
+  },
+  filter: {
+    width: "80%",
+    maxWidth: theme.spacing(60),
     [theme.breakpoints.down("xs")]: {
       width: "100%",
     },
@@ -92,58 +104,224 @@ export default function ValidRecipes() {
     );
   };
 
-  const validationSchema = yup.object({
-    email: yup
-      .string("Enter your email")
-      .email("Enter a valid email")
-      .required("Email is required"),
-    password: yup
-      .string("Enter your password")
-      .min(8, "Password should be of minimum 8 characters length")
-      .required("Password is required"),
-  });
+  // const validationSchema = yup.object({
+  //   email: yup
+  //     .string("Enter your email")
+  //     .email("Enter a valid email")
+  //     .required("Email is required"),
+  //   password: yup
+  //     .string("Enter your password")
+  //     .min(8, "Password should be of minimum 8 characters length")
+  //     .required("Password is required"),
+  // });
+
+  //* Filter on:
+  // Nutrition:
+  //   carbs,
+  //   fats,
+  //   protein,
+  //   calories,
+  // halal, vegan, vegetarian, gluten_free
+  // cooking_time,
+  // rating,
+  // difficulty,
 
   const Filter = () => {
-    const formik = useFormik({
-      initialValues: {
-        email: "foobar@example.com",
-        password: "foobar",
+    // const formik = useFormik({
+    //   initialValues: {
+    //     calories: [0, 100],
+    //     carbs: [0, 100],
+    //     protein: [0, 100],
+    //     fats: [0, 100],
+    //     halal: false,
+    //     vegan: false,
+    //     vegetarian: false,
+    //     gluten_free: false,
+    //     cooking_time: [0, 100],
+    //     // rating: 0,
+    //     // difficulty: 0,
+    //   },
+    //   // validationSchema: validationSchema,
+    //   onSubmit: (values) => {
+    //     console.log(JSON.stringify(values, null, 2));
+    //   },
+    // });
+
+    const [value, setValue] = React.useState([20, 37]);
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
+    };
+
+    const time_marks = [
+      {
+        value: 0,
+        label: "0m",
       },
-      validationSchema: validationSchema,
-      onSubmit: (values) => {
-        alert(JSON.stringify(values, null, 2));
+      {
+        value: 15,
+        label: "15m",
       },
-    });
+      {
+        value: 30,
+        label: "30m",
+      },
+      {
+        value: 45,
+        label: "45m",
+      },
+      {
+        value: 60,
+        label: "1h",
+      },
+      {
+        value: 90,
+        label: "2h",
+        scaledValue: 90,
+      },
+      {
+        value: 120,
+        label: "3h",
+      },
+      {
+        value: 150,
+        label: "Ꝏ",
+      },
+    ];
 
     return (
-      <div>
-        <form onSubmit={formik.handleSubmit}>
-          <TextField
-            fullWidth
-            id="email"
-            name="email"
-            label="Email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-          <TextField
-            fullWidth
-            id="password"
-            name="password"
-            label="Password"
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-          />
-          <Button color="primary" variant="contained" fullWidth type="submit">
-            Submit
-          </Button>
-        </form>
-      </div>
+      <Formik
+        initialValues={{
+          calories: [0, 5000],
+          carbs: [0, 500],
+          protein: [0, 500],
+          fats: [0, 500],
+          cooking_time: [0, 500],
+          halal: false,
+          vegan: false,
+          vegetarian: false,
+          gluten_free: false,
+          // rating: 0,
+          // difficulty: 0,
+        }}
+        onSubmit={(values) => {
+          console.log(JSON.stringify(values, null, 2));
+        }}
+      >
+        {({
+          submitForm,
+          isSubmitting,
+          handleSubmit,
+          handleChange,
+          setFieldValue,
+          touched,
+          errors,
+          values,
+        }) => (
+          <Form onSubmit={handleSubmit} className={classes.filter}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography id="calorie-slider" gutterBottom>
+                  Calories
+                </Typography>
+                <Slider
+                  id="calories"
+                  name="calories"
+                  min={0}
+                  step={10}
+                  max={5000}
+                  value={values.calories}
+                  onChange={(event, value) => setFieldValue("calories", value)}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(val) => {
+                    return val < 5000 ? val : "Ꝏ";
+                  }}
+                  aria-labelledby="calorie-slider"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography id="carbohydrates-slider" gutterBottom>
+                  Carbohydrates
+                </Typography>
+                <Slider
+                  id="carbohydrates"
+                  name="carbohydrates"
+                  min={0}
+                  step={5}
+                  max={500}
+                  value={values.carbs}
+                  onChange={(event, value) => setFieldValue("carbs", value)}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(val) => {
+                    return val < 500 ? `${val}g` : "Ꝏ";
+                  }}
+                  aria-labelledby="carbohydrates-slider"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography id="protein-slider" gutterBottom>
+                  Protein
+                </Typography>
+                <Slider
+                  id="protein"
+                  name="protein"
+                  min={0}
+                  step={5}
+                  max={500}
+                  value={values.protein}
+                  onChange={(event, value) => setFieldValue("protein", value)}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(val) => {
+                    return val < 500 ? `${val}g` : "Ꝏ";
+                  }}
+                  aria-labelledby="protein-slider"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography id="fats-slider" gutterBottom>
+                  Fats
+                </Typography>
+                <Slider
+                  id="fats"
+                  name="fats"
+                  min={0}
+                  step={5}
+                  max={500}
+                  value={values.fats}
+                  onChange={(event, value) => setFieldValue("fats", value)}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(val) => {
+                    return val < 500 ? `${val}g` : "Ꝏ";
+                  }}
+                  aria-labelledby="fats-slider"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography id="discrete-slider-restrict" gutterBottom>
+                  Cooking time
+                </Typography>
+                <Slider
+                  defaultValue={[0, 150]}
+                  min={0}
+                  max={150}
+                  aria-labelledby="prep-time-slider"
+                  step={null}
+                  onChange={(event, value) => {
+                    setFieldValue(
+                      "cooking_time",
+                      value.map((x) => (x > 60 ? (x == 90 ? 120 : 180) : x))
+                    );
+                  }}
+                  valueLabelDisplay="off"
+                  marks={time_marks}
+                />
+              </Grid>
+            </Grid>
+            <Button color="primary" variant="contained" fullWidth type="submit">
+              Submit
+            </Button>
+          </Form>
+        )}
+      </Formik>
     );
   };
 
