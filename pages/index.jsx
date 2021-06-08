@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { signIn, signOut, useSession } from "next-auth/client";
 import { makeStyles } from "@material-ui/core/styles";
 import Layout from "../components/_Layout";
 import {
@@ -79,6 +80,11 @@ export default function Home() {
   const ingredients = useIngredients();
   const setIngredients = useIngredientsUpdate();
 
+  const [session, loading] = useSession();
+  if (!loading) {
+    console.log(session);
+  }
+
   const handleIngredientInput = (e) => {
     setIngredientInput(e.target.value);
   };
@@ -101,6 +107,7 @@ export default function Home() {
   return (
     <Layout title="A Really Smart Food App" flex>
       <Grid container justify="center" alignItems="center">
+        <Link href="/login">Login</Link>
         <Grid item xs={12}>
           <Typography variant="h1" className={classes.title} gutterBottom>
             A Really Smart Food App

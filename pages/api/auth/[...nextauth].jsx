@@ -8,12 +8,7 @@ export const refreshToken = async function (refreshToken) {
   try {
     const response = await axios.post(
       // "http://localhost:8000/api/auth/token/refresh/",
-      makeUrl(
-        process.env.BACKEND_API_BASE,
-        "auth",
-        "token",
-        "refresh"
-      ),
+      makeUrl(process.env.BACKEND_API_BASE, "auth", "token", "refresh"),
       {
         refresh: refreshToken,
       }
@@ -36,29 +31,55 @@ export default NextAuth({
   ],
   callbacks: {
     async signIn(user, account, profile) {
+      console.log("SIGN IN");
+      console.log(user);
+      console.log(account);
+      console.log(profile);
       return true;
     },
 
     async jwt(token, user, account, profile, isNewUser) {
+      console.log("JWT");
+      console.log(token);
+      console.log(user);
+      console.log(account);
+      console.log(profile);
+      console.log(isNewUser);
       return token;
     },
 
     async session(session, user) {
+      console.log("SESSION");
+      console.log(session);
+      console.log(user);
       return session;
     },
   },
 });
 
+/*
+{
+  username:
+  display_name: 
+  identities: [
+    provider:
+    id:
+  ]
+  avatar_url: 
+  date_created: 
+}
+*/
+
 // export default NextAuth({
-//   // secret: process.env.SESSION_SECRET,
-//   // session: {
-//   //   jwt: true,
-//   //   maxAge: 24 * 60 * 60,
-//   // },
-//   // jwt: {
-//   //   secret: process.env.JWT_SECRET,
-//   // },
-//   // debug: process.env.NODE_ENV === "development",
+//   secret: process.env.SESSION_SECRET,
+//   session: {
+//     jwt: true,
+//     maxAge: 24 * 60 * 60,
+//   },
+//   jwt: {
+//     secret: process.env.JWT_SECRET,
+//   },
+//   debug: process.env.NODE_ENV === "development",
 //   providers: [
 //     Providers.Google({
 //       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -73,7 +94,7 @@ export default NextAuth({
 //         // POST request to backend
 //         try {
 //           const res = await axios.post(
-//             "http://smart-food-app-backend.herokuapp.com/", //TODO update with actual endpoint
+//             "http://smart-food-app-backend.herokuapp.com/api/login/google", //TODO update with actual endpoint
 //             {
 //               access_token: accessToken,
 //               id_token: idToken,
