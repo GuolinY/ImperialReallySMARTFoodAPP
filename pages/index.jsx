@@ -8,7 +8,7 @@ import {
   IconButton,
   Grid,
   Card,
-  CardHeader,
+  CardContent,
 } from "@material-ui/core";
 import Link from "next/link";
 import { DeleteOutlined } from "@material-ui/icons";
