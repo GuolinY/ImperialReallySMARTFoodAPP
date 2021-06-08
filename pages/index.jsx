@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/client";
 import { makeStyles } from "@material-ui/core/styles";
 import Layout from "../components/_Layout";
@@ -9,7 +9,7 @@ import {
   IconButton,
   Grid,
   Card,
-  CardHeader,
+  CardContent,
 } from "@material-ui/core";
 import Link from "next/link";
 import { DeleteOutlined } from "@material-ui/icons";
@@ -81,9 +81,6 @@ export default function Home() {
   const setIngredients = useIngredientsUpdate();
 
   const [session, loading] = useSession();
-  if (!loading) {
-    console.log(session);
-  }
 
   const handleIngredientInput = (e) => {
     setIngredientInput(e.target.value);
@@ -103,6 +100,12 @@ export default function Home() {
     newIngredients.splice(index, 1);
     setIngredients([...newIngredients]);
   };
+
+  useEffect(() => {
+    if (!loading) {
+      console.log(session);
+    }
+  }, [loading]);
 
   return (
     <Layout title="A Really Smart Food App" flex>

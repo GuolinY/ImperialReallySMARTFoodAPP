@@ -8,8 +8,6 @@ import {
   Typography,
   IconButton,
   Grid,
-  Card,
-  CardHeader,
 } from "@material-ui/core";
 import Link from "next/link";
 
