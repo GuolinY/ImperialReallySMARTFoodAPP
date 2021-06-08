@@ -2,28 +2,33 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
+import { useRouter } from "next/router";
 import {
+  Box,
   Grid,
   Typography,
   Container,
   Button,
   TextField,
   Slider,
+  FormLabel,
   FormGroup,
   FormControlLabel,
   Checkbox,
   CheckboxIcon,
+  Radio,
+  RadioGroup,
 } from "@material-ui/core";
-import Tile from "../components/Tile";
-import { useRouter } from "next/router";
+import Rating from "@material-ui/lab/Rating";
 import { makeStyles } from "@material-ui/core/styles";
-import BackButton from "../components/BackButton";
 import Masonry from "react-masonry-css";
 import axios from "axios";
 import { useIngredients } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useFormik, Form, Formik, Field } from "formik";
 import * as yup from "yup";
+import BackButton from "../components/BackButton";
+import Tile from "../components/Tile";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -104,54 +109,7 @@ export default function ValidRecipes() {
     );
   };
 
-  // const validationSchema = yup.object({
-  //   email: yup
-  //     .string("Enter your email")
-  //     .email("Enter a valid email")
-  //     .required("Email is required"),
-  //   password: yup
-  //     .string("Enter your password")
-  //     .min(8, "Password should be of minimum 8 characters length")
-  //     .required("Password is required"),
-  // });
-
-  //* Filter on:
-  // Nutrition:
-  //   carbs,
-  //   fats,
-  //   protein,
-  //   calories,
-  // halal, vegan, vegetarian, gluten_free
-  // cooking_time,
-  // rating,
-  // difficulty,
-
   const Filter = () => {
-    // const formik = useFormik({
-    //   initialValues: {
-    //     calories: [0, 100],
-    //     carbs: [0, 100],
-    //     protein: [0, 100],
-    //     fats: [0, 100],
-    //     halal: false,
-    //     vegan: false,
-    //     vegetarian: false,
-    //     gluten_free: false,
-    //     cooking_time: [0, 100],
-    //     // rating: 0,
-    //     // difficulty: 0,
-    //   },
-    //   // validationSchema: validationSchema,
-    //   onSubmit: (values) => {
-    //     console.log(JSON.stringify(values, null, 2));
-    //   },
-    // });
-
-    const [value, setValue] = React.useState([20, 37]);
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };
-
     const time_marks = [
       {
         value: 0,
@@ -188,6 +146,19 @@ export default function ValidRecipes() {
       },
     ];
 
+    const [state, setState] = React.useState({
+      checkedA: true,
+      checkedB: true,
+      checkedF: true,
+      checkedG: true,
+    });
+
+    const handleChange = (event) => {
+      setState({ ...state, [event.target.name]: event.target.checked });
+    };
+
+    const [value, setValue] = React.useState(2);
+
     return (
       <Formik
         initialValues={{
@@ -200,8 +171,8 @@ export default function ValidRecipes() {
           vegan: false,
           vegetarian: false,
           gluten_free: false,
-          // rating: 0,
-          // difficulty: 0,
+          min_rating: 0,
+          difficulty: 0,
         }}
         onSubmit={(values) => {
           console.log(JSON.stringify(values, null, 2));
@@ -296,6 +267,73 @@ export default function ValidRecipes() {
                 />
               </Grid>
               <Grid item xs={12}>
+                <Typography id="fats-slider" gutterBottom>
+                  Dietary requirements
+                </Typography>
+                <FormGroup row style={{ justifyContent: "center" }}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.halal}
+                        onChange={(event) =>
+                          setFieldValue("halal", event.target.checked)
+                        }
+                        name="halal"
+                      />
+                    }
+                    label="Halal"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.kosher}
+                        onChange={(event) =>
+                          setFieldValue("kosher", event.target.checked)
+                        }
+                        name="kosher"
+                      />
+                    }
+                    label="Kosher"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.vegan}
+                        onChange={(event) =>
+                          setFieldValue("vegan", event.target.checked)
+                        }
+                        name="vegan"
+                      />
+                    }
+                    label="Vegan"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.vegetarian}
+                        onChange={(event) =>
+                          setFieldValue("vegetarian", event.target.checked)
+                        }
+                        name="vegetarian"
+                      />
+                    }
+                    label="Vegetarian"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.gluten_free}
+                        onChange={(event) =>
+                          setFieldValue("gluten_free", event.target.checked)
+                        }
+                        name="gluten_free"
+                      />
+                    }
+                    label="Gluten"
+                  />
+                </FormGroup>
+              </Grid>
+              <Grid item xs={12}>
                 <Typography id="discrete-slider-restrict" gutterBottom>
                   Cooking time
                 </Typography>
@@ -315,8 +353,33 @@ export default function ValidRecipes() {
                   marks={time_marks}
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography component="legend">
+                  {values.min_rating == 5
+                    ? "5 stars only"
+                    : values.min_rating == 0
+                    ? "All ratings"
+                    : `${values.min_rating}+ stars`}
+                </Typography>
+                <Rating
+                  name="simple-controlled"
+                  value={values.min_rating}
+                  onChange={(e, value) => {
+                    setFieldValue("min_rating", value || 0);
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography component="legend">Difficulty</Typography>
+              </Grid>
             </Grid>
-            <Button color="primary" variant="contained" fullWidth type="submit">
+            <Button
+              color="primary"
+              variant="contained"
+              fullWidth
+              type="submit"
+              style={{ marginTop: 16 }}
+            >
               Submit
             </Button>
           </Form>
