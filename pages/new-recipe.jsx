@@ -78,7 +78,7 @@ export default function NewRecipe() {
   };
 
   return (
-    <Layout title="New Recipe">
+    <Layout title="New Recipe" other>
       <Typography
         variant="h1"
         style={{ fontFamily: "Abril Fatface" }}
