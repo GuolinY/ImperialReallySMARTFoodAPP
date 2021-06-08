@@ -24,7 +24,7 @@ export default function NewRecipe() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(JSON.stringify(data));
+    console.log(data);
     axios
       .post("http://smart-food-app-backend.herokuapp.com/recipes/submit", data)
       .then((result) => console.log(result));
@@ -35,11 +35,11 @@ export default function NewRecipe() {
   };
 
   const [checked, setChecked] = useState({
-    checkedVegan: false,
-    checkedVegetarian: false,
-    checkedKosher: false,
-    checkedGluten: false,
-    checkedHalal: false,
+    vegan: false,
+    vegetarian: false,
+    kosher: false,
+    gluten_free: false,
+    halal: false,
   });
 
   const [recipeName, setRecipeName] = useState("");
@@ -53,13 +53,18 @@ export default function NewRecipe() {
   const [difficulty, setDifficulty] = useState(0);
 
   const data = {
-    recipeName: recipeName,
+    name: recipeName,
     image_link:
       "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
     ingredients: ingredientList.split(","),
     method: method,
     time: hMToS(time),
     difficulty: difficulty == "easy" ? 1 : difficulty == "medium" ? 2 : 3,
+    halal: checked.halal,
+    vegetarian: checked.vegetarian,
+    vegan: checked.vegan,
+    gluten_free: checked.gluten_free,
+    kosher: checked.kosher,
     nutrition: {
       calories: calories,
       carbohydrates: carbs,
@@ -123,9 +128,9 @@ export default function NewRecipe() {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={checked.checkedVegan}
+                      checked={checked.vegan}
                       onChange={handleCheckbox}
-                      name="checkedVegan"
+                      name="vegan"
                     />
                   }
                   label="Vegan"
@@ -133,9 +138,9 @@ export default function NewRecipe() {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={checked.checkedVegetarian}
+                      checked={checked.vegetarian}
                       onChange={handleCheckbox}
-                      name="checkedVegetarian"
+                      name="vegetarian"
                     />
                   }
                   label="Vegetarian"
@@ -143,9 +148,9 @@ export default function NewRecipe() {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={checked.checkedKosher}
+                      checked={checked.kosher}
                       onChange={handleCheckbox}
-                      name="checkedKosher"
+                      name="kosher"
                     />
                   }
                   label="Kosher"
@@ -153,9 +158,9 @@ export default function NewRecipe() {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={checked.checkedGluten}
+                      checked={checked.gluten_free}
                       onChange={handleCheckbox}
-                      name="checkedGluten"
+                      name="gluten_free"
                     />
                   }
                   label="Gluten-free"
