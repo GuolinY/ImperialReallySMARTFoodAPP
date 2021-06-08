@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/client";
 import { makeStyles } from "@material-ui/core/styles";
 import Layout from "../components/_Layout";
@@ -37,14 +37,27 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
   const classes = useStyles();
 
-  const [session, loading] = useSession();
-  if (!loading) {
-    console.log(session);
-  }
+  let [session, loading] = useSession();
 
   const handleDisplayNameCreation = () => {
     console.log("send post request to create display name");
-  }
+  };
+
+  const fetchSessionData = async () => {
+    console.log("fetching additional user data");
+    return { display_name: "bob" };
+  };
+
+  useEffect(async () => {
+    if (!loading) {
+      const additionalSessionData = await fetchSessionData();
+      session = { ...session, ...additionalSessionData };
+      if (!session?.display_name) {
+        console.log(session);
+        handleDisplayNameCreation();
+      }
+    }
+  }, [loading]);
 
   return (
     <Layout title="A Really Smart Food App" flex>
@@ -72,7 +85,8 @@ export default function Home() {
             {!loading && session && (
               <>
                 Signed in as{" "}
-                {session.username ? "username" : session.user.email} <br />
+                {session.display_name ? "display_name" : session.user.email}{" "}
+                <br />
                 <Button onClick={() => signOut()}>Sign out</Button>
                 {session.accessToken && <pre>User has access token</pre>}
               </>
@@ -83,11 +97,3 @@ export default function Home() {
     </Layout>
   );
 }
-
-// export default function Home() {
-//   const [session, loading] = useSession();
-
-//   return (
-
-//   );
-// }
