@@ -132,6 +132,8 @@ export default function ValidRecipes() {
 
   const onFilterSubmit = (values) => {
     console.log(values);
+    console.log("Parse values data")
+    console.log("Send axios get request and update recipes");
   };
 
   return (
@@ -189,7 +191,7 @@ export default function ValidRecipes() {
             padding: "24px",
           }}
         >
-          <RecipeFilter />
+          <RecipeFilter onSubmit={onFilterSubmit} />
         </DialogContent>
       </Dialog>
       <Container style={{ marginTop: 20 }}>
@@ -202,13 +204,11 @@ export default function ValidRecipes() {
             columnClassName="my-masonry-grid_column"
           >
             {recipes.map((recipe, i) => (
-              <div key={recipe.id}>
-                <Tile
-                  recipe={recipe}
-                  ingredientList={router.query.ingredientList}
-                  key={i}
-                />
-              </div>
+              <Tile
+                recipe={recipe}
+                ingredientList={router.query.ingredientList}
+                key={i}
+              />
             ))}
           </Masonry>
         ) : (

@@ -64,10 +64,10 @@ const StyledRating = withStyles({
 
 export default function Tile(props) {
   const classes = useStyles();
-  const { recipe } = props;
+  const { recipe, key } = props;
 
   return (
-    <Card>
+    <Card key={key}>
       <CardHeader
         title={recipe.name}
         titleTypographyProps={{ variant: "h4" }}
