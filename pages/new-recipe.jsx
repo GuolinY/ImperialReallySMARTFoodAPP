@@ -39,12 +39,10 @@ const validationSchema = yup.object({
     .required("Difficulty is required")
     .min(1, "Lowest difficulty is easy")
     .max(3, "Highest difficulty is hard"),
-  nutrition: yup.object().shape({
-    calories: yup.number().required("Number of calories is required"),
-    proteins: yup.number().required("Amount of protein is required"),
-    fats: yup.number().required("Amount of fats is required"),
-    carbohydrates: yup.number().required("Amount of carbohydrates is required"),
-  }),
+  calories: yup.number().required("Number of calories is required"),
+  proteins: yup.number().required("Amount of protein is required"),
+  fats: yup.number().required("Amount of fats is required"),
+  carbohydrates: yup.number().required("Amount of carbohydrates is required"),
 });
 
 export default function NewRecipe() {
@@ -85,12 +83,10 @@ export default function NewRecipe() {
           vegan: false,
           gluten_free: false,
           kosher: false,
-          nutrition: {
-            calories: 0,
-            carbohydrates: 0,
-            proteins: 0,
-            fats: 0,
-          },
+          calories: 0,
+          carbs: 0,
+          proteins: 0,
+          fats: 0,
         }}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
@@ -253,25 +249,20 @@ export default function NewRecipe() {
                 </Grid>
 
                 <Grid item container spacing={2}>
-                  {["calories", "carbohydrates", "proteins", "fats"].map(
-                    (x, i) => (
-                      <Grid item xs={6}>
-                        <TextField
-                          id={`nutrition[${x}]`}
-                          label={x.charAt(0).toUpperCase() + x.slice(1)}
-                          variant="outlined"
-                          fullWidth
-                          onChange={(e) =>
-                            setFieldValue(
-                              `nutrition[${x}]`,
-                              parseInt(e.target.value)
-                            )
-                          }
-                          value={values.nutrition[x]}
-                        />
-                      </Grid>
-                    )
-                  )}
+                  {["calories", "carbs", "proteins", "fats"].map((x, i) => (
+                    <Grid item xs={6}>
+                      <TextField
+                        id={x}
+                        label={x.charAt(0).toUpperCase() + x.slice(1)}
+                        variant="outlined"
+                        fullWidth
+                        onChange={(e) =>
+                          setFieldValue(x, parseInt(e.target.value))
+                        }
+                        value={values[x]}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
                 <Grid item>
                   <Button variant="contained" color="primary" type="submit">
