@@ -9,16 +9,17 @@
     "test": "jest"
   },
   "dependencies": {
-    "@material-ui/core": "^4.11.2",
+    "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
+    "@material-ui/pickers": "3.x.x",
     "axios": "^0.21.1",
-    "final-form": "^4.20.2",
-    "final-form-material-ui": "^0.3.0",
+    "formik": "^2.2.9",
     "identity-obj-proxy": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "next": "10.2.3",
     "next-auth": "^3.25.0",
+    "prop-types": "^15.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-final-form": "^6.5.3",
@@ -26,7 +27,8 @@
     "react-scripts": "^4.0.3",
     "swr": "^0.5.6",
     "typescript": "^4.3.2",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "^1.6.28",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
