@@ -52,6 +52,10 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     padding: theme.spacing(2, 3),
   },
+  filterSelect: {
+    justifyContent: "center",
+    maxWidth: theme.spacing(120),
+  },
 }));
 
 export default function ValidRecipes() {
@@ -61,7 +65,7 @@ export default function ValidRecipes() {
   const ingredients = useIngredients();
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState({ id: -1 });
-  const [openFilter, setOpenFilter] = useState(true);
+  const [openFilter, setOpenFilter] = useState(false);
 
   const breakpoints = {
     default: 4,
@@ -121,6 +125,14 @@ export default function ValidRecipes() {
           ? `Recipes you can make...`
           : `No recipes found :(`}
       </Typography>
+      <Grid container className={classes.filterSelect} spacing={2}>
+        <Grid item>
+          <Button onClick={() => setOpenFilter(true)}>Filter</Button>
+        </Grid>
+        <Grid item>
+          <Button>Sort by</Button>
+        </Grid>
+      </Grid>
       <Dialog
         open={openFilter}
         onClose={closeFilter}
@@ -137,6 +149,7 @@ export default function ValidRecipes() {
             justifyContent: "center",
             textAlign: "center",
             display: "flex",
+            padding: "24px",
           }}
         >
           <RecipeFilter />
