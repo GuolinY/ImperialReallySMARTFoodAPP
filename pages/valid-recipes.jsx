@@ -39,7 +39,8 @@ export default function ValidRecipes() {
   const breakpoints = {
     default: 4,
     1100: 3,
-    900: 2,
+    700: 2,
+    500: 1,
   };
 
   useEffect(async () => {
