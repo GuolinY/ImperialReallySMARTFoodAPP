@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { FieldArray, Form, Formik, Field } from "formik";
 import {
-  Divider,
   Button,
   TextField,
   IconButton,
@@ -178,6 +177,7 @@ export default function NewRecipe() {
                         "halal",
                       ].map((x, i) => (
                         <FormControlLabel
+                          key={i}
                           control={
                             <Checkbox
                               checked={values[x]}
@@ -205,6 +205,7 @@ export default function NewRecipe() {
                     >
                       {["easy", "medium", "hard"].map((x, i) => (
                         <FormControlLabel
+                          key={i}
                           name="difficulty"
                           value={i + 1}
                           control={<Radio />}
