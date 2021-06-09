@@ -3,7 +3,19 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
 import { useRouter } from "next/router";
-import { Grid, Typography, Container } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  Container,
+  Modal,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Button,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Masonry from "react-masonry-css";
 import axios from "axios";
@@ -34,6 +46,12 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
+  filterDialogTitle: {
+    display: "flex",
+    justifyContent: "space-between",
+    margin: 0,
+    padding: theme.spacing(2, 3),
+  },
 }));
 
 export default function ValidRecipes() {
@@ -43,6 +61,7 @@ export default function ValidRecipes() {
   const ingredients = useIngredients();
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState({ id: -1 });
+  const [openFilter, setOpenFilter] = useState(true);
 
   const breakpoints = {
     default: 4,
@@ -91,6 +110,8 @@ export default function ValidRecipes() {
     );
   };
 
+  const closeFilter = () => setOpenFilter(false);
+
   return (
     <Layout title="Recipes you can make..." validRecipes>
       <Typography className={classes.title} variant="h1" gutterBottom>
@@ -100,7 +121,27 @@ export default function ValidRecipes() {
           ? `Recipes you can make...`
           : `No recipes found :(`}
       </Typography>
-      <RecipeFilter />
+      <Dialog
+        open={openFilter}
+        onClose={closeFilter}
+        aria-labelledby="filter-modal"
+      >
+        <div id="form-dialog-title" className={classes.filterDialogTitle}>
+          <Typography variant="h6">Filter recipes</Typography>
+          <Button onClick={closeFilter} color="primary">
+            Cancel
+          </Button>
+        </div>
+        <DialogContent
+          style={{
+            justifyContent: "center",
+            textAlign: "center",
+            display: "flex",
+          }}
+        >
+          <RecipeFilter />
+        </DialogContent>
+      </Dialog>
       <Container style={{ marginTop: 20 }}>
         {loading ? (
           <LoadingRecipe />

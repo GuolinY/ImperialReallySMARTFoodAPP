@@ -267,7 +267,7 @@ export default function Filter({
                 marks={time_marks}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <Typography component="legend">
                 {values.min_rating == 5
                   ? "5 stars only"
@@ -283,7 +283,7 @@ export default function Filter({
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={8}>
               <Typography component="legend">Difficulty</Typography>
               <FormGroup row style={{ justifyContent: "center" }}>
                 <FormControlLabel
