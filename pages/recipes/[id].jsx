@@ -94,7 +94,7 @@ export default function Recipe({ recipe }) {
   console.log(recipe);
 
   return (
-    <Layout title={recipe.name}>
+    <Layout title={recipe.name} recipe>
       <div>
         <Image
           src={recipe.image_link}
@@ -147,12 +147,13 @@ export default function Recipe({ recipe }) {
             Method
           </Typography>
           <List component="ol">
-            {recipe.method.split(". ").map((step, i) => (
+            {recipe.method.split("\n").map((step, i) => (
               <ListItem key={i}>
-                <ListItemIcon>
-                  <ArrowForwardIosIcon />
-                </ListItemIcon>
-                <ListItemText key={i} primary={step} />
+                <ListItemText
+                  key={i}
+                  primary={step}
+                  primaryTypographyProps={{ paragraph: true }}
+                />
               </ListItem>
             ))}
           </List>
