@@ -129,9 +129,13 @@ export default function ValidRecipes() {
   const [sortBy, setSortBy] = React.useState("");
 
   const sortFunctions = {
+    rating: (first, second) => second.rating - first.rating,
     time_asc: (first, second) => first.cooking_time - second.cooking_time,
     time_desc: (first, second) => second.cooking_time - first.cooking_time,
-    rating: (first, second) => second.rating - first.rating,
+    kcal_asc: (first, second) =>
+      first.nutrition.calories - second.nutrition.calories,
+    kcal_desc: (first, second) =>
+      second.nutrition.calories - first.nutrition.calories,
   };
 
   const handleSelectSort = (event) => {
@@ -173,7 +177,9 @@ export default function ValidRecipes() {
         filters.difficulty[difficultyRating[recipe.difficulty]]
       );
     });
-
+    if (sortBy) {
+      newRecipes.sort(sortFunctions[sortBy]);
+    }
     setFilteredRecipes(newRecipes.length == 0 ? { id: -1 } : newRecipes);
     setOpenFilter(false);
   };
@@ -208,9 +214,11 @@ export default function ValidRecipes() {
                 value={sortBy}
                 onChange={handleSelectSort}
               >
+                <MenuItem value="rating">Rating</MenuItem>
                 <MenuItem value="time_asc">Time ascending</MenuItem>
                 <MenuItem value="time_desc">Time descending</MenuItem>
-                <MenuItem value="rating">Rating</MenuItem>
+                <MenuItem value="kcal_asc">KCal ascending</MenuItem>
+                <MenuItem value="kcal_desc">KCal descending</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -250,7 +258,6 @@ export default function ValidRecipes() {
             {filteredRecipes.map((recipe, i) => (
               <Tile
                 recipe={recipe}
-                ingredientList={router.query.ingredientList}
                 key={i}
               />
             ))}
