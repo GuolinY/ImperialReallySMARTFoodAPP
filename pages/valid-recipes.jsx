@@ -19,7 +19,9 @@ import {
   FormControl,
   MenuItem,
   Button,
+  IconButton,
 } from "@material-ui/core";
+import RestorePageIcon from "@material-ui/icons/RestorePage";
 import { makeStyles } from "@material-ui/core/styles";
 import Masonry from "react-masonry-css";
 import axios from "axios";
@@ -126,7 +128,15 @@ export default function ValidRecipes() {
 
   const closeFilter = () => setOpenFilter(false);
 
-  const [sortBy, setSortBy] = React.useState("");
+  const resetRecipeFilter = () => {
+    const newRecipes = [...recipes];
+    if (sortBy) {
+      newRecipes.sort(sortFunctions[sortBy]);
+    }
+    setFilteredRecipes(newRecipes);
+  };
+
+  const [sortBy, setSortBy] = useState("");
 
   const sortFunctions = {
     rating: (first, second) => second.rating - first.rating,
@@ -200,10 +210,13 @@ export default function ValidRecipes() {
           <Grid item xs={6}>
             <Button
               onClick={() => setOpenFilter(true)}
-              style={{ paddingTop: 22 }}
+              style={{ marginTop: 16 }}
             >
               Filter
             </Button>
+            <IconButton onClick={resetRecipeFilter} style={{ marginTop: 12 }}>
+              <RestorePageIcon />
+            </IconButton>
           </Grid>
           <Grid item xs={6}>
             <FormControl className={classes.formControl}>
@@ -256,10 +269,7 @@ export default function ValidRecipes() {
             columnClassName="my-masonry-grid_column"
           >
             {filteredRecipes.map((recipe, i) => (
-              <Tile
-                recipe={recipe}
-                key={i}
-              />
+              <Tile recipe={recipe} key={i} />
             ))}
           </Masonry>
         ) : hasValidRecipes ? (
