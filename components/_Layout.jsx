@@ -111,7 +111,7 @@ export default function Layout({
             <MenuIcon />
           </IconButton>
           <Typography
-            variant="h6"
+            variant="body1"
             style={{ fontFamily: "Abril Fatface" }}
             noWrap
           >
