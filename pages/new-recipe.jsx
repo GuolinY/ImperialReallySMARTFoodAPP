@@ -40,7 +40,7 @@ const validationSchema = yup.object({
     .min(1, "Lowest difficulty is easy")
     .max(3, "Highest difficulty is hard"),
   calories: yup.number().required("Number of calories is required"),
-  proteins: yup.number().required("Amount of protein is required"),
+  protein: yup.number().required("Amount of protein is required"),
   fats: yup.number().required("Amount of fats is required"),
   carbs: yup.number().required("Amount of carbohydrates is required"),
 });
@@ -85,7 +85,7 @@ export default function NewRecipe() {
           kosher: false,
           calories: 0,
           carbs: 0,
-          proteins: 0,
+          protein: 0,
           fats: 0,
         }}
         validationSchema={validationSchema}
@@ -249,7 +249,7 @@ export default function NewRecipe() {
                 </Grid>
 
                 <Grid item container spacing={2}>
-                  {["calories", "carbs", "proteins", "fats"].map((x, i) => (
+                  {["calories", "carbs", "protein", "fats"].map((x, i) => (
                     <Grid item xs={6}>
                       <TextField
                         id={x}
