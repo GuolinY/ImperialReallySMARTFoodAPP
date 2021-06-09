@@ -12,6 +12,7 @@ import {
   TextField,
   Slider,
   FormLabel,
+  FormControl,
   FormGroup,
   FormControlLabel,
   Checkbox,
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
   filter: {
     width: "80%",
-    maxWidth: theme.spacing(60),
+    maxWidth: theme.spacing(64),
     [theme.breakpoints.down("xs")]: {
       width: "100%",
     },
@@ -172,7 +173,11 @@ export default function ValidRecipes() {
           vegetarian: false,
           gluten_free: false,
           min_rating: 0,
-          difficulty: 0,
+          difficulty: {
+            easy: true,
+            medium: true,
+            hard: true,
+          },
         }}
         onSubmit={(values) => {
           console.log(JSON.stringify(values, null, 2));
@@ -371,6 +376,47 @@ export default function ValidRecipes() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography component="legend">Difficulty</Typography>
+                <FormGroup row style={{ justifyContent: "center" }}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.difficulty.easy}
+                        onChange={(event) =>
+                          setFieldValue("difficulty.easy", event.target.checked)
+                        }
+                        name="easy"
+                      />
+                    }
+                    label="Easy"
+                    labelPlacement="top"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.difficulty.medium}
+                        onChange={(event) =>
+                          setFieldValue("difficulty.medium", event.target.checked)
+                        }
+                        name="medium"
+                      />
+                    }
+                    label="Medium"
+                    labelPlacement="top"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values.difficulty.hard}
+                        onChange={(event) =>
+                          setFieldValue("difficulty.hard", event.target.checked)
+                        }
+                        name="hard"
+                      />
+                    }
+                    label="Hard"
+                    labelPlacement="top"
+                  />
+                </FormGroup>
               </Grid>
             </Grid>
             <Button
@@ -380,7 +426,7 @@ export default function ValidRecipes() {
               type="submit"
               style={{ marginTop: 16 }}
             >
-              Submit
+              Filter
             </Button>
           </Form>
         )}
