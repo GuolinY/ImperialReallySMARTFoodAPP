@@ -14,6 +14,10 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
+  InputLabel,
+  Select,
+  FormControl,
+  MenuItem,
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -55,6 +59,13 @@ const useStyles = makeStyles((theme) => ({
   filterSelect: {
     justifyContent: "center",
     maxWidth: theme.spacing(120),
+  },
+  formControl: {
+    // margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    // marginTop: theme.spacing(2),
   },
 }));
 
@@ -116,6 +127,13 @@ export default function ValidRecipes() {
 
   const closeFilter = () => setOpenFilter(false);
 
+  const [sortBy, setSortBy] = React.useState("");
+
+  const handleSelectSort = (event) => {
+    console.log(event.target.value);
+    setSortBy(event.target.value);
+  };
+
   return (
     <Layout title="Recipes you can make..." validRecipes>
       <Typography className={classes.title} variant="h1" gutterBottom>
@@ -125,14 +143,28 @@ export default function ValidRecipes() {
           ? `Recipes you can make...`
           : `No recipes found :(`}
       </Typography>
-      <Grid container className={classes.filterSelect} spacing={2}>
-        <Grid item>
-          <Button onClick={() => setOpenFilter(true)}>Filter</Button>
+      {!loading && hasValidRecipes && (
+        <Grid container className={classes.filterSelect} spacing={2}>
+          <Grid item xs={6}>
+            <Button onClick={() => setOpenFilter(true)}>Filter</Button>
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl className={classes.formControl}>
+              <InputLabel id="sort-by-selector-input-label">Sort by</InputLabel>
+              <Select
+                labelId="sort-by-selector-label"
+                id="sort-by-selector"
+                value={sortBy}
+                onChange={handleSelectSort}
+              >
+                <MenuItem value="time_asc">Time ascending</MenuItem>
+                <MenuItem value="time_desc">Time descending</MenuItem>
+                <MenuItem value="rating">Rating</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Button>Sort by</Button>
-        </Grid>
-      </Grid>
+      )}
       <Dialog
         open={openFilter}
         onClose={closeFilter}
