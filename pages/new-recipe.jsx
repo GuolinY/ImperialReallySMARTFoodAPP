@@ -1,81 +1,61 @@
+import * as yup from "yup";
+import { FieldArray, Form, Formik, Field } from "formik";
 import {
-  Paper,
-  TextField,
-  Typography,
-  Grid,
+  Divider,
   Button,
-  FormControl,
+  TextField,
+  IconButton,
+  Paper,
+  Grid,
+  Typography,
   FormLabel,
   FormGroup,
+  FormControl,
   FormControlLabel,
   Checkbox,
   RadioGroup,
   Radio,
 } from "@material-ui/core";
+import { DeleteOutlined } from "@material-ui/icons";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Layout from "../components/_Layout";
-import { useState } from "react";
-import axios from "axios";
+
+const validationSchema = yup.object({
+  name: yup.string("Enter recipe name").required("Recipe name is required"),
+  ingredients: yup
+    .array()
+    .of(yup.string().required("Ingredient cannnot be empty"))
+    .min(1, "Ingredients are required"),
+  method: yup.string().required("Recipe needs a method"),
+  time: yup.number().required("Recipe needs a cook time"),
+  halal: yup.bool(),
+  kosher: yup.bool(),
+  gluten_free: yup.bool(),
+  vegan: yup.bool(),
+  vegetarian: yup.bool(),
+  difficulty: yup.number().required("Difficulty is required"),
+  nutrition: yup.object().shape({
+    calories: yup.number().required("Number of calories is required"),
+    proteins: yup.number().required("Amount of protein is required"),
+    fats: yup.number().required("Amount of fats is required"),
+    carbohydrates: yup.number().required("Amount of carbohydrates is required"),
+  }),
+});
 
 export default function NewRecipe() {
   function hMToS(hm) {
-    const a = hm.split(":");
-    return +a[0] * 3600 + +a[1] * 60;
+    const a = ("" + hm).split(":");
+    const sec = +a[0] * 3600 + +a[1] * 60;
+    console.log(sec);
+    return sec;
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(data);
-    axios
-      .post("http://smart-food-app-backend.herokuapp.com/recipes/submit", data)
-      .then((result) => console.log(result));
-  };
-
-  const handleDifficultyChange = (e) => {
-    setDifficulty(e.target.value);
-  };
-
-  const [checked, setChecked] = useState({
-    vegan: false,
-    vegetarian: false,
-    kosher: false,
-    gluten_free: false,
-    halal: false,
-  });
-
-  const [recipeName, setRecipeName] = useState("");
-  const [ingredientList, setIngredientList] = useState("");
-  const [method, setMethod] = useState("");
-  const [time, setTime] = useState("00:00");
-  const [calories, setCalories] = useState(0);
-  const [carbs, setCarbs] = useState(0);
-  const [protein, setProtein] = useState(0);
-  const [fats, setFats] = useState(0);
-  const [difficulty, setDifficulty] = useState(0);
-
-  const data = {
-    name: recipeName,
-    image_link:
-      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-    ingredients: ingredientList.split(","),
-    method: method,
-    time: hMToS(time),
-    difficulty: parseInt(difficulty),
-    halal: checked.halal,
-    vegetarian: checked.vegetarian,
-    vegan: checked.vegan,
-    gluten_free: checked.gluten_free,
-    kosher: checked.kosher,
-    nutrition: {
-      calories: calories,
-      carbohydrates: carbs,
-      proteins: protein,
-      fats: fats,
-    },
-  };
-
-  const handleCheckbox = (event) => {
-    setChecked({ ...checked, [event.target.name]: event.target.checked });
-  };
+  function secondsToHm(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor((d % 3600) / 60);
+    return h + ":" + m;
+  }
 
   return (
     <Layout title="New Recipe">
@@ -84,195 +64,236 @@ export default function NewRecipe() {
         style={{ fontFamily: "Abril Fatface" }}
         gutterBottom
       >
-        Submit a New Recipe
+        Submit a new recipe
       </Typography>
-
-      <form autoComplete="off" onSubmit={handleSubmit}>
-        <Paper variant="outlined" elevation={3} style={{ padding: 16 }}>
-          <Grid
-            container
-            spacing={2}
-            direction="column"
-            justify="center"
-            alignItems="stretch"
-          >
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                label="Recipe Name"
-                onChange={(e) => setRecipeName(e.target.value)}
-                fullWidth
-                required
-              />
-            </Grid>
-            <Grid item>
-              <Button variant="outlined" component="label">
-                Upload a photo of the final product
-                <input type="file" accept="image/png, image/jpeg" hidden />
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Ingredients"
-                placeholder="Enter ingredients, separated by commas"
-                variant="outlined"
-                multiline
-                onChange={(e) => setIngredientList(e.target.value)}
-                fullWidth
-                required
-              />
-            </Grid>
-            <Grid item xs={12} style={{ textAlign: "left" }}>
-              <FormLabel component="legend">Difficulty</FormLabel>
-              <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={checked.vegan}
-                      onChange={handleCheckbox}
-                      name="vegan"
-                    />
-                  }
-                  label="Vegan"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={checked.vegetarian}
-                      onChange={handleCheckbox}
-                      name="vegetarian"
-                    />
-                  }
-                  label="Vegetarian"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={checked.kosher}
-                      onChange={handleCheckbox}
-                      name="kosher"
-                    />
-                  }
-                  label="Kosher"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={checked.gluten_free}
-                      onChange={handleCheckbox}
-                      name="gluten_free"
-                    />
-                  }
-                  label="Gluten-free"
-                />
-              </FormGroup>
-            </Grid>
-            <Grid item style={{ textAlign: "left" }}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Difficulty</FormLabel>
-                <RadioGroup
-                  value={difficulty}
-                  onChange={handleDifficultyChange}
-                  row
-                >
-                  <FormControlLabel
-                    value="1"
-                    control={<Radio />}
-                    label="Easy"
+      <Formik
+        initialValues={{
+          name: "",
+          image_link:
+            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+          ingredients: ["fdsfsafds"],
+          method: "",
+          time: 0,
+          difficulty: 1,
+          halal: false,
+          vegetarian: false,
+          vegan: false,
+          gluten_free: false,
+          kosher: false,
+          nutrition: {
+            calories: 0,
+            carbohydrates: 0,
+            proteins: 0,
+            fats: 0,
+          },
+        }}
+        validationSchema={validationSchema}
+        onSubmit={async (values) => {
+          await new Promise((r) => setTimeout(r, 500));
+          alert(JSON.stringify(values, null, 2));
+        }}
+      >
+        {({
+          values,
+          touched,
+          errors,
+          handleChange,
+          setFieldValue,
+          handleBlur,
+        }) => (
+          <Form autoComplete="off">
+            <Paper variant="outlined" elevation={3} style={{ padding: 16 }}>
+              <Grid
+                container
+                spacing={2}
+                direction="column"
+                justify="center"
+                alignItems="stretch"
+              >
+                <Grid item xs={12}>
+                  <TextField
+                    id="name"
+                    variant="outlined"
+                    label="Recipe Name"
+                    onChange={handleChange}
+                    error={touched.name && Boolean(errors.name)}
+                    helperText={touched.name && errors.name}
+                    required
+                    fullWidth
                   />
-                  <FormControlLabel
-                    value="2"
-                    control={<Radio />}
-                    label="Medium"
+                </Grid>
+
+                <Grid item>
+                  <Button variant="outlined" component="label">
+                    Upload a photo of the final product
+                    <input type="file" accept="image/png, image/jpeg" hidden />
+                  </Button>
+                </Grid>
+
+                <Grid item container direction="column" spacing={2}>
+                  <FieldArray name="ingredients">
+                    {({ push, remove }) => (
+                      <>
+                        {values.ingredients.map((ingredient, i) => (
+                          <Grid item container>
+                            <Grid item xs={9}>
+                              <TextField
+                                variant="outlined"
+                                label="Ingredient"
+                                name={`ingredients[${i}]`}
+                                value={values.ingredients[i]}
+                                onChange={handleChange}
+                                fullWidth
+                              />
+                            </Grid>
+                            <Grid item xs={3}>
+                              <IconButton
+                                aria-label="delete ingredient"
+                                onClick={() => remove(i)}
+                              >
+                                <DeleteOutlined />
+                              </IconButton>
+                            </Grid>
+                          </Grid>
+                        ))}
+                        <Button
+                          variant="outlined"
+                          color="default"
+                          onClick={() => push("")}
+                          startIcon={<AddCircleOutlineIcon />}
+                        >
+                          Add Ingredient
+                        </Button>
+                      </>
+                    )}
+                  </FieldArray>
+                </Grid>
+                <Grid item xs={12} style={{ textAlign: "left" }}>
+                  <FormControl>
+                    <FormLabel>Diet</FormLabel>
+                    <FormGroup row>
+                      {[
+                        "vegan",
+                        "vegetarian",
+                        "kosher",
+                        "gluten_free",
+                        "halal",
+                      ].map((x, i) => (
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={values[x]}
+                              onChange={handleChange}
+                              name={x}
+                            />
+                          }
+                          label={x.charAt(0).toUpperCase() + x.slice(1)}
+                        />
+                      ))}
+                    </FormGroup>
+                  </FormControl>
+                </Grid>
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormControl>
+                    <FormLabel>Difficulty</FormLabel>
+                    <RadioGroup
+                      id="difficulty"
+                      row
+                      value={values.difficulty}
+                      onChange={(e) => {
+                        console.log(parseInt(e.target.value));
+                        setFieldValue("difficulty", parseInt(e.target.value));
+                      }}
+                    >
+                      {["easy", "medium", "hard"].map((x, i) => (
+                        <FormControlLabel
+                          name="difficulty"
+                          value={i}
+                          control={<Radio />}
+                          label={x.charAt(0).toUpperCase() + x.slice(1)}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="method"
+                    label="Method"
+                    placeholder="Separate each step with a new line"
+                    variant="outlined"
+                    multiline
+                    rows={4}
+                    onChange={handleChange}
+                    value={values.method}
+                    error={touched.method && Boolean(errors.method)}
+                    helperText={touched.method && errors.method}
+                    fullWidth
+                    required
                   />
-                  <FormControlLabel
-                    value="3"
-                    control={<Radio />}
-                    label="Hard"
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id="time"
+                    label="Cooking Time"
+                    type="time"
+                    variant="outlined"
+                    defaultValue="00:00"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    onChange={(e) => {
+                      setFieldValue("time", hMToS(e.target.value));
+                    }}
+                    fullWidth
+                    required
                   />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Method"
-                placeholder="Separate each step with a new line"
-                variant="outlined"
-                multiline
-                rows={4}
-                onChange={(e) => setMethod(e.target.value)}
-                fullWidth
-                required
-              />
-            </Grid>
+                </Grid>
 
-            <Grid item>
-              <TextField
-                id="time"
-                label="Cooking Time"
-                type="time"
-                variant="outlined"
-                defaultValue="00:00"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(e) => setTime(e.target.value)}
-                fullWidth
-                required
-              />
-            </Grid>
+                <Grid item container spacing={2}>
+                  {["calories", "carbohydrates", "proteins", "fats"].map(
+                    (x, i) => (
+                      <Grid item xs={6}>
+                        <TextField
+                          id={`nutrition[${x}]`}
+                          label={x.charAt(0).toUpperCase() + x.slice(1)}
+                          variant="outlined"
+                          fullWidth
+                          onChange={(e) =>
+                            setFieldValue(
+                              `nutrition[${x}]`,
+                              parseInt(e.target.value)
+                            )
+                          }
+                          value={values.nutrition[x]}
+                        />
+                      </Grid>
+                    )
+                  )}
+                </Grid>
+                <Grid item>
+                  <Button variant="contained" color="primary" type="submit">
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+            </Paper>
 
-            <Grid item container spacing={2}>
-              <Grid item xs={6}>
-                <TextField
-                  label="Calories"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setCalories(e.target.value)}
-                  type="number"
-                  required
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Carbohydrates"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setCarbs(e.target.value)}
-                  type="number"
-                  required
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Protein (g)"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setProtein(e.target.value)}
-                  type="number"
-                  required
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Fats"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setFats(e.target.value)}
-                  type="number"
-                  required
-                />
-              </Grid>
-            </Grid>
-
-            <Grid item>
-              <Button variant="contained" color="primary" type="submit">
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
-        </Paper>
-      </form>
+            <>
+              <pre style={{ textAlign: "left" }}>
+                <strong>Values</strong>
+                <br />
+                {JSON.stringify(values, null, 2)}
+              </pre>
+              <pre style={{ textAlign: "left" }}>
+                <strong>Errors</strong>
+                <br />
+                {JSON.stringify(errors, null, 2)}
+              </pre>
+            </>
+          </Form>
+        )}
+      </Formik>
     </Layout>
   );
 }
