@@ -72,6 +72,7 @@ export default function ValidRecipes() {
   const ingredients = useIngredients();
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState({ id: -1 });
+  const [filteredRecipes, setFilteredRecipes] = useState({ id: -1 });
   const [openFilter, setOpenFilter] = useState(false);
 
   const breakpoints = {
@@ -96,11 +97,13 @@ export default function ValidRecipes() {
           console.log(err);
         });
       setRecipes(newRecipes);
+      setFilteredRecipes(newRecipes);
     }
     setLoading(false);
   }, []);
 
   const hasValidRecipes = Array.isArray(recipes);
+  const hasFilteredRecipes = Array.isArray(filteredRecipes);
 
   const LoadingRecipe = () => {
     return (
@@ -130,10 +133,54 @@ export default function ValidRecipes() {
     setSortBy(event.target.value);
   };
 
-  const onFilterSubmit = (values) => {
-    console.log(values);
-    console.log("Parse values data")
-    console.log("Send axios get request and update recipes");
+  const onFilterSubmit = (filters) => {
+    console.log(filters);
+    console.log("Parse values data");
+    console.log(recipes);
+    console.log("Filter recipes");
+
+    const inRange = (value, [l, u], max = 500) => {
+      if (u == max) {
+        return l <= value;
+      }
+      return l <= value && value <= u;
+    };
+
+    const difficultyRating = {
+      1: "easy",
+      2: "medium",
+      3: "hard",
+    };
+
+    const newRecipes = recipes.filter((recipe) => {
+      console.log(recipe.name);
+      console.log(
+        (filters.difficulty.easy &&
+          filters.difficulty.medium &&
+          filters.difficulty.hard) ||
+          filters.difficulty[difficultyRating[recipe.difficulty]]
+      );
+      return (
+        (inRange(recipe.nutrition.calories, filters.calories, 5000) &&
+          inRange(recipe.nutrition.carbohydrates, filters.carbs) &&
+          inRange(recipe.nutrition.protein, filters.protein) &&
+          inRange(recipe.nutrition.fats, filters.fats) &&
+          inRange(recipe.cooking_time, filters.cooking_time, 14400) &&
+          (!filters.halal || recipe.halal) &&
+          (!filters.kosher || recipe.kosher) &&
+          (!filters.gluten_free || recipe.gluten_free) &&
+          (!filters.vegan || recipe.vegan) &&
+          (!filters.vegetarian || recipe.vegetarian) &&
+          recipe.rating >= filters.min_rating &&
+          filters.difficulty.easy &&
+          filters.difficulty.medium &&
+          filters.difficulty.hard) ||
+        filters.difficulty[difficultyRating[recipe.difficulty]]
+      );
+    });
+
+    setFilteredRecipes(newRecipes.length == 0 ? { id: -1 } : newRecipes);
+    setOpenFilter(false);
   };
 
   return (
@@ -142,7 +189,9 @@ export default function ValidRecipes() {
         {loading
           ? "Loading..."
           : hasValidRecipes
-          ? `Recipes you can make...`
+          ? hasFilteredRecipes
+            ? `Recipes you can make...`
+            : "No recipes"
           : `No recipes found :(`}
       </Typography>
       {!loading && hasValidRecipes && (
@@ -197,13 +246,13 @@ export default function ValidRecipes() {
       <Container style={{ marginTop: 20 }}>
         {loading ? (
           <LoadingRecipe />
-        ) : hasValidRecipes ? (
+        ) : hasFilteredRecipes ? (
           <Masonry
             breakpointCols={breakpoints}
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
           >
-            {recipes.map((recipe, i) => (
+            {filteredRecipes.map((recipe, i) => (
               <Tile
                 recipe={recipe}
                 ingredientList={router.query.ingredientList}
@@ -211,6 +260,8 @@ export default function ValidRecipes() {
               />
             ))}
           </Masonry>
+        ) : hasValidRecipes ? (
+          `No recipes found matching filter you selected`
         ) : (
           `Unfortunately, we weren't able to find recipes for all your ingredients this time. Please try again with other ingredients.`
         )}

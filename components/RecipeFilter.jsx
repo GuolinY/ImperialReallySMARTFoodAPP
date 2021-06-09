@@ -50,32 +50,31 @@ export default function Filter({
       label: "0m",
     },
     {
-      value: 15,
+      value: 900,
       label: "15m",
     },
     {
-      value: 30,
+      value: 1800,
       label: "30m",
     },
     {
-      value: 45,
+      value: 2700,
       label: "45m",
     },
     {
-      value: 60,
+      value: 3600,
       label: "1h",
     },
     {
-      value: 90,
+      value: 5400,
       label: "2h",
-      scaledValue: 90,
     },
     {
-      value: 120,
+      value: 7200,
       label: "3h",
     },
     {
-      value: 150,
+      value: 9000,
       label: "Ꝏ",
     },
   ];
@@ -87,7 +86,7 @@ export default function Filter({
         carbs: [0, 500],
         protein: [0, 500],
         fats: [0, 500],
-        cooking_time: [0, 500],
+        cooking_time: [0, 9000],
         halal: false,
         vegan: false,
         vegetarian: false,
@@ -252,15 +251,15 @@ export default function Filter({
                 Cooking time
               </Typography>
               <Slider
-                defaultValue={[0, 150]}
+                defaultValue={[0, 9000]}
                 min={0}
-                max={150}
+                max={9000}
                 aria-labelledby="prep-time-slider"
                 step={null}
                 onChange={(event, value) => {
                   setFieldValue(
                     "cooking_time",
-                    value.map((x) => (x > 60 ? (x == 90 ? 120 : 180) : x))
+                    value.map((x) => (x > 3600 ? x + (x - 3600) * 2 : x))
                   );
                 }}
                 valueLabelDisplay="off"
