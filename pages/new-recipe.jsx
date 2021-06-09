@@ -19,6 +19,7 @@ import {
 import { DeleteOutlined } from "@material-ui/icons";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Layout from "../components/_Layout";
+import axios from "axios";
 
 const validationSchema = yup.object({
   name: yup.string("Enter recipe name").required("Recipe name is required"),
@@ -33,7 +34,11 @@ const validationSchema = yup.object({
   gluten_free: yup.bool(),
   vegan: yup.bool(),
   vegetarian: yup.bool(),
-  difficulty: yup.number().required("Difficulty is required"),
+  difficulty: yup
+    .number()
+    .required("Difficulty is required")
+    .min(1, "Lowest difficulty is easy")
+    .max(3, "Highest difficulty is hard"),
   nutrition: yup.object().shape({
     calories: yup.number().required("Number of calories is required"),
     proteins: yup.number().required("Amount of protein is required"),
@@ -71,7 +76,7 @@ export default function NewRecipe() {
           name: "",
           image_link:
             "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-          ingredients: ["fdsfsafds"],
+          ingredients: [""],
           method: "",
           time: 0,
           difficulty: 1,
@@ -89,18 +94,15 @@ export default function NewRecipe() {
         }}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
-          await new Promise((r) => setTimeout(r, 500));
-          alert(JSON.stringify(values, null, 2));
+          axios
+            .post(
+              "http://smart-food-app-backend.herokuapp.com/recipes/submit",
+              values
+            )
+            .then((result) => console.log(result));
         }}
       >
-        {({
-          values,
-          touched,
-          errors,
-          handleChange,
-          setFieldValue,
-          handleBlur,
-        }) => (
+        {({ values, touched, errors, handleChange, setFieldValue }) => (
           <Form autoComplete="off">
             <Paper variant="outlined" elevation={3} style={{ padding: 16 }}>
               <Grid
@@ -208,7 +210,7 @@ export default function NewRecipe() {
                       {["easy", "medium", "hard"].map((x, i) => (
                         <FormControlLabel
                           name="difficulty"
-                          value={i}
+                          value={i + 1}
                           control={<Radio />}
                           label={x.charAt(0).toUpperCase() + x.slice(1)}
                         />
