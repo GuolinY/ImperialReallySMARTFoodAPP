@@ -243,7 +243,7 @@ export default function Filter({
                       name="gluten_free"
                     />
                   }
-                  label="Gluten"
+                  label="Gluten free"
                 />
               </FormGroup>
             </Grid>

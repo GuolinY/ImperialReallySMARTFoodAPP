@@ -61,11 +61,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: theme.spacing(120),
   },
   formControl: {
-    // margin: theme.spacing(1),
     minWidth: 120,
-  },
-  selectEmpty: {
-    // marginTop: theme.spacing(2),
   },
 }));
 
@@ -134,6 +130,10 @@ export default function ValidRecipes() {
     setSortBy(event.target.value);
   };
 
+  const onFilterSubmit = (values) => {
+    console.log(values);
+  };
+
   return (
     <Layout title="Recipes you can make..." validRecipes>
       <Typography className={classes.title} variant="h1" gutterBottom>
@@ -146,7 +146,12 @@ export default function ValidRecipes() {
       {!loading && hasValidRecipes && (
         <Grid container className={classes.filterSelect} spacing={2}>
           <Grid item xs={6}>
-            <Button onClick={() => setOpenFilter(true)}>Filter</Button>
+            <Button
+              onClick={() => setOpenFilter(true)}
+              style={{ paddingTop: 22 }}
+            >
+              Filter
+            </Button>
           </Grid>
           <Grid item xs={6}>
             <FormControl className={classes.formControl}>
