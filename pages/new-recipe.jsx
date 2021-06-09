@@ -42,7 +42,7 @@ const validationSchema = yup.object({
   calories: yup.number().required("Number of calories is required"),
   proteins: yup.number().required("Amount of protein is required"),
   fats: yup.number().required("Amount of fats is required"),
-  carbohydrates: yup.number().required("Amount of carbohydrates is required"),
+  carbs: yup.number().required("Amount of carbohydrates is required"),
 });
 
 export default function NewRecipe() {
