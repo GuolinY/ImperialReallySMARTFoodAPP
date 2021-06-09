@@ -6,7 +6,7 @@ import Link from "next/link";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useRouter } from "next/router";
-import { Typography } from "@material-ui/core";
+import { Typography, AppBar, Toolbar } from "@material-ui/core";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -99,17 +99,34 @@ export default function Layout({
         />
       </Head>
 
+      <AppBar position="fixed" color="secondary" className={classes.appBar}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerOpen}
+            className={classes.menuButton}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            style={{ fontFamily: "Abril Fatface" }}
+            noWrap
+          >
+            {title}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
       <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={open}
         classes={{
-          paper: clsx({
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          }),
+          paper: classes.drawerPaper,
         }}
       >
         <div className={classes.toolbar}>
@@ -126,31 +143,35 @@ export default function Layout({
             <ListItemText primary="Login" />
           </ListItem>
 
-          <ListItem button divider component="a" href="/new-recipe">
+          <ListItem button component="a" href="/new-recipe">
             <ListItemIcon>
               <AddCircleOutlineIcon />
             </ListItemIcon>
             <ListItemText primary="New Recipe" />
           </ListItem>
 
-          <ListItem button disabled={home} component="a" href="/">
-            <ListItemIcon>
-              <ChevronLeftIcon />
-            </ListItemIcon>
-            <ListItemText primary={other ? "Home" : "Back to Ingredients"} />
-          </ListItem>
+          {!home && (
+            <>
+              <Divider />
+              <ListItem button component="a" href="/">
+                <ListItemIcon>
+                  <ChevronLeftIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={other ? "Home" : "Back to Ingredients"}
+                />
+              </ListItem>
+            </>
+          )}
 
-          <ListItem
-            button
-            disabled={!recipe}
-            component="a"
-            href="/valid-recipes"
-          >
-            <ListItemIcon>
-              <ChevronLeftIcon />
-            </ListItemIcon>
-            <ListItemText primary="Back to Recipes" />
-          </ListItem>
+          {recipe && (
+            <ListItem button component="a" href="/valid-recipes">
+              <ListItemIcon>
+                <ChevronLeftIcon />
+              </ListItemIcon>
+              <ListItemText primary="Back to Recipes" />
+            </ListItem>
+          )}
         </List>
       </Drawer>
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
-import { Grid, Typography, Container } from "@material-ui/core";
+import { Grid, Typography, Container, Button } from "@material-ui/core";
 import Tile from "../components/Tile";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +10,7 @@ import Masonry from "react-masonry-css";
 import axios from "axios";
 import { useIngredients } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
+import Link from "next/link";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -39,7 +40,8 @@ export default function ValidRecipes() {
   const breakpoints = {
     default: 4,
     1100: 3,
-    900: 2,
+    700: 2,
+    500: 1,
   };
 
   useEffect(async () => {
@@ -113,7 +115,13 @@ export default function ValidRecipes() {
             ))}
           </Masonry>
         ) : (
-          `Unfortunately, we weren't able to find recipes for all your ingredients this time. Please try again with other ingredients.`
+          <Typography>
+            Unfortunately, we weren't able to find recipes for all your
+            ingredients this time.{" "}
+            <Link href="/" passHref>
+              <Button>Please try again with other ingredients.</Button>
+            </Link>
+          </Typography>
         )}
       </Container>
     </Layout>

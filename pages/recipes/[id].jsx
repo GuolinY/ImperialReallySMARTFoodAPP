@@ -4,26 +4,25 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
   Typography,
-  Box,
-  ThemeProvider,
   List,
   ListItem,
   ListItemText,
   ListItemIcon,
 } from "@material-ui/core";
 import Image from "next/image";
-import TimerIcon from "@material-ui/icons/Timer";
-import RatingAndReviews from "../../components/RatingAndReviews";
+
 import FastfoodIcon from "@material-ui/icons/Fastfood";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import BackButton from "../../components/BackButton";
+
 import { useRouter } from "next/router";
+import ReviewsModal from "../../components/ReviewsModal";
+import axios from "axios";
 
 export async function getStaticPaths() {
-  const res = await fetch(
+  const res = await axios.get(
     `http://smart-food-app-backend.herokuapp.com/recipes/all`
   );
-  const data = await res.json();
+
+  const data = await res.data;
 
   const paths = data.ids.map((id) => {
     return {
@@ -38,10 +37,10 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const res = await fetch(
+  const res = await axios.get(
     `http://smart-food-app-backend.herokuapp.com/recipes/${context.params.id}`
   );
-  const recipe = await res.json();
+  const recipe = await res.data;
   return {
     props: { recipe }, // will be passed to the page component as props
   };
@@ -105,7 +104,7 @@ export default function Recipe({ recipe }) {
         <Typography className={classes.title} variant="h2" gutterBottom>
           {recipe.name}
         </Typography>
-        <RatingAndReviews recipe={recipe} size="large" />
+        <ReviewsModal recipe={recipe} />
       </div>
       <Grid container spacing={10} className={classes.container}>
         <Grid
