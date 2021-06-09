@@ -128,17 +128,19 @@ export default function ValidRecipes() {
 
   const [sortBy, setSortBy] = React.useState("");
 
+  const sortFunctions = {
+    time_asc: (first, second) => first.cooking_time - second.cooking_time,
+    time_desc: (first, second) => second.cooking_time - first.cooking_time,
+    rating: (first, second) => second.rating - first.rating,
+  };
+
   const handleSelectSort = (event) => {
-    console.log(event.target.value);
+    const sorted = [...filteredRecipes].sort(sortFunctions[event.target.value]);
     setSortBy(event.target.value);
+    setFilteredRecipes(sorted);
   };
 
   const onFilterSubmit = (filters) => {
-    console.log(filters);
-    console.log("Parse values data");
-    console.log(recipes);
-    console.log("Filter recipes");
-
     const inRange = (value, [l, u], max = 500) => {
       if (u == max) {
         return l <= value;
@@ -153,13 +155,6 @@ export default function ValidRecipes() {
     };
 
     const newRecipes = recipes.filter((recipe) => {
-      console.log(recipe.name);
-      console.log(
-        (filters.difficulty.easy &&
-          filters.difficulty.medium &&
-          filters.difficulty.hard) ||
-          filters.difficulty[difficultyRating[recipe.difficulty]]
-      );
       return (
         (inRange(recipe.nutrition.calories, filters.calories, 5000) &&
           inRange(recipe.nutrition.carbohydrates, filters.carbs) &&
