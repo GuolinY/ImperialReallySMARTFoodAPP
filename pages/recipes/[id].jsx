@@ -18,6 +18,7 @@ import FastfoodIcon from "@material-ui/icons/Fastfood";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import BackButton from "../../components/BackButton";
 import { useRouter } from "next/router";
+import ReviewsModal from "../../components/ReviewsModal";
 
 export async function getStaticPaths() {
   const res = await fetch(
@@ -105,7 +106,7 @@ export default function Recipe({ recipe }) {
         <Typography className={classes.title} variant="h2" gutterBottom>
           {recipe.name}
         </Typography>
-        <RatingAndReviews recipe={recipe} size="large" />
+        <ReviewsModal recipe={recipe} />
       </div>
       <Grid container spacing={10} className={classes.container}>
         <Grid
