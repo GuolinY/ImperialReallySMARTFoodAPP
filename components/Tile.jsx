@@ -82,7 +82,9 @@ export default function Tile(props) {
         <Typography className={classes.iconsAndText} variant="h6">
           <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; |
           &nbsp;
-          {Array(recipe.difficulty).fill(<WhatshotIcon />)}
+          {Array(recipe.difficulty).map((i) => (
+            <WhatshotIcon key={i} />
+          ))}
         </Typography>
         <Typography variant="body1">{recipe.description}</Typography>
         <Typography className={classes.nutrition} variant="body2">
@@ -106,6 +108,26 @@ export default function Tile(props) {
             {recipe.nutrition.fats}
           </span>
         </Typography>
+        {recipe.missing?.length > 0 && (
+          <div>
+            <Typography variant="body1">You are missing:</Typography>
+            <ul style={{ margin: 0, padding: 0 }}>
+              {recipe.missing.map((ingredient, i) => (
+                <li key={i}>{ingredient}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {recipe.notUsed?.length > 0 && (
+          <div>
+            <Typography variant="body1">Not using:</Typography>
+            <ul style={{ margin: 0, padding: 0 }}>
+              {recipe.notUsed.map((ingredient, i) => (
+                <li key={i}>{ingredient}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </CardContent>
       <CardActions>
         <Link href={`/recipes/${recipe.id}`} passHref>
