@@ -84,7 +84,7 @@ export default function ValidRecipes() {
   const [openFilter, setOpenFilter] = useState(false);
   const filters = useValidRecipeFilters();
   const setFilters = useValidRecipeFiltersUpdate();
-  const [sortBy, setSortBy] = useState("");
+  const [sortBy, setSortBy] = useState("closest_match");
 
   const breakpoints = {
     default: 4,
@@ -113,6 +113,8 @@ export default function ValidRecipes() {
   };
 
   const sortFunctions = {
+    closest_match: (first, second) =>
+      first.missing.length - second.missing.length,
     rating: (first, second) => second.rating - first.rating,
     time_asc: (first, second) => first.cooking_time - second.cooking_time,
     time_desc: (first, second) => second.cooking_time - first.cooking_time,
@@ -124,7 +126,7 @@ export default function ValidRecipes() {
 
   const sortRecipes = (recipes, sortBy) => {
     if (sortBy) {
-      return [...filteredRecipes].sort(sortFunctions[sortBy]);
+      return [...recipes].sort(sortFunctions[sortBy]);
     }
     return recipes;
   };
@@ -189,6 +191,7 @@ export default function ValidRecipes() {
         );
       });
       setRecipes(newRecipes);
+      setFilteredRecipes(newRecipes);
       setFilteredRecipes(
         sortRecipes(filterRecipes(newRecipes, filters), sortBy)
       );
@@ -216,7 +219,7 @@ export default function ValidRecipes() {
   };
 
   const handleSelectSort = (event) => {
-    setFilteredRecipes(sortRecipes(recipes, event.target.value));
+    setFilteredRecipes(sortRecipes(filteredRecipes, event.target.value));
     setSortBy(event.target.value);
   };
 
@@ -253,6 +256,7 @@ export default function ValidRecipes() {
                 value={sortBy}
                 onChange={handleSelectSort}
               >
+                <MenuItem value="closest_match">Closest Match</MenuItem>
                 <MenuItem value="rating">Rating</MenuItem>
                 <MenuItem value="time_asc">Time ascending</MenuItem>
                 <MenuItem value="time_desc">Time descending</MenuItem>
