@@ -12,6 +12,7 @@ import {
   Grid,
   Typography,
   Button,
+  Switch,
 } from "@material-ui/core";
 import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
@@ -67,6 +68,17 @@ export default function Tile(props) {
   const classes = useStyles();
   const { recipe } = props;
 
+  function difficulty(level) {
+    switch (recipe.difficulty) {
+      case 1:
+        return "Easy";
+      case 2:
+        return "Medium";
+      case 3:
+        return "Hard";
+    }
+  }
+
   return (
     <Card variant="outlined">
       <CardHeader
@@ -82,7 +94,7 @@ export default function Tile(props) {
         <Typography className={classes.iconsAndText} variant="h6">
           <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; |
           &nbsp;
-          {Array(recipe.difficulty).fill(<WhatshotIcon />)}
+          {difficulty(recipe.difficulty)}
         </Typography>
         <Typography variant="body1">{recipe.description}</Typography>
         <Typography className={classes.nutrition} variant="body2">
