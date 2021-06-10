@@ -125,12 +125,12 @@ export default function Tile(props) {
               {recipe.missing.join(", ")}
             </div>
           )}
-          {recipe?.notUsed?.length > 0 && (
+          {/* {recipe?.notUsed?.length > 0 && (
             <div>
               <Typography variant="body1">Not using:</Typography>
               {recipe.notUsed.join(", ")}
             </div>
-          )}
+          )} */}
         </div>
       </CardContent>
       <CardActions>
