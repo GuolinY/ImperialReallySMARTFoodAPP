@@ -21,6 +21,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PersonIcon from "@material-ui/icons/Person";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import CollectionsBookmarkIcon from "@material-ui/icons/CollectionsBookmark";
 
 const drawerWidth = 240;
 
@@ -151,6 +152,15 @@ export default function Layout({
                 <AddCircleOutlineIcon />
               </ListItemIcon>
               <ListItemText primary="New Recipe" />
+            </ListItem>
+          </Link>
+
+          <Link href="/all-recipes" passHref>
+            <ListItem button component="a">
+              <ListItemIcon>
+                <CollectionsBookmarkIcon />
+              </ListItemIcon>
+              <ListItemText primary="All Recipes" />
             </ListItem>
           </Link>
 
