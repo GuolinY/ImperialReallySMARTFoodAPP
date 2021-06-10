@@ -19,7 +19,7 @@ import axios from "axios";
 
 export async function getStaticPaths() {
   const res = await axios.get(
-    `http://smart-food-app-backend.herokuapp.com/recipes/all`
+    `https://smart-food-app-backend.herokuapp.com/recipes/all`
   );
 
   const data = await res.data;
@@ -38,7 +38,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context) {
   const res = await axios.get(
-    `http://smart-food-app-backend.herokuapp.com/recipes/${context.params.id}`
+    `https://smart-food-app-backend.herokuapp.com/recipes/${context.params.id}`
   );
   const recipe = await res.data;
   return {

@@ -47,17 +47,15 @@ export default function Filter({
     protein: [0, 500],
     fats: [0, 500],
     cooking_time: [0, 9000],
-    halal: false,
     vegan: false,
     vegetarian: false,
-    gluten_free: false,
     min_rating: 0,
     difficulty: {
       easy: true,
       medium: true,
       hard: true,
     },
-  }
+  },
 }) {
   const classes = useStyles();
 
@@ -97,10 +95,7 @@ export default function Filter({
   ];
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-    >
+    <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {({ setFieldValue, values, handleSubmit }) => (
         <Form onSubmit={handleSubmit} className={classes.filter}>
           <Grid container spacing={3}>
@@ -188,30 +183,6 @@ export default function Filter({
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={values.halal}
-                      onChange={(event) =>
-                        setFieldValue("halal", event.target.checked)
-                      }
-                      name="halal"
-                    />
-                  }
-                  label="Halal"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={values.kosher}
-                      onChange={(event) =>
-                        setFieldValue("kosher", event.target.checked)
-                      }
-                      name="kosher"
-                    />
-                  }
-                  label="Kosher"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
                       checked={values.vegan}
                       onChange={(event) =>
                         setFieldValue("vegan", event.target.checked)
@@ -232,18 +203,6 @@ export default function Filter({
                     />
                   }
                   label="Vegetarian"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={values.gluten_free}
-                      onChange={(event) =>
-                        setFieldValue("gluten_free", event.target.checked)
-                      }
-                      name="gluten_free"
-                    />
-                  }
-                  label="Gluten free"
                 />
               </FormGroup>
             </Grid>

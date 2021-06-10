@@ -29,10 +29,8 @@ export const DEFAULT_FILTERS = {
   protein: [0, 500],
   fats: [0, 500],
   cooking_time: [0, 9000],
-  halal: false,
   vegan: false,
   vegetarian: false,
-  gluten_free: false,
   min_rating: 0,
   difficulty: {
     easy: true,

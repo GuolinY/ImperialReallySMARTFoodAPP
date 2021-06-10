@@ -150,9 +150,6 @@ export default function ValidRecipes() {
         inRange(recipe.nutrition.protein, filters.protein) &&
         inRange(recipe.nutrition.fats, filters.fats) &&
         inRange(recipe.cooking_time, filters.cooking_time, 14400) &&
-        (!filters.halal || recipe.halal) &&
-        (!filters.kosher || recipe.kosher) &&
-        (!filters.gluten_free || recipe.gluten_free) &&
         (!filters.vegan || recipe.vegan) &&
         (!filters.vegetarian || recipe.vegetarian) &&
         recipe.rating >= filters.min_rating &&
@@ -172,7 +169,7 @@ export default function ValidRecipes() {
     if (ingredients?.length > 0) {
       let newRecipes = await axios
         .get(
-          `http://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
+          `https://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
             "_"
           )}`
         )
@@ -218,7 +215,7 @@ export default function ValidRecipes() {
     <Layout title="Recipes you can make..." validRecipes>
       <Typography className={classes.title} variant="h1" gutterBottom>
         {loading
-          ? "Loading..."
+          ? "Finding some delicious recipes for you..."
           : hasValidRecipes
           ? hasFilteredRecipes
             ? `Recipes you can make...`
@@ -296,8 +293,8 @@ export default function ValidRecipes() {
           `No recipes found matching filter you selected`
         ) : (
           <Typography>
-            Unfortunately, we weren't able to find recipes for all your
-            ingredients this time.{" "}
+            Unfortunately, you gotta go shopping, we weren't able to find
+            recipes for all your ingredients this time.{" "}
             <Link href="/" passHref>
               <Button>Please try again with other ingredients.</Button>
             </Link>
