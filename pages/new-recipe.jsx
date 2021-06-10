@@ -92,7 +92,7 @@ export default function NewRecipe() {
         onSubmit={async (values) => {
           axios
             .post(
-              "http://smart-food-app-backend.herokuapp.com/recipes/submit",
+              "https://smart-food-app-backend.herokuapp.com/recipes/submit",
               values
             )
             .then((result) => console.log(result));

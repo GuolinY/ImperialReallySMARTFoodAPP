@@ -172,7 +172,7 @@ export default function ValidRecipes() {
     if (ingredients?.length > 0) {
       let newRecipes = await axios
         .get(
-          `http://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
+          `https://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
             "_"
           )}`
         )
