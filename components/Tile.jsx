@@ -91,7 +91,7 @@ export default function Tile(props) {
             {recipe.nutrition.calories}
           </span>
           <br />
-          Carbohyrdates:
+          Carbohydrates:
           <span className={classes.nutritionalData}>
             {recipe.nutrition.carbohydrates}
           </span>
