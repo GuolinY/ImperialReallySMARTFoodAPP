@@ -108,26 +108,20 @@ export default function Tile(props) {
             {recipe.nutrition.fats}
           </span>
         </Typography>
-        {recipe.missing?.length > 0 && (
-          <div>
-            <Typography variant="body1">You are missing:</Typography>
-            <ul style={{ margin: 0, padding: 0 }}>
-              {recipe.missing.map((ingredient, i) => (
-                <li key={i}>{ingredient}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {recipe.notUsed?.length > 0 && (
-          <div>
-            <Typography variant="body1">Not using:</Typography>
-            <ul style={{ margin: 0, padding: 0 }}>
-              {recipe.notUsed.map((ingredient, i) => (
-                <li key={i}>{ingredient}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <div style={{ textAlign: "left", padding: "12px 0px" }}>
+          {recipe.missing?.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <Typography variant="body1">You are missing:</Typography>
+              {recipe.missing.join(", ")}
+            </div>
+          )}
+          {recipe.notUsed?.length > 0 && (
+            <div>
+              <Typography variant="body1">Not using:</Typography>
+              {recipe.notUsed.join(", ")}
+            </div>
+          )}
+        </div>
       </CardContent>
       <CardActions>
         <Link href={`/recipes/${recipe.id}`} passHref>
