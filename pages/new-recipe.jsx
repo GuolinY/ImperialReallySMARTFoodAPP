@@ -261,19 +261,6 @@ export default function NewRecipe() {
                 </Grid>
               </Grid>
             </Paper>
-
-            <>
-              <pre style={{ textAlign: "left" }}>
-                <strong>Values</strong>
-                <br />
-                {JSON.stringify(values, null, 2)}
-              </pre>
-              <pre style={{ textAlign: "left" }}>
-                <strong>Errors</strong>
-                <br />
-                {JSON.stringify(errors, null, 2)}
-              </pre>
-            </>
           </Form>
         )}
       </Formik>
