@@ -180,10 +180,19 @@ export default function ValidRecipes() {
         .catch((err) => {
           console.log(err);
         });
+      newRecipes.forEach((recipe) => {
+        recipe.notUsed = ingredients.filter(
+          (ingredient) => !recipe.ingredients.includes(ingredient)
+        );
+        recipe.missing = recipe.ingredients.filter(
+          (ingredient) => !ingredients.includes(ingredient)
+        );
+      });
       setRecipes(newRecipes);
       setFilteredRecipes(
         sortRecipes(filterRecipes(newRecipes, filters), sortBy)
       );
+      console.log(newRecipes);
     }
     setLoading(false);
   }, []);

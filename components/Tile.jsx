@@ -69,7 +69,7 @@ export default function Tile(props) {
   const { recipe } = props;
 
   function difficulty(level) {
-    switch (recipe.difficulty) {
+    switch (level) {
       case 1:
         return "Easy";
       case 2:
@@ -118,6 +118,26 @@ export default function Tile(props) {
             {recipe.nutrition.fats}
           </span>
         </Typography>
+        {recipe.missing?.length > 0 && (
+          <div>
+            <Typography variant="body1">You are missing:</Typography>
+            <ul style={{ margin: 0, padding: 0 }}>
+              {recipe.missing.map((ingredient, i) => (
+                <li key={i}>{ingredient}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {recipe.notUsed?.length > 0 && (
+          <div>
+            <Typography variant="body1">Not using:</Typography>
+            <ul style={{ margin: 0, padding: 0 }}>
+              {recipe.notUsed.map((ingredient, i) => (
+                <li key={i}>{ingredient}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </CardContent>
       <CardActions>
         <Link href={`/recipes/${recipe.id}`} passHref>
