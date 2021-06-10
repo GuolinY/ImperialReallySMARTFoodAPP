@@ -1,3 +1,4 @@
+import React from "react";
 import * as yup from "yup";
 import { FieldArray, Form, Formik, Field } from "formik";
 import {
@@ -132,7 +133,7 @@ export default function NewRecipe() {
                     {({ push, remove }) => (
                       <>
                         {values.ingredients.map((ingredient, i) => (
-                          <Grid item container>
+                          <Grid item container key={i}>
                             <Grid item xs={9}>
                               <TextField
                                 variant="outlined"
@@ -251,7 +252,7 @@ export default function NewRecipe() {
 
                 <Grid item container spacing={2}>
                   {["calories", "carbs", "protein", "fats"].map((x, i) => (
-                    <Grid item xs={6}>
+                    <Grid item xs={6} key={i}>
                       <TextField
                         id={x}
                         label={x.charAt(0).toUpperCase() + x.slice(1)}
