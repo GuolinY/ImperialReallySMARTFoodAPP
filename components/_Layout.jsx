@@ -136,41 +136,49 @@ export default function Layout({
         </div>
         <Divider />
         <List>
-          <ListItem button component="a" href="/login">
-            <ListItemIcon>
-              <PersonIcon />
-            </ListItemIcon>
-            <ListItemText primary="Login" />
-          </ListItem>
+          <Link href="/login" passHref>
+            <ListItem button component="a">
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="Login" />
+            </ListItem>
+          </Link>
 
-          <ListItem button component="a" href="/new-recipe">
-            <ListItemIcon>
-              <AddCircleOutlineIcon />
-            </ListItemIcon>
-            <ListItemText primary="New Recipe" />
-          </ListItem>
+          <Link href="/new-recipe" passHref>
+            <ListItem button component="a">
+              <ListItemIcon>
+                <AddCircleOutlineIcon />
+              </ListItemIcon>
+              <ListItemText primary="New Recipe" />
+            </ListItem>
+          </Link>
 
           {!home && (
             <>
               <Divider />
-              <ListItem button component="a" href="/">
-                <ListItemIcon>
-                  <ChevronLeftIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={other ? "Home" : "Back to Ingredients"}
-                />
-              </ListItem>
+              <Link href="/" passHref>
+                <ListItem button component="a">
+                  <ListItemIcon>
+                    <ChevronLeftIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={other ? "Home" : "Back to Ingredients"}
+                  />
+                </ListItem>
+              </Link>
             </>
           )}
 
           {recipe && (
-            <ListItem button component="a" href="/valid-recipes">
-              <ListItemIcon>
-                <ChevronLeftIcon />
-              </ListItemIcon>
-              <ListItemText primary="Back to Recipes" />
-            </ListItem>
+            <Link href="/valid-recipes" passHref>
+              <ListItem button component="a">
+                <ListItemIcon>
+                  <ChevronLeftIcon />
+                </ListItemIcon>
+                <ListItemText primary="Back to Recipes" />
+              </ListItem>
+            </Link>
           )}
         </List>
       </Drawer>
