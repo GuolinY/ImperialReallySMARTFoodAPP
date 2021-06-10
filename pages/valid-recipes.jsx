@@ -218,7 +218,7 @@ export default function ValidRecipes() {
     <Layout title="Recipes you can make..." validRecipes>
       <Typography className={classes.title} variant="h1" gutterBottom>
         {loading
-          ? "Loading..."
+          ? "Finding some delicious recipes for you..."
           : hasValidRecipes
           ? hasFilteredRecipes
             ? `Recipes you can make...`
@@ -296,8 +296,8 @@ export default function ValidRecipes() {
           `No recipes found matching filter you selected`
         ) : (
           <Typography>
-            Unfortunately, we weren't able to find recipes for all your
-            ingredients this time.{" "}
+            Unfortunately, you gotta go shopping, we weren't able to find
+            recipes for all your ingredients this time.{" "}
             <Link href="/" passHref>
               <Button>Please try again with other ingredients.</Button>
             </Link>
