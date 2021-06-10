@@ -29,9 +29,6 @@ const validationSchema = yup.object({
     .min(1, "Ingredients are required"),
   method: yup.string().required("Recipe needs a method"),
   time: yup.number().required("Recipe needs a cook time"),
-  halal: yup.bool(),
-  kosher: yup.bool(),
-  gluten_free: yup.bool(),
   vegan: yup.bool(),
   vegetarian: yup.bool(),
   difficulty: yup
@@ -78,11 +75,8 @@ export default function NewRecipe() {
           method: "",
           time: 0,
           difficulty: 1,
-          halal: false,
           vegetarian: false,
           vegan: false,
-          gluten_free: false,
-          kosher: false,
           calories: 0,
           carbs: 0,
           protein: 0,
@@ -92,7 +86,7 @@ export default function NewRecipe() {
         onSubmit={async (values) => {
           axios
             .post(
-              "http://smart-food-app-backend.herokuapp.com/recipes/submit",
+              "https://smart-food-app-backend.herokuapp.com/recipes/submit",
               values
             )
             .then((result) => console.log(result));
@@ -170,13 +164,7 @@ export default function NewRecipe() {
                   <FormControl>
                     <FormLabel>Diet</FormLabel>
                     <FormGroup row>
-                      {[
-                        "vegan",
-                        "vegetarian",
-                        "kosher",
-                        "gluten_free",
-                        "halal",
-                      ].map((x, i) => (
+                      {["vegan", "vegetarian"].map((x, i) => (
                         <FormControlLabel
                           key={i}
                           control={

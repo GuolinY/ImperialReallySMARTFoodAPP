@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -96,7 +96,7 @@ export default function ReviewssModal({ recipe }) {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <Paper elevation={24} outlined style={{ padding: 16 }}>
+        <Paper elevation={24} variant="outlined" style={{ padding: 16 }}>
           <Box
             className={classes.iconsAndText}
             display="flex"
@@ -109,7 +109,7 @@ export default function ReviewssModal({ recipe }) {
           </Box>
           {reviews?.length > 0 ? (
             reviews.map((r, i) => (
-              <DialogContent item xs={12}>
+              <DialogContent item xs={12} key={i}>
                 <Card variant="outlined">
                   <CardHeader
                     title={title}

@@ -150,9 +150,6 @@ export default function ValidRecipes() {
         inRange(recipe.nutrition.protein, filters.protein) &&
         inRange(recipe.nutrition.fats, filters.fats) &&
         inRange(recipe.cooking_time, filters.cooking_time, 14400) &&
-        (!filters.halal || recipe.halal) &&
-        (!filters.kosher || recipe.kosher) &&
-        (!filters.gluten_free || recipe.gluten_free) &&
         (!filters.vegan || recipe.vegan) &&
         (!filters.vegetarian || recipe.vegetarian) &&
         recipe.rating >= filters.min_rating &&
@@ -172,7 +169,7 @@ export default function ValidRecipes() {
     if (ingredients?.length > 0) {
       let newRecipes = await axios
         .get(
-          `http://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
+          `https://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
             "_"
           )}`
         )
