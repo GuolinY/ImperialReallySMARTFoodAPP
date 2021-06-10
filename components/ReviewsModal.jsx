@@ -112,7 +112,7 @@ export default function ReviewssModal({ recipe }) {
               <DialogContent item xs={12} key={i}>
                 <Card variant="outlined">
                   <CardHeader
-                    title={title}
+                    title={r.title}
                     avatar={<Avatar>{r.user.charAt(0)}</Avatar>}
                   />
                   <CardContent>
