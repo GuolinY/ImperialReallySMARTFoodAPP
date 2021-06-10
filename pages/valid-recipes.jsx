@@ -25,7 +25,12 @@ import RestorePageIcon from "@material-ui/icons/RestorePage";
 import { makeStyles } from "@material-ui/core/styles";
 import Masonry from "react-masonry-css";
 import axios from "axios";
-import { useIngredients } from "../contexts/ingredients";
+import {
+  useIngredients,
+  useValidRecipeFilters,
+  useValidRecipeFiltersUpdate,
+  DEFAULT_FILTERS,
+} from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Link from "next/link";
 import Tile from "../components/Tile";
@@ -77,6 +82,9 @@ export default function ValidRecipes() {
   const [recipes, setRecipes] = useState({ id: -1 });
   const [filteredRecipes, setFilteredRecipes] = useState({ id: -1 });
   const [openFilter, setOpenFilter] = useState(false);
+  const filters = useValidRecipeFilters();
+  const setFilters = useValidRecipeFiltersUpdate();
+  const [sortBy, setSortBy] = useState("");
 
   const breakpoints = {
     default: 4,
@@ -84,30 +92,6 @@ export default function ValidRecipes() {
     700: 2,
     500: 1,
   };
-
-  useEffect(async () => {
-    if (ingredients?.length > 0) {
-      const newRecipes = await axios
-        .get(
-          `http://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
-            "_"
-          )}`
-        )
-        .then((res) => {
-          setLoading(false);
-          return res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      setRecipes(newRecipes);
-      setFilteredRecipes(newRecipes);
-    }
-    setLoading(false);
-  }, []);
-
-  const hasValidRecipes = Array.isArray(recipes);
-  const hasFilteredRecipes = Array.isArray(filteredRecipes);
 
   const LoadingRecipe = () => {
     return (
@@ -128,18 +112,6 @@ export default function ValidRecipes() {
     );
   };
 
-  const closeFilter = () => setOpenFilter(false);
-
-  const resetRecipeFilter = () => {
-    const newRecipes = [...recipes];
-    if (sortBy) {
-      newRecipes.sort(sortFunctions[sortBy]);
-    }
-    setFilteredRecipes(newRecipes);
-  };
-
-  const [sortBy, setSortBy] = useState("");
-
   const sortFunctions = {
     rating: (first, second) => second.rating - first.rating,
     time_asc: (first, second) => first.cooking_time - second.cooking_time,
@@ -150,13 +122,14 @@ export default function ValidRecipes() {
       second.nutrition.calories - first.nutrition.calories,
   };
 
-  const handleSelectSort = (event) => {
-    const sorted = [...filteredRecipes].sort(sortFunctions[event.target.value]);
-    setSortBy(event.target.value);
-    setFilteredRecipes(sorted);
+  const sortRecipes = (recipes, sortBy) => {
+    if (sortBy) {
+      return [...filteredRecipes].sort(sortFunctions[sortBy]);
+    }
+    return recipes;
   };
 
-  const onFilterSubmit = (filters) => {
+  const filterRecipes = (recipes, filters) => {
     const inRange = (value, [l, u], max = 500) => {
       if (u == max) {
         return l <= value;
@@ -192,8 +165,53 @@ export default function ValidRecipes() {
     if (sortBy) {
       newRecipes.sort(sortFunctions[sortBy]);
     }
-    setFilteredRecipes(newRecipes.length == 0 ? { id: -1 } : newRecipes);
+    return newRecipes.length == 0 ? { id: -1 } : newRecipes;
+  };
+
+  useEffect(async () => {
+    if (ingredients?.length > 0) {
+      let newRecipes = await axios
+        .get(
+          `http://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
+            "_"
+          )}`
+        )
+        .then((res) => {
+          setLoading(false);
+          return res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      setRecipes(newRecipes);
+      setFilteredRecipes(
+        sortRecipes(filterRecipes(newRecipes, filters), sortBy)
+      );
+    }
+    setLoading(false);
+  }, []);
+
+  const hasValidRecipes = Array.isArray(recipes);
+  const hasFilteredRecipes = Array.isArray(filteredRecipes);
+
+  const closeFilter = () => setOpenFilter(false);
+
+  const resetRecipeFilter = () => {
+    setFilteredRecipes(
+      sortRecipes(filterRecipes(recipes, DEFAULT_FILTERS), sortBy)
+    );
+    setFilters(DEFAULT_FILTERS);
+  };
+
+  const onFilterSubmit = (filters) => {
+    setFilteredRecipes(filterRecipes(recipes, filters));
+    setFilters(filters);
     setOpenFilter(false);
+  };
+
+  const handleSelectSort = (event) => {
+    setFilteredRecipes(sortRecipes(recipes, event.target.value));
+    setSortBy(event.target.value);
   };
 
   return (
@@ -258,7 +276,7 @@ export default function ValidRecipes() {
             padding: "24px",
           }}
         >
-          <RecipeFilter onSubmit={onFilterSubmit} />
+          <RecipeFilter onSubmit={onFilterSubmit} initialValues={filters} />
         </DialogContent>
       </Dialog>
       <Container style={{ marginTop: 20 }}>

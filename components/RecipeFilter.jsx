@@ -41,6 +41,23 @@ export default function Filter({
   onSubmit = (values) => {
     console.log(JSON.stringify(values, null, 2));
   },
+  initialValues = {
+    calories: [0, 5000],
+    carbs: [0, 500],
+    protein: [0, 500],
+    fats: [0, 500],
+    cooking_time: [0, 9000],
+    halal: false,
+    vegan: false,
+    vegetarian: false,
+    gluten_free: false,
+    min_rating: 0,
+    difficulty: {
+      easy: true,
+      medium: true,
+      hard: true,
+    },
+  }
 }) {
   const classes = useStyles();
 
@@ -81,23 +98,7 @@ export default function Filter({
 
   return (
     <Formik
-      initialValues={{
-        calories: [0, 5000],
-        carbs: [0, 500],
-        protein: [0, 500],
-        fats: [0, 500],
-        cooking_time: [0, 9000],
-        halal: false,
-        vegan: false,
-        vegetarian: false,
-        gluten_free: false,
-        min_rating: 0,
-        difficulty: {
-          easy: true,
-          medium: true,
-          hard: true,
-        },
-      }}
+      initialValues={initialValues}
       onSubmit={onSubmit}
     >
       {({ setFieldValue, values, handleSubmit }) => (
@@ -344,4 +345,5 @@ export default function Filter({
 
 Filter.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  initialValues: PropTypes.object.isRequired,
 };
