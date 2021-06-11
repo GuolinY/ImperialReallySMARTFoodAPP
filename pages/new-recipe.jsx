@@ -28,7 +28,8 @@ const validationSchema = yup.object({
     .of(yup.string().required("Ingredient cannnot be empty"))
     .min(1, "Ingredients are required"),
   method: yup.string().required("Recipe needs a method"),
-  time: yup.number().required("Recipe needs a cook time"),
+  hours: yup.number().required("Recipe needs a cook time"),
+  minutes: yup.number().required("Recipe needs a cook time"),
   vegan: yup.bool(),
   vegetarian: yup.bool(),
   difficulty: yup
@@ -73,7 +74,8 @@ export default function NewRecipe() {
             "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
           ingredients: [""],
           method: "",
-          time: 0,
+          hours: 0,
+          minutes: 0,
           difficulty: 1,
           vegetarian: false,
           vegan: false,
@@ -84,6 +86,7 @@ export default function NewRecipe() {
         }}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
+          values.time = values.hours * 3600 + values.minutes * 60;
           axios
             .post(
               "https://smart-food-app-backend.herokuapp.com/recipes/submit",
@@ -220,22 +223,52 @@ export default function NewRecipe() {
                     required
                   />
                 </Grid>
-                <Grid item>
-                  <TextField
-                    id="time"
-                    label="Cooking Time"
-                    type="time"
-                    variant="outlined"
-                    defaultValue="00:00"
-                    InputLabelProps={{
-                      shrink: true,
+                <Grid
+                  item
+                  xs={12}
+                  container
+                  style={{ textAlign: "right" }}
+                  spacing={2}
+                >
+                  <Grid
+                    item
+                    xs={6}
+                    sm={8}
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      display: "flex",
                     }}
-                    onChange={(e) => {
-                      setFieldValue("time", hMToS(e.target.value));
-                    }}
-                    fullWidth
-                    required
-                  />
+                  >
+                    <Typography variant="body1">Cooking time</Typography>
+                  </Grid>
+                  <Grid item xs={3} sm={2}>
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      onChange={(e) => {
+                        const newValue = parseInt(e.target.value);
+                        setFieldValue("hours", isNaN(newValue) ? 0 : newValue);
+                      }}
+                      label="Hours"
+                      value={values.hours}
+                    />
+                  </Grid>
+                  <Grid item xs={3} sm={2}>
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      onChange={(e) => {
+                        const newValue = parseInt(e.target.value);
+                        setFieldValue(
+                          "minutes",
+                          isNaN(newValue) ? 0 : newValue
+                        );
+                      }}
+                      label="Minutes"
+                      value={values.minutes}
+                    />
+                  </Grid>
                 </Grid>
 
                 <Grid item container spacing={2}>
@@ -246,9 +279,10 @@ export default function NewRecipe() {
                         label={x.charAt(0).toUpperCase() + x.slice(1)}
                         variant="outlined"
                         fullWidth
-                        onChange={(e) =>
-                          setFieldValue(x, parseInt(e.target.value))
-                        }
+                        onChange={(e) => {
+                          const newValue = parseInt(e.target.value);
+                          setFieldValue(x, isNaN(newValue) ? 0 : newValue);
+                        }}
                         value={values[x]}
                       />
                     </Grid>
