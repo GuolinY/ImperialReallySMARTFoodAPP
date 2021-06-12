@@ -1,9 +1,6 @@
 import React, { forwardRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
 import { withStyles } from "@material-ui/core/styles";
-import Fade from "@material-ui/core/Fade";
 import {
   Button,
   Card,
@@ -12,11 +9,12 @@ import {
   Paper,
   Typography,
   Container,
-  Grid,
-  CardActions,
   Avatar,
   IconButton,
   Box,
+  Slider,
+  Grid,
+  TextField,
 } from "@material-ui/core";
 import RatingAndReviews from "./RatingAndReviews";
 import Rating from "@material-ui/lab/Rating";
@@ -29,6 +27,8 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import CloseIcon from "@material-ui/icons/Close";
+import * as yup from "yup";
+import { FieldArray, Form, Formik, Field } from "formik";
 
 const StyledRating = withStyles({
   iconFilled: {
@@ -62,6 +62,35 @@ const useStyles = makeStyles((theme) => ({
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const validationSchema = yup.object({
+  title: yup.string().required(),
+  content: yup.string().required(),
+  rating: yup.number().required(),
+});
+
+const ratingMarks = [
+  {
+    value: 1,
+    label: "1",
+  },
+  {
+    value: 2,
+    label: "2",
+  },
+  {
+    value: 3,
+    label: "3",
+  },
+  {
+    value: 4,
+    label: "4",
+  },
+  {
+    value: 5,
+    label: "5",
+  },
+];
 
 export default function ReviewssModal({ recipe }) {
   const classes = useStyles();
@@ -107,6 +136,98 @@ export default function ReviewssModal({ recipe }) {
               <CloseIcon />
             </IconButton>
           </Box>
+          <DialogContent>
+            <Formik
+              initialValues={{
+                title: "",
+                rating: 0,
+                content: "",
+                user: "",
+              }}
+              validationSchema={validationSchema}
+              onSubmit={async (values, { resetForm }) => {
+                axios
+                  .post(
+                    "https://smart-food-app-backend.herokuapp.com/reviews/submit",
+                    values
+                  )
+                  .then((result) => console.log(result));
+                resetForm({});
+                console.log("form reset");
+              }}
+            >
+              {({ values, touched, errors, handleChange, setFieldValue }) => (
+                <Form autoComplete="off">
+                  <Paper elevation={1} style={{ padding: 32 }}>
+                    <Grid
+                      container
+                      direction="column"
+                      alignItems="stretch"
+                      spacing={2}
+                    >
+                      <Typography variant="h6" gutterBottom>
+                        Submit a new review
+                      </Typography>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="title"
+                          variant="outlined"
+                          label="Title"
+                          onChange={handleChange}
+                          error={touched.title && Boolean(errors.title)}
+                          helperText={touched.title && errors.title}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Rating
+                          id="rating"
+                          value={values.rating}
+                          onChange={(e) =>
+                            setFieldValue("rating", parseInt(e.target.value))
+                          }
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          id="content"
+                          variant="outlined"
+                          label="Review"
+                          placeholder="What would you like or dislike about this recipe?"
+                          onChange={handleChange}
+                          error={touched.content && Boolean(errors.content)}
+                          helperText={touched.content && errors.content}
+                          multiline
+                          rows={3}
+                          defaul
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Button variant="contained" type="submit">
+                          Submit
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                  <>
+                    <pre style={{ textAlign: "left" }}>
+                      <strong>Values</strong>
+                      <br />
+                      {JSON.stringify(values, null, 2)}
+                    </pre>
+                    <pre style={{ textAlign: "left" }}>
+                      <strong>Errors</strong>
+                      <br />
+                      {JSON.stringify(errors, null, 2)}
+                    </pre>
+                  </>
+                </Form>
+              )}
+            </Formik>
+          </DialogContent>
           {reviews?.length > 0 ? (
             reviews.map((r, i) => (
               <DialogContent item xs={12} key={i}>
