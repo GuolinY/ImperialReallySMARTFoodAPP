@@ -139,7 +139,6 @@ export default function ReviewsModal({ recipe }) {
           <DialogContent>
             <Formik
               initialValues={{
-                recipe_id: recipe.id,
                 title: "",
                 rating: 5,
                 content: "",
@@ -150,7 +149,7 @@ export default function ReviewsModal({ recipe }) {
                 axios
                   .post(
                     "https://smart-food-app-backend.herokuapp.com/reviews/submit",
-                    values
+                    { ...values, recipe_id: recipe.id }
                   )
                   .then((result) => console.log(result));
                 resetForm();
@@ -185,6 +184,7 @@ export default function ReviewsModal({ recipe }) {
                       <Grid item>
                         <Rating
                           id="rating"
+                          name="rating"
                           value={values.rating}
                           onChange={(e) =>
                             setFieldValue("rating", parseInt(e.target.value))
@@ -203,7 +203,6 @@ export default function ReviewsModal({ recipe }) {
                           helperText={touched.content && errors.content}
                           multiline
                           rows={3}
-                          defaul
                           required
                           fullWidth
                         />
@@ -233,7 +232,7 @@ export default function ReviewsModal({ recipe }) {
           </DialogContent>
           {reviews?.length > 0 ? (
             reviews.map((r, i) => (
-              <DialogContent item xs={12} key={i}>
+              <DialogContent key={i}>
                 <Card variant="outlined">
                   <CardHeader
                     title={r.title}
