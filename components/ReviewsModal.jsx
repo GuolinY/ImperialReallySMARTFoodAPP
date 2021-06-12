@@ -92,7 +92,7 @@ const ratingMarks = [
   },
 ];
 
-export default function ReviewssModal({ recipe }) {
+export default function ReviewsModal({ recipe }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
@@ -139,21 +139,22 @@ export default function ReviewssModal({ recipe }) {
           <DialogContent>
             <Formik
               initialValues={{
+                recipe_id: recipe.id,
                 title: "",
-                rating: 0,
+                rating: 5,
                 content: "",
                 user: "",
               }}
               validationSchema={validationSchema}
-              onSubmit={async (values, { resetForm }) => {
+              onSubmit={async (values, { resetForm, setFieldValue }) => {
                 axios
                   .post(
                     "https://smart-food-app-backend.herokuapp.com/reviews/submit",
                     values
                   )
                   .then((result) => console.log(result));
-                resetForm({});
-                console.log("form reset");
+                resetForm();
+                values = {};
               }}
             >
               {({ values, touched, errors, handleChange, setFieldValue }) => (
@@ -173,6 +174,7 @@ export default function ReviewssModal({ recipe }) {
                           id="title"
                           variant="outlined"
                           label="Title"
+                          value={values.title}
                           onChange={handleChange}
                           error={touched.title && Boolean(errors.title)}
                           helperText={touched.title && errors.title}
@@ -194,6 +196,7 @@ export default function ReviewssModal({ recipe }) {
                           id="content"
                           variant="outlined"
                           label="Review"
+                          value={values.content}
                           placeholder="What would you like or dislike about this recipe?"
                           onChange={handleChange}
                           error={touched.content && Boolean(errors.content)}
