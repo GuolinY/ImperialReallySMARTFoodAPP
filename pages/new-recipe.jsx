@@ -85,7 +85,7 @@ export default function NewRecipe() {
           fats: 0,
         }}
         validationSchema={validationSchema}
-        onSubmit={async (values) => {
+        onSubmit={async (values, { resetForm, setFieldValue }) => {
           values.time = values.hours * 3600 + values.minutes * 60;
           axios
             .post(
@@ -93,6 +93,8 @@ export default function NewRecipe() {
               values
             )
             .then((result) => console.log(result));
+          resetForm();
+          alert("submitted new recipe");
         }}
       >
         {({ values, touched, errors, handleChange, setFieldValue }) => (
@@ -151,14 +153,17 @@ export default function NewRecipe() {
                             </Grid>
                           </Grid>
                         ))}
-                        <Button
-                          variant="outlined"
-                          color="default"
-                          onClick={() => push("")}
-                          startIcon={<AddCircleOutlineIcon />}
-                        >
-                          Add Ingredient
-                        </Button>
+                        <Grid item>
+                          <Button
+                            variant="outlined"
+                            color="default"
+                            fullWidth
+                            onClick={() => push("")}
+                            startIcon={<AddCircleOutlineIcon />}
+                          >
+                            Add Ingredient
+                          </Button>
+                        </Grid>
                       </>
                     )}
                   </FieldArray>
@@ -223,25 +228,11 @@ export default function NewRecipe() {
                     required
                   />
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  container
-                  style={{ textAlign: "right" }}
-                  spacing={2}
-                >
-                  <Grid
-                    item
-                    xs={6}
-                    sm={8}
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                      display: "flex",
-                    }}
-                  >
-                    <Typography variant="body1">Cooking time</Typography>
-                  </Grid>
+
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Cooking time</FormLabel>
+                </Grid>
+                <Grid item container spacing={2}>
                   <Grid item xs={3} sm={2}>
                     <TextField
                       variant="outlined"
@@ -271,6 +262,9 @@ export default function NewRecipe() {
                   </Grid>
                 </Grid>
 
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Nutritional Information</FormLabel>
+                </Grid>
                 <Grid item container spacing={2}>
                   {["calories", "carbs", "protein", "fats"].map((x, i) => (
                     <Grid item xs={6} key={i}>
