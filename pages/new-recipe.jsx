@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import * as yup from "yup";
 import { FieldArray, Form, Formik, Field } from "formik";
 import {
@@ -25,7 +26,10 @@ const validationSchema = yup.object({
   name: yup.string("Enter recipe name").required("Recipe name is required"),
   image_link: yup
     .string()
-    .url()
+    .matches(
+      /((https?):\/\/)?(www.)?(i.imgur.com\/)[a-zA-Z0-9]+(.png)/,
+      "Enter a url of an image hosted on imgur"
+    )
     .required(
       "Need an image of the finished product, you need to start your link with http://"
     ),
@@ -76,7 +80,7 @@ export default function NewRecipe() {
       <Formik
         initialValues={{
           name: "",
-          image_link: "",
+          image_link: "https://i.imgur.com/e9FZq3W.png",
           ingredients: [""],
           method: "",
           hours: 0,
@@ -104,7 +108,7 @@ export default function NewRecipe() {
       >
         {({ values, touched, errors, handleChange, setFieldValue }) => (
           <Form autoComplete="off">
-            <Paper variant="outlined" elevation={3} style={{ padding: 16 }}>
+            <Paper variant="outlined" elevation={20} style={{ padding: 16 }}>
               <Grid
                 container
                 spacing={2}
@@ -146,6 +150,13 @@ export default function NewRecipe() {
                     fullWidth
                   />
                 </Grid>
+                {/* <Grid item>
+                  <Image
+                    src={`${values.image_link}`}
+                    height={200}
+                    width={200}
+                  />
+                </Grid> */}
                 <Grid item style={{ textAlign: "left" }}>
                   <FormLabel>Ingredients</FormLabel>
                 </Grid>
