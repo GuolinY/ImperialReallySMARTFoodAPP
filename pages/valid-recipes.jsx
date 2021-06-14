@@ -182,19 +182,21 @@ export default function ValidRecipes() {
         .catch((err) => {
           console.log(err);
         });
-      newRecipes.forEach((recipe) => {
-        recipe.notUsed = ingredients.filter(
-          (ingredient) => !recipe.ingredients.includes(ingredient)
+      if (Array.isArray(newRecipes)) {
+        newRecipes.forEach((recipe) => {
+          recipe.notUsed = ingredients.filter(
+            (ingredient) => !recipe.ingredients.includes(ingredient)
+          );
+          recipe.missing = recipe.ingredients.filter(
+            (ingredient) => !ingredients.includes(ingredient)
+          );
+        });
+        setRecipes(newRecipes);
+        setFilteredRecipes(newRecipes);
+        setFilteredRecipes(
+          sortRecipes(filterRecipes(newRecipes, filters), sortBy)
         );
-        recipe.missing = recipe.ingredients.filter(
-          (ingredient) => !ingredients.includes(ingredient)
-        );
-      });
-      setRecipes(newRecipes);
-      setFilteredRecipes(newRecipes);
-      setFilteredRecipes(
-        sortRecipes(filterRecipes(newRecipes, filters), sortBy)
-      );
+      }
       console.log(newRecipes);
     }
     setLoading(false);

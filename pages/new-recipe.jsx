@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import * as yup from "yup";
 import { FieldArray, Form, Formik, Field } from "formik";
 import {
@@ -23,6 +24,15 @@ import axios from "axios";
 
 const validationSchema = yup.object({
   name: yup.string("Enter recipe name").required("Recipe name is required"),
+  image_link: yup
+    .string()
+    .matches(
+      /((https?):\/\/)?(www.)?(i.imgur.com\/)[a-zA-Z0-9]+(.png)/,
+      "Enter a url of an image hosted on imgur"
+    )
+    .required(
+      "Need an image of the finished product, you need to start your link with http://"
+    ),
   ingredients: yup
     .array()
     .of(yup.string().required("Ingredient cannnot be empty"))
@@ -41,6 +51,7 @@ const validationSchema = yup.object({
   protein: yup.number().required("Amount of protein is required"),
   fats: yup.number().required("Amount of fats is required"),
   carbs: yup.number().required("Amount of carbohydrates is required"),
+  extra_link: yup.string().url(),
 });
 
 export default function NewRecipe() {
@@ -70,8 +81,7 @@ export default function NewRecipe() {
       <Formik
         initialValues={{
           name: "",
-          image_link:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+          image_link: "https://i.imgur.com/e9FZq3W.png",
           ingredients: [""],
           method: "",
           hours: 0,
@@ -83,9 +93,10 @@ export default function NewRecipe() {
           carbs: 0,
           protein: 0,
           fats: 0,
+          extra_link: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={async (values) => {
+        onSubmit={async (values, { resetForm, setFieldValue }) => {
           values.time = values.hours * 3600 + values.minutes * 60;
           axios
             .post(
@@ -93,11 +104,13 @@ export default function NewRecipe() {
               values
             )
             .then((result) => console.log(result));
+          resetForm();
+          alert("submitted new recipe");
         }}
       >
         {({ values, touched, errors, handleChange, setFieldValue }) => (
           <Form autoComplete="off">
-            <Paper variant="outlined" elevation={3} style={{ padding: 16 }}>
+            <Paper variant="outlined" elevation={20} style={{ padding: 16 }}>
               <Grid
                 container
                 spacing={2}
@@ -105,10 +118,14 @@ export default function NewRecipe() {
                 justify="center"
                 alignItems="stretch"
               >
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Recipe Name</FormLabel>
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     id="name"
                     variant="outlined"
+                    value={values.name}
                     label="Recipe Name"
                     onChange={handleChange}
                     error={touched.name && Boolean(errors.name)}
@@ -117,12 +134,33 @@ export default function NewRecipe() {
                     fullWidth
                   />
                 </Grid>
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Image</FormLabel>
+                </Grid>
 
-                <Grid item>
-                  <Button variant="outlined" component="label">
-                    Upload a photo of the final product
-                    <input type="file" accept="image/png, image/jpeg" hidden />
-                  </Button>
+                <Grid item xs={12}>
+                  <TextField
+                    id="image_link"
+                    variant="outlined"
+                    value={values.image_link}
+                    label="Image URL"
+                    placeholder="Paste a link to your image here"
+                    onChange={handleChange}
+                    error={touched.image_link && Boolean(errors.image_link)}
+                    helperText={touched.image_link && errors.image_link}
+                    required
+                    fullWidth
+                  />
+                </Grid>
+                {/* <Grid item>
+                  <Image
+                    src={`${values.image_link}`}
+                    height={200}
+                    width={200}
+                  />
+                </Grid> */}
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Ingredients</FormLabel>
                 </Grid>
 
                 <Grid item container direction="column" spacing={2}>
@@ -151,14 +189,17 @@ export default function NewRecipe() {
                             </Grid>
                           </Grid>
                         ))}
-                        <Button
-                          variant="outlined"
-                          color="default"
-                          onClick={() => push("")}
-                          startIcon={<AddCircleOutlineIcon />}
-                        >
-                          Add Ingredient
-                        </Button>
+                        <Grid item>
+                          <Button
+                            variant="outlined"
+                            color="default"
+                            fullWidth
+                            onClick={() => push("")}
+                            startIcon={<AddCircleOutlineIcon />}
+                          >
+                            Add Ingredient
+                          </Button>
+                        </Grid>
                       </>
                     )}
                   </FieldArray>
@@ -223,25 +264,11 @@ export default function NewRecipe() {
                     required
                   />
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  container
-                  style={{ textAlign: "right" }}
-                  spacing={2}
-                >
-                  <Grid
-                    item
-                    xs={6}
-                    sm={8}
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                      display: "flex",
-                    }}
-                  >
-                    <Typography variant="body1">Cooking time</Typography>
-                  </Grid>
+
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Cooking time</FormLabel>
+                </Grid>
+                <Grid item container spacing={2}>
                   <Grid item xs={3} sm={2}>
                     <TextField
                       variant="outlined"
@@ -271,6 +298,9 @@ export default function NewRecipe() {
                   </Grid>
                 </Grid>
 
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Nutritional Information</FormLabel>
+                </Grid>
                 <Grid item container spacing={2}>
                   {["calories", "carbs", "protein", "fats"].map((x, i) => (
                     <Grid item xs={6} key={i}>
@@ -287,6 +317,22 @@ export default function NewRecipe() {
                       />
                     </Grid>
                   ))}
+                </Grid>
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Extra information</FormLabel>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="extra_link"
+                    variant="outlined"
+                    value={values.extra_link}
+                    label="Link to extra information"
+                    placeholder="Paste a link here"
+                    onChange={handleChange}
+                    error={touched.extra_link && Boolean(errors.extra_link)}
+                    helperText={touched.extra_link && errors.extra_link}
+                    fullWidth
+                  />
                 </Grid>
                 <Grid item>
                   <Button variant="contained" color="primary" type="submit">
