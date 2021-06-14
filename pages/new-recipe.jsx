@@ -27,12 +27,10 @@ const validationSchema = yup.object({
   image_link: yup
     .string()
     .matches(
-      /((https?):\/\/)?(www.)?(i.imgur.com\/)[a-zA-Z0-9]+(.png)/,
-      "Enter a url of an image hosted on imgur"
+      /((https?):\/\/)?(www.)?(i.imgur.com\/)[a-zA-Z0-9]+(.((png)|(jpg)|(jpeg)|(gif)))/,
+      "Need an image of the finished product, your link should look something like https://i.imgur.com/<image_name> (image needs to be a png, jpeg, jpg, gif)"
     )
-    .required(
-      "Need an image of the finished product, you need to start your link with http://"
-    ),
+    .required("Please enter a link to an image hosted on imgur"),
   ingredients: yup
     .array()
     .of(yup.string().required("Ingredient cannnot be empty"))
@@ -98,6 +96,9 @@ export default function NewRecipe() {
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm, setFieldValue }) => {
           values.time = values.hours * 3600 + values.minutes * 60;
+          values.ingredients = values.ingredients.map((ing) =>
+            ing.toLowerCase()
+          );
           axios
             .post(
               "https://smart-food-app-backend.herokuapp.com/recipes/submit",
@@ -175,12 +176,7 @@ export default function NewRecipe() {
                                 label="Ingredient"
                                 name={`ingredients[${i}]`}
                                 value={values.ingredients[i]}
-                                onChange={(e, value) =>
-                                  setFieldValue(
-                                    `ingredients[${i}]`,
-                                    value.toLowerCase()
-                                  )
-                                }
+                                onChange={handleChange}
                                 fullWidth
                               />
                             </Grid>

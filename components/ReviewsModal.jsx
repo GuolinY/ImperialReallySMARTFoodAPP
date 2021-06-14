@@ -15,6 +15,7 @@ import {
   Slider,
   Grid,
   TextField,
+  FormLabel,
 } from "@material-ui/core";
 import RatingAndReviews from "./RatingAndReviews";
 import Rating from "@material-ui/lab/Rating";
@@ -181,15 +182,26 @@ export default function ReviewsModal({ recipe }) {
                           fullWidth
                         />
                       </Grid>
-                      <Grid item>
-                        <Rating
-                          id="rating"
-                          name="rating"
-                          value={values.rating}
-                          onChange={(e) =>
-                            setFieldValue("rating", parseInt(e.target.value))
-                          }
-                        />
+                      <Grid
+                        item
+                        container
+                        className={classes.iconsAndText}
+                        spacing={2}
+                        justify="space-between"
+                      >
+                        <Grid item>
+                          <FormLabel>Rating:</FormLabel>
+                        </Grid>
+                        <Grid item>
+                          <Rating
+                            id="rating"
+                            name="rating"
+                            value={values.rating}
+                            onChange={(e) =>
+                              setFieldValue("rating", parseInt(e.target.value))
+                            }
+                          />
+                        </Grid>
                       </Grid>
                       <Grid item>
                         <TextField
