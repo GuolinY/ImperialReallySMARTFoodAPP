@@ -51,6 +51,7 @@ const validationSchema = yup.object({
   protein: yup.number().required("Amount of protein is required"),
   fats: yup.number().required("Amount of fats is required"),
   carbs: yup.number().required("Amount of carbohydrates is required"),
+  extra_link: yup.string().url(),
 });
 
 export default function NewRecipe() {
@@ -92,6 +93,7 @@ export default function NewRecipe() {
           carbs: 0,
           protein: 0,
           fats: 0,
+          extra_link: "",
         }}
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm, setFieldValue }) => {
@@ -315,6 +317,22 @@ export default function NewRecipe() {
                       />
                     </Grid>
                   ))}
+                </Grid>
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Extra information</FormLabel>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="extra_link"
+                    variant="outlined"
+                    value={values.extra_link}
+                    label="Link to extra information"
+                    placeholder="Paste a link here"
+                    onChange={handleChange}
+                    error={touched.extra_link && Boolean(errors.extra_link)}
+                    helperText={touched.extra_link && errors.extra_link}
+                    fullWidth
+                  />
                 </Grid>
                 <Grid item>
                   <Button variant="contained" color="primary" type="submit">
