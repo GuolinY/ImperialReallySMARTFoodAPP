@@ -23,6 +23,7 @@ import axios from "axios";
 
 const validationSchema = yup.object({
   name: yup.string("Enter recipe name").required("Recipe name is required"),
+  image_link: yup.string().url().required(),
   ingredients: yup
     .array()
     .of(yup.string().required("Ingredient cannnot be empty"))
@@ -70,8 +71,7 @@ export default function NewRecipe() {
       <Formik
         initialValues={{
           name: "",
-          image_link:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+          image_link: "",
           ingredients: [""],
           method: "",
           hours: 0,
@@ -107,6 +107,9 @@ export default function NewRecipe() {
                 justify="center"
                 alignItems="stretch"
               >
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Recipe Name</FormLabel>
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     id="name"
@@ -120,12 +123,26 @@ export default function NewRecipe() {
                     fullWidth
                   />
                 </Grid>
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Image</FormLabel>
+                </Grid>
 
-                <Grid item>
-                  <Button variant="outlined" component="label">
-                    Upload a photo of the final product
-                    <input type="file" accept="image/png, image/jpeg" hidden />
-                  </Button>
+                <Grid item xs={12}>
+                  <TextField
+                    id="image_link"
+                    variant="outlined"
+                    value={values.image_link}
+                    label="Image URL"
+                    placeholder="Paste a link to your image here"
+                    onChange={handleChange}
+                    error={touched.image_link && Boolean(errors.image_link)}
+                    helperText={touched.image_link && errors.image_link}
+                    required
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item style={{ textAlign: "left" }}>
+                  <FormLabel>Ingredients</FormLabel>
                 </Grid>
 
                 <Grid item container direction="column" spacing={2}>
