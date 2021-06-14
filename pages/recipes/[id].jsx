@@ -188,14 +188,16 @@ export default function Recipe() {
                       </ListItem>
                     </>
                   ))}
-                  <ListItem>
-                    <Typography variant="h6">
-                      For extra information{" "}
-                      <Link href={recipe.extra_link} passHref>
-                        <Button variant="outlined">Click here</Button>
-                      </Link>
-                    </Typography>
-                  </ListItem>
+                  {recipe.extra_link && (
+                    <ListItem>
+                      <Typography variant="h6">
+                        For extra information{" "}
+                        <Link href={recipe.extra_link} passHref>
+                          <Button variant="outlined">Click here</Button>
+                        </Link>
+                      </Typography>
+                    </ListItem>
+                  )}
                 </List>
               </Grid>
             </Grid>
