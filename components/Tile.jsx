@@ -105,17 +105,17 @@ export default function Tile(props) {
           <br />
           Carbohydrates:
           <span className={classes.nutritionalData}>
-            {recipe.nutrition.carbohydrates}
+            {recipe.nutrition.carbohydrates}g
           </span>
           <br />
           Protein:
           <span className={classes.nutritionalData}>
-            {recipe.nutrition.protein}
+            {recipe.nutrition.protein}g
           </span>
           <br />
           Fat:
           <span className={classes.nutritionalData}>
-            {recipe.nutrition.fats}
+            {recipe.nutrition.fats}g
           </span>
         </Typography>
         <div style={{ textAlign: "left", padding: "12px 0px" }}>
