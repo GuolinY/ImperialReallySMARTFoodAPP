@@ -214,7 +214,7 @@ export default function ReviewsModal({ recipe }) {
                       </Grid>
                     </Grid>
                   </Paper>
-                  <>
+                  {/* <>
                     <pre style={{ textAlign: "left" }}>
                       <strong>Values</strong>
                       <br />
@@ -225,7 +225,7 @@ export default function ReviewsModal({ recipe }) {
                       <br />
                       {JSON.stringify(errors, null, 2)}
                     </pre>
-                  </>
+                  </> */}
                 </Form>
               )}
             </Formik>
