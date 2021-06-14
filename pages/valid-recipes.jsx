@@ -29,6 +29,7 @@ import {
   useIngredients,
   useValidRecipeFilters,
   useValidRecipeFiltersUpdate,
+  useLoadingIngredients,
   DEFAULT_FILTERS,
 } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -79,6 +80,7 @@ export default function ValidRecipes() {
 
   const ingredients = useIngredients();
   const [loading, setLoading] = useState(true);
+  const loadingIngredients = useLoadingIngredients();
   const [recipes, setRecipes] = useState({ id: -1 });
   const [filteredRecipes, setFilteredRecipes] = useState({ id: -1 });
   const [openFilter, setOpenFilter] = useState(false);
@@ -168,6 +170,7 @@ export default function ValidRecipes() {
   };
 
   useEffect(async () => {
+    setLoading(true)
     if (ingredients?.length > 0) {
       let newRecipes = await axios
         .get(
@@ -200,7 +203,7 @@ export default function ValidRecipes() {
       console.log(newRecipes);
     }
     setLoading(false);
-  }, []);
+  }, [ingredients]);
 
   const hasValidRecipes = Array.isArray(recipes);
   const hasFilteredRecipes = Array.isArray(filteredRecipes);
@@ -228,7 +231,7 @@ export default function ValidRecipes() {
   return (
     <Layout title="Recipes you can make..." validRecipes>
       <Typography className={classes.title} variant="h1" gutterBottom>
-        {loading
+        {loading || loadingIngredients
           ? "Finding some delicious recipes for you..."
           : hasValidRecipes
           ? hasFilteredRecipes
@@ -236,7 +239,7 @@ export default function ValidRecipes() {
             : "No recipes"
           : `No recipes found :(`}
       </Typography>
-      {!loading && hasValidRecipes && (
+      {!(loading || loadingIngredients) && hasValidRecipes && (
         <Grid container className={classes.filterSelect} spacing={2}>
           <Grid item xs={6}>
             <Button
@@ -292,7 +295,7 @@ export default function ValidRecipes() {
         </DialogContent>
       </Dialog>
       <Container style={{ marginTop: 20 }}>
-        {loading ? (
+        {loading || loadingIngredients ? (
           <LoadingRecipe />
         ) : hasFilteredRecipes ? (
           <Masonry
