@@ -8,8 +8,10 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  Button,
 } from "@material-ui/core";
 import Image from "next/image";
+import Link from "next/link";
 
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 
@@ -174,6 +176,14 @@ export default function Recipe() {
                     </ListItem>
                   ))}
                 </List>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6">
+                  For extra information{" "}
+                  <Link href={recipe.extra_link} passHref>
+                    <Button>Click here</Button>
+                  </Link>
+                </Typography>
               </Grid>
             </Grid>
           </>
