@@ -23,7 +23,12 @@ import axios from "axios";
 
 const validationSchema = yup.object({
   name: yup.string("Enter recipe name").required("Recipe name is required"),
-  image_link: yup.string().url().required(),
+  image_link: yup
+    .string()
+    .url()
+    .required(
+      "Need an image of the finished product, you need to start your link with http://"
+    ),
   ingredients: yup
     .array()
     .of(yup.string().required("Ingredient cannnot be empty"))
