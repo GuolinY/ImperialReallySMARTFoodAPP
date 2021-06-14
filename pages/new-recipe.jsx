@@ -111,6 +111,7 @@ export default function NewRecipe() {
                   <TextField
                     id="name"
                     variant="outlined"
+                    value={values.name}
                     label="Recipe Name"
                     onChange={handleChange}
                     error={touched.name && Boolean(errors.name)}
