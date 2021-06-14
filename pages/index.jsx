@@ -89,7 +89,7 @@ export default function Home() {
   const handleIngredientInputEntry = (e) => {
     if (e.keyCode == KEYCODE_ENTER) {
       if (ingredientInput) {
-        setIngredients([...ingredients, ingredientInput]);
+        setIngredients([...ingredients, ingredientInput.toLowerCase()]);
         setIngredientInput("");
       }
     }

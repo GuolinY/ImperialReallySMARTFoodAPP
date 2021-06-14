@@ -175,7 +175,12 @@ export default function NewRecipe() {
                                 label="Ingredient"
                                 name={`ingredients[${i}]`}
                                 value={values.ingredients[i]}
-                                onChange={handleChange}
+                                onChange={(e, value) =>
+                                  setFieldValue(
+                                    `ingredients[${i}]`,
+                                    value.toLowerCase()
+                                  )
+                                }
                                 fullWidth
                               />
                             </Grid>
