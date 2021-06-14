@@ -81,7 +81,7 @@ export default function NewRecipe() {
       <Formik
         initialValues={{
           name: "",
-          image_link: "https://i.imgur.com/e9FZq3W.png",
+          image_link: "",
           ingredients: [""],
           method: "",
           hours: 0,
@@ -208,19 +208,38 @@ export default function NewRecipe() {
                   <FormControl>
                     <FormLabel>Diet</FormLabel>
                     <FormGroup row>
-                      {["vegan", "vegetarian"].map((x, i) => (
-                        <FormControlLabel
-                          key={i}
-                          control={
-                            <Checkbox
-                              checked={values[x]}
-                              onChange={handleChange}
-                              name={x}
-                            />
-                          }
-                          label={x.charAt(0).toUpperCase() + x.slice(1)}
-                        />
-                      ))}
+                      <FormControlLabel
+                        key={0}
+                        control={
+                          <Checkbox
+                            checked={values["vegan"]}
+                            onChange={(e, value) => {
+                              setFieldValue("vegan", value);
+                              if (value) {
+                                setFieldValue("vegetarian", true);
+                              }
+                            }}
+                            name="vegan"
+                          />
+                        }
+                        label="Vegan"
+                      />
+                      <FormControlLabel
+                        key={1}
+                        control={
+                          <Checkbox
+                            checked={values["vegetarian"]}
+                            onChange={(e, value) => {
+                              setFieldValue("vegetarian", value);
+                              if (!value) {
+                                setFieldValue("vegan", false);
+                              }
+                            }}
+                            name="vegetarian"
+                          />
+                        }
+                        label="Vegetarian"
+                      />
                     </FormGroup>
                   </FormControl>
                 </Grid>

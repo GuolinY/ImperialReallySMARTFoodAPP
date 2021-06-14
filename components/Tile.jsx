@@ -135,7 +135,7 @@ export default function Tile(props) {
       </CardContent>
       <CardActions>
         <Link href={`/recipes/${recipe.id}`} passHref>
-          <Button color="secondary" variant="contained">
+          <Button color="primary" variant="contained">
             Learn More
           </Button>
         </Link>
