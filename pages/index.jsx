@@ -90,12 +90,19 @@ export default function Home() {
     setIngredientInput(e.target.value);
   };
 
+  const addIngredient = () => {
+    if (ingredientInput) {
+      const ingredientToAdd = ingredientInput.trim().toLowerCase();
+      if (!ingredients.includes(ingredientToAdd)) {
+        setIngredients([...ingredients, ingredientToAdd]);
+      }
+      setIngredientInput("");
+    }
+  };
+
   const handleIngredientInputEntry = (e) => {
     if (e.keyCode == KEYCODE_ENTER) {
-      if (ingredientInput) {
-        setIngredients([...ingredients, ingredientInput.toLowerCase()]);
-        setIngredientInput("");
-      }
+      addIngredient();
     }
   };
 
@@ -153,13 +160,7 @@ export default function Home() {
                     <IconButton
                       aria-label="add ingredient"
                       onClick={() => {
-                        if (ingredientInput) {
-                          setIngredients([
-                            ...ingredients,
-                            ingredientInput.toLowerCase(),
-                          ]);
-                          setIngredientInput("");
-                        }
+                        addIngredient();
                         setInputFocus();
                       }}
                     >
