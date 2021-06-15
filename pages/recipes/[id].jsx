@@ -146,7 +146,7 @@ export default function Recipe() {
                     return (
                       <ListItem key={i}>
                         <ListItemIcon>
-                          <FastfoodIcon color="secondary" />
+                          <FastfoodIcon color="primary" />
                         </ListItemIcon>
                         <ListItemText
                           key={i}
