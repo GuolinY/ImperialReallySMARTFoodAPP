@@ -14,9 +14,14 @@ import {
 } from "@material-ui/core";
 import Link from "next/link";
 import { DeleteOutlined } from "@material-ui/icons";
-import { useIngredients, useIngredientsUpdate } from "../contexts/ingredients";
+import {
+  useIngredients,
+  useIngredientsUpdate,
+  PANTRY_INGREDIENTS,
+} from "../contexts/ingredients";
 import AddIcon from "@material-ui/icons/Add";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
+import InfoIcon from "@material-ui/icons/Info";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -141,10 +146,31 @@ export default function Home() {
             A Really Smart Food App
           </Typography>
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6" gutterBottom>
-            Here to suggest you recipes for the food in your kitchen!
-          </Typography>
+        <Grid
+          item
+          xs={12}
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          spacing={2}
+        >
+          <Grid item>
+            <Typography variant="h6" gutterBottom>
+              Here to suggest you recipes for the food in your kitchen!
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Tooltip
+              placement="top"
+              title={`You should have these basic things in your kitchen: ${PANTRY_INGREDIENTS.join(
+                ", "
+              )}`}
+              interactive
+            >
+              <InfoIcon />
+            </Tooltip>
+          </Grid>
         </Grid>
         <Grid item container direction="column" justify="center">
           <Grid item xs={12}>
@@ -174,13 +200,6 @@ export default function Home() {
                 ),
               }}
             />
-          </Grid>
-          <Grid item>
-            <Typography gutterBottom>
-              You should have these basic things in your kitchen: oil, vinegar,
-              flour, sugar, yeast, baking soda, baking powder, salt, pepper,
-              water
-            </Typography>
           </Grid>
           {ingredients?.length > 0 && (
             <Grid

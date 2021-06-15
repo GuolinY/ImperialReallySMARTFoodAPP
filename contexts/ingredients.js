@@ -45,6 +45,19 @@ export const DEFAULT_FILTERS = {
   },
 };
 
+export const PANTRY_INGREDIENTS = [
+  "oil",
+  "vinegar",
+  "flour",
+  "sugar",
+  "yeast",
+  "baking soda",
+  "baking powder",
+  "salt",
+  "pepper",
+  "water",
+];
+
 export default function IngredientsProvider({ children }) {
   const [ingredientList, setIngredientList] = useState([]);
   const [validRecipeFilters, setValidRecipeFilters] = useState(DEFAULT_FILTERS);

@@ -32,6 +32,7 @@ import {
   useValidRecipeFiltersUpdate,
   useLoadingIngredients,
   DEFAULT_FILTERS,
+  PANTRY_INGREDIENTS,
 } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Link from "next/link";
@@ -178,7 +179,7 @@ export default function ValidRecipes() {
     if (ingredients?.length > 0) {
       let newRecipes = await axios
         .post("https://smart-food-app-backend.herokuapp.com/recipes/partial", {
-        // .post("http://127.0.0.1:8000/recipes/partial", {
+          // .post("http://127.0.0.1:8000/recipes/partial", {
           ingredients,
           no_missing: 2, // default value 2
         })
