@@ -20,6 +20,8 @@ import ReviewsModal from "../../components/ReviewsModal";
 import axios from "axios";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
+import PLACEHOLDER_IMAGE from "../../components/Tile";
+
 export async function getStaticPaths() {
   const res = await axios.get(
     `https://smart-food-app-backend.herokuapp.com/recipes/all`
@@ -32,7 +34,7 @@ export async function getStaticPaths() {
       params: { id: id.toString() },
     };
   });
-  
+
   return {
     paths,
     fallback: false,
@@ -92,9 +94,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Recipe() {
   const classes = useStyles();
   const router = useRouter();
-
-  const PLACEHOLDER_IMAGE =
-    "https://food.files.bbci.co.uk/kandl-food/3098/images/non-spriteable-images/bbc_placeholder.png";
 
   const [loading, setLoading] = useState(true);
   const [recipe, setRecipe] = useState({ id: -1 });

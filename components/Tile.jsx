@@ -64,6 +64,9 @@ const StyledRating = withStyles({
   },
 })(Rating);
 
+export const PLACEHOLDER_IMAGE =
+  "https://food.files.bbci.co.uk/kandl-food/3098/images/non-spriteable-images/bbc_placeholder.png";
+
 export default function Tile(props) {
   const classes = useStyles();
   const { recipe } = props;
@@ -85,11 +88,13 @@ export default function Tile(props) {
         title={recipe.name}
         titleTypographyProps={{ variant: "h4" }}
       />
-      <CardMedia
-        className={classes.media}
-        image={recipe.image_link}
-        title={recipe.name}
-      />
+      {recipe.image_link && recipe.image_link !== PLACEHOLDER_IMAGE && (
+        <CardMedia
+          className={classes.media}
+          image={recipe.image_link}
+          title={recipe.name}
+        />
+      )}
       <CardContent>
         <Typography className={classes.iconsAndText} variant="h6">
           <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp;
@@ -99,25 +104,41 @@ export default function Tile(props) {
         </Typography>
         <Typography variant="body1">{recipe.description}</Typography>
         <Typography className={classes.nutrition} variant="body2">
-          Calories:
-          <span className={classes.nutritionalData}>
-            {recipe.nutrition.calories}
-          </span>
-          <br />
-          Carbohydrates:
-          <span className={classes.nutritionalData}>
-            {recipe.nutrition.carbohydrates}g
-          </span>
-          <br />
-          Protein:
-          <span className={classes.nutritionalData}>
-            {recipe.nutrition.protein}g
-          </span>
-          <br />
-          Fat:
-          <span className={classes.nutritionalData}>
-            {recipe.nutrition.fats}g
-          </span>
+          {recipe.nutrition.calories >= 0 && (
+            <>
+              Calories:
+              <span className={classes.nutritionalData}>
+                {recipe.nutrition.calories}
+              </span>
+              <br />
+            </>
+          )}
+          {recipe.nutrition.calories >= 0 && (
+            <>
+              Carbohydrates:
+              <span className={classes.nutritionalData}>
+                {recipe.nutrition.carbohydrates}g
+              </span>
+              <br />
+            </>
+          )}
+          {recipe.nutrition.calories >= 0 && (
+            <>
+              Protein:
+              <span className={classes.nutritionalData}>
+                {recipe.nutrition.protein}g
+              </span>
+              <br />
+            </>
+          )}
+          {recipe.nutrition.calories >= 0 && (
+            <>
+              Fat:
+              <span className={classes.nutritionalData}>
+                {recipe.nutrition.fats}g
+              </span>
+            </>
+          )}
         </Typography>
         <div style={{ textAlign: "left", padding: "12px 0px" }}>
           {recipe?.missing?.length > 0 && (
@@ -126,12 +147,12 @@ export default function Tile(props) {
               {recipe.missing.join(", ")}
             </div>
           )}
-          {/* {recipe?.notUsed?.length > 0 && (
+          {recipe?.notUsed?.length > 0 && (
             <div>
               <Typography variant="body1">Not using:</Typography>
               {recipe.notUsed.join(", ")}
             </div>
-          )} */}
+          )}
         </div>
       </CardContent>
       <CardActions>

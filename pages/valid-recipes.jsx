@@ -136,7 +136,10 @@ export default function ValidRecipes() {
 
   const filterRecipes = (recipes, filters) => {
     const inRange = (value, [l, u], max = 500) => {
-      if (u == max) {
+      if (l === 0 && u === max) {
+        return true;
+      }
+      if (u === max) {
         return l <= value;
       }
       return l <= value && value <= u;
