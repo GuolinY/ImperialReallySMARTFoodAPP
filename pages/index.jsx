@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { signIn, signOut, useSession } from "next-auth/client";
 import { makeStyles } from "@material-ui/core/styles";
 import Layout from "../components/_Layout";
@@ -10,10 +10,12 @@ import {
   Grid,
   Card,
   CardContent,
+  InputAdornment,
 } from "@material-ui/core";
 import Link from "next/link";
 import { DeleteOutlined } from "@material-ui/icons";
 import { useIngredients, useIngredientsUpdate } from "../contexts/ingredients";
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -101,6 +103,17 @@ export default function Home() {
     setIngredients([...newIngredients]);
   };
 
+  const useFocus = () => {
+    const htmlElRef = useRef(null);
+    const setFocus = () => {
+      htmlElRef.current && htmlElRef.current.focus();
+    };
+
+    return [htmlElRef, setFocus];
+  };
+
+  const [inputRef, setInputFocus] = useFocus();
+
   useEffect(() => {
     if (!loading) {
       console.log(session);
@@ -123,6 +136,7 @@ export default function Home() {
         <Grid item container direction="column" justify="center">
           <Grid item xs={12}>
             <TextField
+              inputRef={inputRef}
               variant="outlined"
               color="secondary"
               id="ingredient-input"
@@ -131,6 +145,27 @@ export default function Home() {
               onChange={handleIngredientInput}
               onKeyDown={handleIngredientInputEntry}
               className={classes.textField}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="add ingredient"
+                      onClick={() => {
+                        if (ingredientInput) {
+                          setIngredients([
+                            ...ingredients,
+                            ingredientInput.toLowerCase(),
+                          ]);
+                          setIngredientInput("");
+                        }
+                        setInputFocus();
+                      }}
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
           {ingredients?.length > 0 && (
