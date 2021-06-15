@@ -173,7 +173,7 @@ export default function Layout({
                     <ChevronLeftIcon />
                   </ListItemIcon>
                   <ListItemText
-                    primary={other ? "Home" : "Back to Ingredients"}
+                    primary={other ? "Home" : "Back to Search"}
                   />
                 </ListItem>
               </Link>

@@ -175,8 +175,8 @@ export default function ValidRecipes() {
     if (ingredients?.length > 0) {
       let newRecipes = await axios
         .post("https://smart-food-app-backend.herokuapp.com/recipes/partial", {
-          ingredients,
-          no_missing: 2, // default value 2
+          ingredients: [],
+          no_missing: 0, // default value 2
         })
         .then((res) => {
           setLoading(false);
@@ -185,7 +185,7 @@ export default function ValidRecipes() {
         .catch((err) => {
           console.log(err);
         });
-      if (Array.isArray(newRecipes)) {
+      if (Array.isArray(newRecipes) && newRecipes.length > 0) {
         newRecipes.forEach((recipe) => {
           recipe.notUsed = ingredients.filter(
             (ingredient) => !recipe.ingredients.includes(ingredient)
@@ -205,8 +205,9 @@ export default function ValidRecipes() {
     setLoading(false);
   }, [ingredients]);
 
-  const hasValidRecipes = Array.isArray(recipes);
-  const hasFilteredRecipes = Array.isArray(filteredRecipes);
+  const hasValidRecipes = Array.isArray(recipes) && recipes.length > 0;
+  const hasFilteredRecipes =
+    Array.isArray(filteredRecipes) && filteredRecipes.length > 0;
 
   const closeFilter = () => setOpenFilter(false);
 
@@ -312,13 +313,15 @@ export default function ValidRecipes() {
         ) : hasValidRecipes ? (
           `No recipes found matching filter you selected`
         ) : (
-          <Typography>
-            Unfortunately, you gotta go shopping, we weren't able to find
-            recipes for all your ingredients this time.{" "}
+          <>
+            <Typography>
+              Unfortunately, we weren't able to find recipes to suit your
+              ingredients this time.
+            </Typography>
             <Link href="/" passHref>
-              <Button>Please try again with other ingredients.</Button>
+              <Button>Try again with other ingredients</Button>
             </Link>
-          </Typography>
+          </>
         )}
       </Container>
     </Layout>

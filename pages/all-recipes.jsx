@@ -168,7 +168,12 @@ export default function ValidRecipes() {
   useEffect(async () => {
     let newRecipes = await axios
       .get(
-        `https://smart-food-app-backend.herokuapp.com/recipes/everysinglerecipe`
+        // TODO update with new endpoint
+        `https://smart-food-app-backend.herokuapp.com/recipes/everyrecipe`,
+        {
+          pageNo: 1,
+          pageSize: 25,
+        }
       )
       .then((res) => {
         setLoading(false);
@@ -177,9 +182,13 @@ export default function ValidRecipes() {
       .catch((err) => {
         console.log(err);
       });
-    setRecipes(newRecipes);
-    setFilteredRecipes(newRecipes);
-    setFilteredRecipes(sortRecipes(filterRecipes(newRecipes, filters), sortBy));
+    if (Array.isArray(recipes)) {
+      setRecipes(newRecipes);
+      setFilteredRecipes(newRecipes);
+      setFilteredRecipes(
+        sortRecipes(filterRecipes(newRecipes, filters), sortBy)
+      );
+    }
     setLoading(false);
   }, []);
 
@@ -288,7 +297,7 @@ export default function ValidRecipes() {
           `No recipes found matching filter you selected`
         ) : (
           <Typography>
-            Unfortunately, we can't provide you with our recipes at this time.
+            Unfortunately, there seems to be an issue with fetching our recipes right now.
             Please try again later.
           </Typography>
         )}
