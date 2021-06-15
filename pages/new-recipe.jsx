@@ -27,12 +27,10 @@ const validationSchema = yup.object({
   image_link: yup
     .string()
     .matches(
-      /((https?):\/\/)?(www.)?(i.imgur.com\/)[a-zA-Z0-9]+(.png)/,
-      "Enter a url of an image hosted on imgur"
+      /((https?):\/\/)?(www.)?(i.imgur.com\/)[a-zA-Z0-9]+(.((png)|(jpg)|(jpeg)|(gif)))/,
+      "Need an image of the finished product, your link should look something like https://i.imgur.com/<image_name> (image needs to be a png, jpeg, jpg, gif)"
     )
-    .required(
-      "Need an image of the finished product, you need to start your link with http://"
-    ),
+    .required("Please enter a link to an image hosted on imgur"),
   ingredients: yup
     .array()
     .of(yup.string().required("Ingredient cannnot be empty"))
@@ -81,7 +79,7 @@ export default function NewRecipe() {
       <Formik
         initialValues={{
           name: "",
-          image_link: "https://i.imgur.com/e9FZq3W.png",
+          image_link: "",
           ingredients: [""],
           method: "",
           hours: 0,
@@ -98,6 +96,9 @@ export default function NewRecipe() {
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm, setFieldValue }) => {
           values.time = values.hours * 3600 + values.minutes * 60;
+          values.ingredients = values.ingredients.map((ing) =>
+            ing.toLowerCase()
+          );
           axios
             .post(
               "https://smart-food-app-backend.herokuapp.com/recipes/submit",
@@ -208,19 +209,38 @@ export default function NewRecipe() {
                   <FormControl>
                     <FormLabel>Diet</FormLabel>
                     <FormGroup row>
-                      {["vegan", "vegetarian"].map((x, i) => (
-                        <FormControlLabel
-                          key={i}
-                          control={
-                            <Checkbox
-                              checked={values[x]}
-                              onChange={handleChange}
-                              name={x}
-                            />
-                          }
-                          label={x.charAt(0).toUpperCase() + x.slice(1)}
-                        />
-                      ))}
+                      <FormControlLabel
+                        key={0}
+                        control={
+                          <Checkbox
+                            checked={values["vegan"]}
+                            onChange={(e, value) => {
+                              setFieldValue("vegan", value);
+                              if (value) {
+                                setFieldValue("vegetarian", true);
+                              }
+                            }}
+                            name="vegan"
+                          />
+                        }
+                        label="Vegan"
+                      />
+                      <FormControlLabel
+                        key={1}
+                        control={
+                          <Checkbox
+                            checked={values["vegetarian"]}
+                            onChange={(e, value) => {
+                              setFieldValue("vegetarian", value);
+                              if (!value) {
+                                setFieldValue("vegan", false);
+                              }
+                            }}
+                            name="vegetarian"
+                          />
+                        }
+                        label="Vegetarian"
+                      />
                     </FormGroup>
                   </FormControl>
                 </Grid>

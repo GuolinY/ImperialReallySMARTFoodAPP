@@ -18,6 +18,7 @@ import FastfoodIcon from "@material-ui/icons/Fastfood";
 import { useRouter } from "next/router";
 import ReviewsModal from "../../components/ReviewsModal";
 import axios from "axios";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 export async function getStaticPaths() {
   const res = await axios.get(
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     flexWrap: "wrap",
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
   nutrition: {
     textAlign: "left",
@@ -145,9 +146,15 @@ export default function Recipe() {
                     return (
                       <ListItem key={i}>
                         <ListItemIcon>
-                          <FastfoodIcon />
+                          <FastfoodIcon color="secondary" />
                         </ListItemIcon>
-                        <ListItemText key={i} primary={ingredient} />
+                        <ListItemText
+                          key={i}
+                          primary={
+                            ingredient.charAt(0).toUpperCase() +
+                            ingredient.slice(1)
+                          }
+                        />
                       </ListItem>
                     );
                   })}
@@ -167,23 +174,31 @@ export default function Recipe() {
                 </Typography>
                 <List component="ol">
                   {recipe.method.split("\n").map((step, i) => (
-                    <ListItem key={i}>
-                      <ListItemText
-                        key={i}
-                        primary={step}
-                        primaryTypographyProps={{ paragraph: true }}
-                      />
-                    </ListItem>
+                    <>
+                      <Typography variant="h6" className={classes.iconsAndText}>
+                        <ChevronRightIcon color="secondary" />
+                        Step {i + 1}
+                      </Typography>
+                      <ListItem key={i}>
+                        <ListItemText
+                          key={i}
+                          primary={step}
+                          primaryTypographyProps={{ paragraph: true }}
+                        />
+                      </ListItem>
+                    </>
                   ))}
+                  {recipe.extra_link && (
+                    <ListItem>
+                      <Typography variant="h6">
+                        For extra information{" "}
+                        <Link href={recipe.extra_link} passHref>
+                          <Button variant="outlined">Click here</Button>
+                        </Link>
+                      </Typography>
+                    </ListItem>
+                  )}
                 </List>
-              </Grid>
-              <Grid item>
-                <Typography variant="h6">
-                  For extra information{" "}
-                  <Link href={recipe.extra_link} passHref>
-                    <Button>Click here</Button>
-                  </Link>
-                </Typography>
               </Grid>
             </Grid>
           </>
@@ -191,7 +206,7 @@ export default function Recipe() {
           <Typography>No recipe found</Typography>
         )
       ) : (
-        <Typography>Loading...</Typography>
+        <Typography variant="h1">Loading...</Typography>
       )}
     </Layout>
   );
