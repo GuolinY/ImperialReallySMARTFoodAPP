@@ -174,11 +174,10 @@ export default function ValidRecipes() {
     setLoading(true);
     if (ingredients?.length > 0) {
       let newRecipes = await axios
-        .get(
-          `https://smart-food-app-backend.herokuapp.com/recipes/${ingredients.join(
-            "_"
-          )}`
-        )
+        .post("https://smart-food-app-backend.herokuapp.com/recipes/partial", {
+          ingredients,
+          no_missing: 2, // default value 2
+        })
         .then((res) => {
           setLoading(false);
           return res.data;
