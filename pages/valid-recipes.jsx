@@ -20,6 +20,7 @@ import {
   MenuItem,
   Button,
   IconButton,
+  Tooltip,
 } from "@material-ui/core";
 import RestorePageIcon from "@material-ui/icons/RestorePage";
 import { makeStyles } from "@material-ui/core/styles";
@@ -170,7 +171,7 @@ export default function ValidRecipes() {
   };
 
   useEffect(async () => {
-    setLoading(true)
+    setLoading(true);
     if (ingredients?.length > 0) {
       let newRecipes = await axios
         .get(
@@ -248,9 +249,11 @@ export default function ValidRecipes() {
             >
               Filter
             </Button>
-            <IconButton onClick={resetRecipeFilter} style={{ marginTop: 12 }}>
-              <RestorePageIcon />
-            </IconButton>
+            <Tooltip title="Reset Filter" placement="top">
+              <IconButton onClick={resetRecipeFilter} style={{ marginTop: 12 }}>
+                <RestorePageIcon />
+              </IconButton>
+            </Tooltip>
           </Grid>
           <Grid item xs={6}>
             <FormControl className={classes.formControl}>

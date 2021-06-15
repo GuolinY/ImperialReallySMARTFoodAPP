@@ -11,11 +11,13 @@ import {
   Card,
   CardContent,
   InputAdornment,
+  Tooltip,
 } from "@material-ui/core";
 import Link from "next/link";
 import { DeleteOutlined } from "@material-ui/icons";
 import { useIngredients, useIngredientsUpdate } from "../contexts/ingredients";
 import AddIcon from "@material-ui/icons/Add";
+import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -169,10 +171,27 @@ export default function Home() {
             />
           </Grid>
           {ingredients?.length > 0 && (
-            <Grid className={classes.showRecipeButton} item>
-              <Link href="/valid-recipes" passHref>
-                <Button variant="outlined">Show me recipes!</Button>
-              </Link>
+            <Grid
+              className={classes.showRecipeButton}
+              item
+              container
+              spacing={2}
+              justify="center"
+              alignItems="center"
+              direction="row"
+            >
+              <Grid item>
+                <Link href="/valid-recipes" passHref>
+                  <Button variant="outlined">Show me recipes!</Button>
+                </Link>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Clear ingredients" placement="top">
+                  <IconButton onClick={() => setIngredients([])}>
+                    <RotateLeftIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
             </Grid>
           )}
         </Grid>
