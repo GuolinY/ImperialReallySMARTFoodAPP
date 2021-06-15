@@ -3,25 +3,32 @@ import PropTypes from "prop-types";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
-import IconButton from "@material-ui/core/IconButton";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useRouter } from "next/router";
-import { Typography, AppBar, Toolbar } from "@material-ui/core";
+import {
+  Typography,
+  AppBar,
+  Toolbar,
+  CssBaseline,
+  Divider,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Drawer,
+  List,
+  IconButton,
+  Hidden,
+} from "@material-ui/core";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Divider from "@material-ui/core/Divider";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import PersonIcon from "@material-ui/icons/Person";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import CollectionsBookmarkIcon from "@material-ui/icons/CollectionsBookmark";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import MailIcon from "@material-ui/icons/Mail";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 const drawerWidth = 240;
 
@@ -88,7 +95,7 @@ export default function Layout({
   };
 
   return (
-    <div className={flex ? styles.flexContainer : styles.container}>
+    <>
       <Head>
         <title>{title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -172,9 +179,7 @@ export default function Layout({
                   <ListItemIcon>
                     <ChevronLeftIcon />
                   </ListItemIcon>
-                  <ListItemText
-                    primary={other ? "Home" : "Back to Search"}
-                  />
+                  <ListItemText primary={other ? "Home" : "Back to Search"} />
                 </ListItem>
               </Link>
             </>
@@ -193,13 +198,15 @@ export default function Layout({
         </List>
       </Drawer>
 
-      <main className={styles.main}>{children}</main>
-      {/* <footer className={styles.footer}>
+      <div className={flex ? styles.flexContainer : styles.container}>
+        <main className={styles.main}>{children}</main>
+        {/* <footer className={styles.footer}>
         <Typography style={{ textAlign: "center" }} variant="body1">
           A Really Smart Food App{" "}
         </Typography>
       </footer> */}
-    </div>
+      </div>
+    </>
   );
 }
 

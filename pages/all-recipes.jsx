@@ -167,12 +167,11 @@ export default function ValidRecipes() {
 
   useEffect(async () => {
     let newRecipes = await axios
-      .get(
-        // TODO update with new endpoint
+      .post(
         `https://smart-food-app-backend.herokuapp.com/recipes/everyrecipe`,
         {
-          pageNo: 1,
-          pageSize: 25,
+          page_no: 0,
+          page_size: 25,
         }
       )
       .then((res) => {
@@ -182,7 +181,7 @@ export default function ValidRecipes() {
       .catch((err) => {
         console.log(err);
       });
-    if (Array.isArray(recipes)) {
+    if (Array.isArray(newRecipes)) {
       setRecipes(newRecipes);
       setFilteredRecipes(newRecipes);
       setFilteredRecipes(

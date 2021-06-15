@@ -175,8 +175,8 @@ export default function ValidRecipes() {
     if (ingredients?.length > 0) {
       let newRecipes = await axios
         .post("https://smart-food-app-backend.herokuapp.com/recipes/partial", {
-          ingredients: [],
-          no_missing: 0, // default value 2
+          ingredients,
+          no_missing: 2, // default value 2
         })
         .then((res) => {
           setLoading(false);
