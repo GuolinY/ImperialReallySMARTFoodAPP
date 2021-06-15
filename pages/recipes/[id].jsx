@@ -20,6 +20,8 @@ import ReviewsModal from "../../components/ReviewsModal";
 import axios from "axios";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
+import { PLACEHOLDER_IMAGE } from "../../components/Tile";
+
 export async function getStaticPaths() {
   const res = await axios.get(
     `https://smart-food-app-backend.herokuapp.com/recipes/all`
@@ -112,17 +114,19 @@ export default function Recipe() {
   }, []);
 
   return (
-    <Layout title={recipe.name} recipe>
+    <Layout title={recipe.name || "Recipe"} recipe>
       {!loading ? (
         recipe ? (
           <>
             <div>
-              <Image
-                src={recipe.image_link}
-                width={200}
-                height={200}
-                className={classes.image}
-              />
+              {recipe.image_link !== PLACEHOLDER_IMAGE && (
+                <Image
+                  src={recipe.image_link}
+                  width={200}
+                  height={200}
+                  className={classes.image}
+                />
+              )}
               <Typography className={classes.title} variant="h2" gutterBottom>
                 {recipe.name}
               </Typography>
@@ -146,7 +150,7 @@ export default function Recipe() {
                     return (
                       <ListItem key={i}>
                         <ListItemIcon>
-                          <FastfoodIcon color="secondary" />
+                          <FastfoodIcon color="primary" />
                         </ListItemIcon>
                         <ListItemText
                           key={i}
@@ -174,7 +178,7 @@ export default function Recipe() {
                 </Typography>
                 <List component="ol">
                   {recipe.method.split("\n").map((step, i) => (
-                    <>
+                    <div key={`${step}_${i}`}>
                       <Typography variant="h6" className={classes.iconsAndText}>
                         <ChevronRightIcon color="secondary" />
                         Step {i + 1}
@@ -186,7 +190,7 @@ export default function Recipe() {
                           primaryTypographyProps={{ paragraph: true }}
                         />
                       </ListItem>
-                    </>
+                    </div>
                   ))}
                   {recipe.extra_link && (
                     <ListItem>

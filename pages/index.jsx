@@ -8,16 +8,20 @@ import {
   Typography,
   IconButton,
   Grid,
-  Card,
-  CardContent,
+  Paper,
   InputAdornment,
   Tooltip,
 } from "@material-ui/core";
 import Link from "next/link";
 import { DeleteOutlined } from "@material-ui/icons";
-import { useIngredients, useIngredientsUpdate } from "../contexts/ingredients";
+import {
+  useIngredients,
+  useIngredientsUpdate,
+  PANTRY_INGREDIENTS,
+} from "../contexts/ingredients";
 import AddIcon from "@material-ui/icons/Add";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
+import InfoIcon from "@material-ui/icons/Info";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -52,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
   },
   removeEnteredIngredientButton: {
     padding: theme.spacing(0.5),
-    marginLeft: theme.spacing(1),
   },
   enteredIngredients: {
     display: "flex",
@@ -72,6 +75,12 @@ const useStyles = makeStyles((theme) => ({
   showRecipeButton: {
     marginBottom: "1rem",
   },
+  iconsAndText: {
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
 }));
 
 export default function Home() {
@@ -90,12 +99,19 @@ export default function Home() {
     setIngredientInput(e.target.value);
   };
 
+  const addIngredient = () => {
+    if (ingredientInput) {
+      const ingredientToAdd = ingredientInput.trim().toLowerCase();
+      if (!ingredients.includes(ingredientToAdd)) {
+        setIngredients([...ingredients, ingredientToAdd]);
+      }
+      setIngredientInput("");
+    }
+  };
+
   const handleIngredientInputEntry = (e) => {
     if (e.keyCode == KEYCODE_ENTER) {
-      if (ingredientInput) {
-        setIngredients([...ingredients, ingredientInput.toLowerCase()]);
-        setIngredientInput("");
-      }
+      addIngredient();
     }
   };
 
@@ -123,17 +139,38 @@ export default function Home() {
   }, [loading]);
 
   return (
-    <Layout title="A Really Smart Food App" flex home>
+    <Layout title="A Really Smart Food App" home>
       <Grid container justify="center" alignItems="center">
         <Grid item xs={12}>
           <Typography variant="h1" className={classes.title} gutterBottom>
             A Really Smart Food App
           </Typography>
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6" gutterBottom>
-            Here to suggest you recipes for the food in your kitchen!
-          </Typography>
+        <Grid
+          item
+          xs={12}
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          spacing={2}
+        >
+          <Grid item>
+            <Typography variant="h6" gutterBottom>
+              Here to suggest you recipes for the food in your kitchen!
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Tooltip
+              placement="top"
+              title={`You should have these basic things in your kitchen: ${PANTRY_INGREDIENTS.join(
+                ", "
+              )}`}
+              interactive
+            >
+              <InfoIcon />
+            </Tooltip>
+          </Grid>
         </Grid>
         <Grid item container direction="column" justify="center">
           <Grid item xs={12}>
@@ -153,13 +190,7 @@ export default function Home() {
                     <IconButton
                       aria-label="add ingredient"
                       onClick={() => {
-                        if (ingredientInput) {
-                          setIngredients([
-                            ...ingredients,
-                            ingredientInput.toLowerCase(),
-                          ]);
-                          setIngredientInput("");
-                        }
+                        addIngredient();
                         setInputFocus();
                       }}
                     >
@@ -209,21 +240,24 @@ export default function Home() {
               <Typography gutterBottom>You have entered:</Typography>
             </Grid>
             {ingredients.map((ingredient, i) => (
-              <Grid item xs={12} sm={6} md={3} key={i}>
-                <Card variant="outlined">
-                  <CardContent>
-                    <Typography variant="h6" noWrap>
-                      <IconButton
-                        aria-label="delete ingredient"
-                        onClick={(e) => handleRemoveIngredient(e, i)}
-                        className={classes.removeEnteredIngredientButton}
-                      >
-                        <DeleteOutlined />
-                      </IconButton>
-                      {ingredient}
-                    </Typography>
-                  </CardContent>
-                </Card>
+              <Grid item key={i}>
+                <Paper style={{ padding: "10px" }}>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    style={{ textAlign: "left" }}
+                    className={classes.iconsAndText}
+                  >
+                    <IconButton
+                      aria-label="delete ingredient"
+                      onClick={(e) => handleRemoveIngredient(e, i)}
+                      className={classes.removeEnteredIngredientButton}
+                    >
+                      <DeleteOutlined />
+                    </IconButton>
+                    {ingredient}
+                  </Typography>
+                </Paper>
               </Grid>
             ))}
           </Grid>
