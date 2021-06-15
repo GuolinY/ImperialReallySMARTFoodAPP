@@ -8,8 +8,7 @@ import {
   Typography,
   IconButton,
   Grid,
-  Card,
-  CardContent,
+  Paper,
   InputAdornment,
   Tooltip,
 } from "@material-ui/core";
@@ -52,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
   },
   removeEnteredIngredientButton: {
     padding: theme.spacing(0.5),
-    marginLeft: theme.spacing(1),
   },
   enteredIngredients: {
     display: "flex",
@@ -71,6 +69,12 @@ const useStyles = makeStyles((theme) => ({
   },
   showRecipeButton: {
     marginBottom: "1rem",
+  },
+  iconsAndText: {
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
+    justifyContent: "center",
   },
 }));
 
@@ -170,6 +174,13 @@ export default function Home() {
               }}
             />
           </Grid>
+          <Grid item>
+            <Typography gutterBottom>
+              You should have these basic things in your kitchen: oil, vinegar,
+              flour, sugar, yeast, baking soda, baking powder, salt, pepper,
+              water
+            </Typography>
+          </Grid>
           {ingredients?.length > 0 && (
             <Grid
               className={classes.showRecipeButton}
@@ -209,21 +220,24 @@ export default function Home() {
               <Typography gutterBottom>You have entered:</Typography>
             </Grid>
             {ingredients.map((ingredient, i) => (
-              <Grid item xs={12} sm={6} md={3} key={i}>
-                <Card variant="outlined">
-                  <CardContent>
-                    <Typography variant="h6" noWrap>
-                      <IconButton
-                        aria-label="delete ingredient"
-                        onClick={(e) => handleRemoveIngredient(e, i)}
-                        className={classes.removeEnteredIngredientButton}
-                      >
-                        <DeleteOutlined />
-                      </IconButton>
-                      {ingredient}
-                    </Typography>
-                  </CardContent>
-                </Card>
+              <Grid item key={i}>
+                <Paper style={{ padding: "10px" }}>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    style={{ textAlign: "left" }}
+                    className={classes.iconsAndText}
+                  >
+                    <IconButton
+                      aria-label="delete ingredient"
+                      onClick={(e) => handleRemoveIngredient(e, i)}
+                      className={classes.removeEnteredIngredientButton}
+                    >
+                      <DeleteOutlined />
+                    </IconButton>
+                    {ingredient}
+                  </Typography>
+                </Paper>
               </Grid>
             ))}
           </Grid>
