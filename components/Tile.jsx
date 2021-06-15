@@ -92,9 +92,10 @@ export default function Tile(props) {
       />
       <CardContent>
         <Typography className={classes.iconsAndText} variant="h6">
-          <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; |
-          &nbsp;
-          {difficulty(recipe.difficulty)}
+          <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp;
+          {recipe.difficulty >= 1 &&
+            recipe.difficulty <= 3 &&
+            `| ${difficulty(recipe.difficulty)}`}
         </Typography>
         <Typography variant="body1">{recipe.description}</Typography>
         <Typography className={classes.nutrition} variant="body2">
