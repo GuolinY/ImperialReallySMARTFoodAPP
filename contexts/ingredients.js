@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 const IngredientsContext = createContext();
@@ -6,6 +6,8 @@ const IngredientsUpdateContext = createContext();
 
 const ValidRecipeFiltersContext = createContext();
 const ValidRecipeFiltersUpdateContext = createContext();
+
+const LoadingIngredientsContext = createContext();
 
 export function useIngredients() {
   return useContext(IngredientsContext);
@@ -21,6 +23,10 @@ export function useValidRecipeFilters() {
 
 export function useValidRecipeFiltersUpdate() {
   return useContext(ValidRecipeFiltersUpdateContext);
+}
+
+export function useLoadingIngredients() {
+  return useContext(LoadingIngredientsContext);
 }
 
 export const DEFAULT_FILTERS = {
@@ -42,15 +48,34 @@ export const DEFAULT_FILTERS = {
 export default function IngredientsProvider({ children }) {
   const [ingredientList, setIngredientList] = useState([]);
   const [validRecipeFilters, setValidRecipeFilters] = useState(DEFAULT_FILTERS);
+  const [loadingIngredients, setLoadingIngredients] = useState(true);
+
+  const updateIngredientList = (value) => {
+    setIngredientList(value);
+    sessionStorage.setItem("ingredientList", JSON.stringify(value));
+  };
+
+  useEffect(() => {
+    if (sessionStorage.getItem("ingredientList")) {
+      console.log(sessionStorage.getItem("ingredientList"));
+      setIngredientList(JSON.parse(sessionStorage.getItem("ingredientList")));
+    } else {
+      console.log("no ingredient list");
+      setIngredientList([]);
+    }
+    setLoadingIngredients(false);
+  }, []);
 
   return (
     <IngredientsContext.Provider value={ingredientList}>
-      <IngredientsUpdateContext.Provider value={setIngredientList}>
+      <IngredientsUpdateContext.Provider value={updateIngredientList}>
         <ValidRecipeFiltersContext.Provider value={validRecipeFilters}>
           <ValidRecipeFiltersUpdateContext.Provider
             value={setValidRecipeFilters}
           >
-            {children}
+            <LoadingIngredientsContext.Provider value={loadingIngredients}>
+              {children}
+            </LoadingIngredientsContext.Provider>
           </ValidRecipeFiltersUpdateContext.Provider>
         </ValidRecipeFiltersContext.Provider>
       </IngredientsUpdateContext.Provider>

@@ -206,7 +206,7 @@ export default function Recipe() {
           <Typography>No recipe found</Typography>
         )
       ) : (
-        <Typography>Loading...</Typography>
+        <Typography variant="h1">Loading...</Typography>
       )}
     </Layout>
   );
