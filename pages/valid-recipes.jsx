@@ -174,6 +174,12 @@ export default function ValidRecipes() {
     return newRecipes.length == 0 ? { id: -1 } : newRecipes;
   };
 
+  const containsIngredient = (recipeIngredients, ingredient) => {
+    return recipeIngredients.some((recipeIngredient) =>
+      recipeIngredient.includes(ingredient)
+    );
+  };
+
   useEffect(async () => {
     setLoading(true);
     if (ingredients?.length > 0) {
@@ -192,11 +198,14 @@ export default function ValidRecipes() {
         });
       if (Array.isArray(newRecipes) && newRecipes.length > 0) {
         newRecipes.forEach((recipe) => {
-          recipe.notUsed = ingredients.filter(
-            (ingredient) => !recipe.ingredients.includes(ingredient)
-          );
           recipe.missing = recipe.ingredients.filter(
-            (ingredient) => !ingredients.includes(ingredient)
+            (recipeIngredient) =>
+              !ingredients.some((ingredient) =>
+                recipeIngredient.includes(ingredient)
+              )
+          );
+          recipe.notUsed = ingredients.filter(
+            (ingredient) => !containsIngredient(recipe.ingredients, ingredient)
           );
         });
         setRecipes(newRecipes);

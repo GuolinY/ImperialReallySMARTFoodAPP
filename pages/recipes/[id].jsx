@@ -20,7 +20,7 @@ import ReviewsModal from "../../components/ReviewsModal";
 import axios from "axios";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
-import PLACEHOLDER_IMAGE from "../../components/Tile";
+import { PLACEHOLDER_IMAGE } from "../../components/Tile";
 
 export async function getStaticPaths() {
   const res = await axios.get(
