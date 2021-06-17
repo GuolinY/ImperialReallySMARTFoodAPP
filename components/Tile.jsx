@@ -166,7 +166,10 @@ export default function Tile(props) {
         </div>
       </CardContent>
       <CardActions>
-        <Link href={`/recipes/${recipe.id}`} passHref>
+        <Link
+          href={{ pathname: `/recipes`, query: { id: recipe.id } }}
+          passHref
+        >
           <Button color="primary" variant="contained">
             Learn More
           </Button>

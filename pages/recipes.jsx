@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../../components/_Layout";
+import Layout from "../components/_Layout";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -16,40 +16,11 @@ import Link from "next/link";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 
 import { useRouter } from "next/router";
-import ReviewsModal from "../../components/ReviewsModal";
+import ReviewsModal from "../components/ReviewsModal";
 import axios from "axios";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
-import { PLACEHOLDER_IMAGE } from "../../components/Tile";
-
-export async function getStaticPaths() {
-  const res = await axios.get(
-    `https://smart-food-app-backend.herokuapp.com/recipes/all`
-  );
-
-  const data = await res.data;
-
-  const paths = data.ids.map((id) => {
-    return {
-      params: { id: id.toString() },
-    };
-  });
-
-  return {
-    paths,
-    fallback: false,
-  };
-}
-
-export async function getStaticProps(context) {
-  const res = await axios.get(
-    `https://smart-food-app-backend.herokuapp.com/recipes/${context.params.id}`
-  );
-  const recipe = await res.data;
-  return {
-    props: { recipe }, // will be passed to the page component as props
-  };
-}
+import { PLACEHOLDER_IMAGE } from "../components/Tile";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -111,10 +82,10 @@ export default function Recipe() {
       });
     setRecipe(recipe);
     setLoading(false);
-  }, []);
+  }, [recipe]);
 
   return (
-    <Layout title={recipe.name || "Recipe"} recipe>
+    <Layout title={recipe?.name || "Recipe"} recipe>
       {!loading ? (
         recipe ? (
           <>
