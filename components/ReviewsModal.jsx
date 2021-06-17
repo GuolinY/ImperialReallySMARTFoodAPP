@@ -93,7 +93,7 @@ const ratingMarks = [
   },
 ];
 
-export default function ReviewsModal({ recipe }) {
+export default function ReviewsModal({ recipe, size }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
@@ -116,7 +116,7 @@ export default function ReviewsModal({ recipe }) {
   return (
     <div>
       <Button onClick={handleOpen}>
-        <RatingAndReviews recipe={recipe} />
+        <RatingAndReviews recipe={recipe} size={size} />
       </Button>
       <Dialog
         open={open}

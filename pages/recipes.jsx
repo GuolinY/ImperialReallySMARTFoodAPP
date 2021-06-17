@@ -25,9 +25,10 @@ import { PLACEHOLDER_IMAGE } from "../components/Tile";
 const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: "Abril Fatface",
+    color: "white",
   },
   image: {
-    borderRadius: "50%",
+    borderRadius: "5%",
     border: "2px solid black",
   },
   iconsAndText: {
@@ -89,18 +90,30 @@ export default function Recipe() {
       {!loading ? (
         recipe ? (
           <>
-            <div>
-              {recipe.image_link !== PLACEHOLDER_IMAGE && (
-                <Image
-                  src={recipe.image_link}
-                  width={350}
-                  height={200}
-                  className={classes.image}
-                />
-              )}
-              <Typography className={classes.title} variant="h2" gutterBottom>
-                {recipe.name}
-              </Typography>
+            <div
+              style={{
+                width: "100%",
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${recipe.image_link})`,
+                height: "405px",
+                backgroundColor: "purple",
+                backgroundPosition: "center",
+              }}
+            >
+              <div
+                style={{
+                  textAlign: "center",
+                  position: "relative",
+                  top: "50%",
+                  left: "50%",
+                  transform: " translate(-50%, -50%)",
+                }}
+              >
+                <Typography className={classes.title} variant="h2" gutterBottom>
+                  {recipe.name}
+                </Typography>
+              </div>
+            </div>
+            <div style={{ marginTop: "40px" }}>
               <ReviewsModal recipe={recipe} />
             </div>
             <Grid container spacing={10} className={classes.container}>

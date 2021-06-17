@@ -25,7 +25,7 @@ const StyledRating = withStyles({
   },
 })(Rating);
 
-export default function RatingAndReviews({ recipe, size = "small" }) {
+export default function RatingAndReviews({ recipe, size = "large" }) {
   const classes = useStyles();
 
   return (
