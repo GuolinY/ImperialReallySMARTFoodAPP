@@ -7,6 +7,7 @@ module.exports = {
       "i.imgur.com",
       "food.files.bbci.co.uk",
       "ichef.bbci.co.uk",
+      "imagesvc.meredithcorp.io",
     ],
   },
 };
