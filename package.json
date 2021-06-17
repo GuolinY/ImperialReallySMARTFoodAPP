@@ -17,6 +17,7 @@
     "formik": "^2.2.9",
     "identity-obj-proxy": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
+    "netlify-identity-widget": "^1.9.1",
     "next": "10.2.3",
     "next-auth": "^3.25.0",
     "prop-types": "^15.7.2",
