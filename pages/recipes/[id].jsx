@@ -122,7 +122,7 @@ export default function Recipe() {
               {recipe.image_link !== PLACEHOLDER_IMAGE && (
                 <Image
                   src={recipe.image_link}
-                  width={200}
+                  width={350}
                   height={200}
                   className={classes.image}
                 />
