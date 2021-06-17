@@ -148,9 +148,15 @@ export default function Tile(props) {
             </div>
           )}
           {recipe?.notUsed?.length > 0 && (
-            <div>
+            <div style={{ marginBottom: 12 }}>
               <Typography variant="body1">Not using:</Typography>
               {recipe.notUsed.join(", ")}
+            </div>
+          )}
+          {recipe?.substitutions?.length > 0 && (
+            <div>
+              <Typography variant="body1">You can substitute:</Typography>
+              {recipe.substitutions.join("\n")}
             </div>
           )}
         </div>
