@@ -146,22 +146,24 @@ export default function Recipe() {
                   Ingredients
                 </Typography>
                 <List>
-                  {recipe.ingredients.map((ingredient, i) => {
-                    return (
-                      <ListItem key={i}>
-                        <ListItemIcon>
-                          <FastfoodIcon color="primary" />
-                        </ListItemIcon>
-                        <ListItemText
-                          key={i}
-                          primary={
-                            ingredient.charAt(0).toUpperCase() +
-                            ingredient.slice(1)
-                          }
-                        />
-                      </ListItem>
-                    );
-                  })}
+                  {recipe.ingredients
+                    .concat(recipe.pantry_ingredients)
+                    .map((ingredient, i) => {
+                      return (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <FastfoodIcon color="primary" />
+                          </ListItemIcon>
+                          <ListItemText
+                            key={i}
+                            primary={
+                              ingredient.charAt(0).toUpperCase() +
+                              ingredient.slice(1)
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
                 </List>
               </Grid>
               <Grid
@@ -192,16 +194,17 @@ export default function Recipe() {
                       </ListItem>
                     </div>
                   ))}
-                  {recipe.extra_link && (
-                    <ListItem>
-                      <Typography variant="h6">
-                        For extra information{" "}
-                        <Link href={recipe.extra_link} passHref>
-                          <Button variant="outlined">Click here</Button>
-                        </Link>
-                      </Typography>
-                    </ListItem>
-                  )}
+                  {recipe.extra_link &&
+                    recipe.extra_link !== "http://google.com" && (
+                      <ListItem>
+                        <Typography variant="h6">
+                          For extra information{" "}
+                          <Link href={recipe.extra_link} passHref>
+                            <Button variant="outlined">Click here</Button>
+                          </Link>
+                        </Typography>
+                      </ListItem>
+                    )}
                 </List>
               </Grid>
             </Grid>

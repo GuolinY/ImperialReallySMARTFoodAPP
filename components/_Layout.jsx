@@ -144,14 +144,14 @@ export default function Layout({
         </div>
         <Divider />
         <List>
-          <Link href="/login" passHref>
+          {/* <Link href="/login" passHref>
             <ListItem button component="a">
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>
               <ListItemText primary="Login" />
             </ListItem>
-          </Link>
+          </Link> */}
 
           <Link href="/new-recipe" passHref>
             <ListItem button component="a">
