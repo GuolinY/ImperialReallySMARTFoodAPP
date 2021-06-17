@@ -156,7 +156,11 @@ export default function Tile(props) {
           {recipe?.substitutions?.length > 0 && (
             <div>
               <Typography variant="body1">You can substitute:</Typography>
-              {recipe.substitutions.join("\n")}
+              {recipe.substitutions.map((sub, i) => (
+                <p style={{ margin: 0 }} key={i}>
+                  {sub}
+                </p>
+              ))}
             </div>
           )}
         </div>
