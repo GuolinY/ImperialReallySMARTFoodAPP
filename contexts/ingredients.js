@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 const IngredientsContext = createContext();
 const IngredientsUpdateContext = createContext();
 
+const SubstitutionsContext = createContext();
+
 const ValidRecipeFiltersContext = createContext();
 const ValidRecipeFiltersUpdateContext = createContext();
 
@@ -17,6 +19,9 @@ export function useIngredientsUpdate() {
   return useContext(IngredientsUpdateContext);
 }
 
+export function useSubstitutions() {
+  return useContext(SubstitutionsContext);
+}
 export function useValidRecipeFilters() {
   return useContext(ValidRecipeFiltersContext);
 }
@@ -58,23 +63,75 @@ export const PANTRY_INGREDIENTS = [
   "water",
 ];
 
+class TwoWayMap {
+  constructor(map) {
+    this.map = map;
+    this.reverseMap = {};
+    for (const key in map) {
+      const value = map[key];
+      this.reverseMap[value] = key;
+    }
+  }
+  get(key) {
+    return this.map[key];
+  }
+  revGet(key) {
+    return this.reverseMap[key];
+  }
+  getSub(key) {
+    if (key in this.map) {
+      return this.map[key];
+    }
+    return this.reverseMap[key];
+  }
+  isSub(key) {
+    return key in this.map || key in this.reverseMap;
+  }
+}
+
+export const SUBSTITUTIONS = new TwoWayMap({
+  "soy sauce": "vinegar",
+  milk: "cream",
+  mayonnaise: "sour cream",
+  onion: "leek",
+  sugar: "honey",
+  coriander: "parsley",
+  raisin: "plum",
+  starch: "flour",
+  agar: "gelatin",
+  quinoa: "rice",
+  cauliflower: "potato",
+  nutmeg: "cinnamon",
+  kale: "spinach",
+});
+
 export default function IngredientsProvider({ children }) {
   const [ingredientList, setIngredientList] = useState([]);
+  const [substitutionsList, setSubstitutionsList] = useState([]);
   const [validRecipeFilters, setValidRecipeFilters] = useState(DEFAULT_FILTERS);
   const [loadingIngredients, setLoadingIngredients] = useState(true);
 
   const updateIngredientList = (value) => {
     setIngredientList(value);
     sessionStorage.setItem("ingredientList", JSON.stringify(value));
+    if (value?.length > 0) {
+      setSubstitutionsList(
+        value
+          .filter((v) => SUBSTITUTIONS.isSub(v))
+          .map((v) => SUBSTITUTIONS.getSub(v))
+      );
+    } else {
+      setSubstitutionsList([]);
+    }
   };
 
   useEffect(() => {
     if (sessionStorage.getItem("ingredientList")) {
       console.log(sessionStorage.getItem("ingredientList"));
-      setIngredientList(JSON.parse(sessionStorage.getItem("ingredientList")));
+      updateIngredientList(JSON.parse(sessionStorage.getItem("ingredientList")));
     } else {
       console.log("no ingredient list");
-      setIngredientList([]);
+      updateIngredientList([]);
     }
     setLoadingIngredients(false);
   }, []);
@@ -82,15 +139,17 @@ export default function IngredientsProvider({ children }) {
   return (
     <IngredientsContext.Provider value={ingredientList}>
       <IngredientsUpdateContext.Provider value={updateIngredientList}>
-        <ValidRecipeFiltersContext.Provider value={validRecipeFilters}>
-          <ValidRecipeFiltersUpdateContext.Provider
-            value={setValidRecipeFilters}
-          >
-            <LoadingIngredientsContext.Provider value={loadingIngredients}>
-              {children}
-            </LoadingIngredientsContext.Provider>
-          </ValidRecipeFiltersUpdateContext.Provider>
-        </ValidRecipeFiltersContext.Provider>
+        <SubstitutionsContext.Provider value={substitutionsList}>
+          <ValidRecipeFiltersContext.Provider value={validRecipeFilters}>
+            <ValidRecipeFiltersUpdateContext.Provider
+              value={setValidRecipeFilters}
+            >
+              <LoadingIngredientsContext.Provider value={loadingIngredients}>
+                {children}
+              </LoadingIngredientsContext.Provider>
+            </ValidRecipeFiltersUpdateContext.Provider>
+          </ValidRecipeFiltersContext.Provider>
+        </SubstitutionsContext.Provider>
       </IngredientsUpdateContext.Provider>
     </IngredientsContext.Provider>
   );

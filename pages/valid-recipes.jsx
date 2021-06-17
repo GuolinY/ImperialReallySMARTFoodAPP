@@ -31,7 +31,9 @@ import {
   useValidRecipeFilters,
   useValidRecipeFiltersUpdate,
   useLoadingIngredients,
+  useSubstitutions,
   DEFAULT_FILTERS,
+  SUBSTITUTIONS,
   PANTRY_INGREDIENTS,
 } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -89,6 +91,7 @@ export default function ValidRecipes() {
   const filters = useValidRecipeFilters();
   const setFilters = useValidRecipeFiltersUpdate();
   const [sortBy, setSortBy] = useState("closest_match");
+  const substitutions = useSubstitutions();
 
   const breakpoints = {
     default: 4,
@@ -185,9 +188,9 @@ export default function ValidRecipes() {
     if (ingredients?.length > 0) {
       let newRecipes = await axios
         .post("https://smart-food-app-backend.herokuapp.com/recipes/partial", {
-          // .post("http://127.0.0.1:8000/recipes/partial", {
+        // .post("http://127.0.0.1:8000/recipes/partial", {
           ingredients,
-          no_missing: 2, // default value 2
+          no_missing: 0, // default value 2
         })
         .then((res) => {
           setLoading(false);
@@ -198,8 +201,10 @@ export default function ValidRecipes() {
         });
       if (Array.isArray(newRecipes) && newRecipes.length > 0) {
         newRecipes.forEach((recipe) => {
-          recipe.missing = recipe.ingredients.filter(
+          // Each ingredient in the recipe which doesn't appear in the user's ingredients
+          recipe.missing = recipe.ingredients.concat(recipe.pantry_ingredients).filter(
             (recipeIngredient) =>
+              // not false if none of the ingredients are a substring of recipeIngredient
               !ingredients.some((ingredient) =>
                 recipeIngredient.includes(ingredient)
               )
@@ -207,6 +212,18 @@ export default function ValidRecipes() {
           recipe.notUsed = ingredients.filter(
             (ingredient) => !containsIngredient(recipe.ingredients, ingredient)
           );
+          recipe.substitutions = substitutions
+            .filter((substitution) =>
+              recipe.ingredients.some((ingredient) =>
+                ingredient.includes(substitution)
+              )
+            )
+            .map(
+              (substitutionInUse) =>
+                `${substitutionInUse} with ${SUBSTITUTIONS.getSub(
+                  substitutionInUse
+                )}`
+            );
         });
         setRecipes(newRecipes);
         setFilteredRecipes(newRecipes);

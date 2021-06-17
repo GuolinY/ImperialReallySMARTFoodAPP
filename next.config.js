@@ -6,6 +6,7 @@ module.exports = {
       "images.immediate.co.uk",
       "i.imgur.com",
       "food.files.bbci.co.uk",
+      "ichef.bbci.co.uk",
     ],
   },
 };

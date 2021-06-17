@@ -131,7 +131,10 @@ export default function ValidRecipes() {
 
   const filterRecipes = (recipes, filters) => {
     const inRange = (value, [l, u], max = 500) => {
-      if (u == max) {
+      if (l === 0 && u === max) {
+        return true;
+      }
+      if (u === max) {
         return l <= value;
       }
       return l <= value && value <= u;
@@ -171,7 +174,7 @@ export default function ValidRecipes() {
         `https://smart-food-app-backend.herokuapp.com/recipes/everyrecipe`,
         {
           page_no: 0,
-          page_size: 25,
+          page_size: 50,
         }
       )
       .then((res) => {
@@ -296,8 +299,8 @@ export default function ValidRecipes() {
           `No recipes found matching filter you selected`
         ) : (
           <Typography>
-            Unfortunately, there seems to be an issue with fetching our recipes right now.
-            Please try again later.
+            Unfortunately, there seems to be an issue with fetching our recipes
+            right now. Please try again later.
           </Typography>
         )}
       </Container>
