@@ -190,7 +190,7 @@ export default function ValidRecipes() {
         .post("https://smart-food-app-backend.herokuapp.com/recipes/partial", {
           // .post("http://127.0.0.1:8000/recipes/partial", {
           ingredients,
-          no_missing: Math.max(2, 3 * Math.floor(ingredients.length() / 4)),
+          no_missing: Math.max(2, 3 * Math.floor(ingredients.length / 4)),
         })
         .then((res) => {
           setLoading(false);
