@@ -71,7 +71,7 @@ export default function Recipe() {
   const [recipe, setRecipe] = useState({ id: -1 });
 
   useEffect(async () => {
-    let recipe = await axios
+    let newRecipe = await axios
       .get(
         `https://smart-food-app-backend.herokuapp.com/recipes/${router.query.id}`
       )
@@ -81,9 +81,11 @@ export default function Recipe() {
       .catch((err) => {
         console.log(err);
       });
-    setRecipe(recipe);
-    setLoading(false);
-  }, [recipe]);
+    setRecipe(newRecipe);
+    if (router.query.id) {
+      setLoading(false);
+    }
+  }, [router]);
 
   return (
     <Layout title={recipe?.name || "Recipe"} recipe>
@@ -134,18 +136,20 @@ export default function Recipe() {
                     .concat(recipe.pantry_ingredients)
                     .map((ingredient, i) => {
                       return (
-                        <ListItem key={i}>
-                          <ListItemIcon>
-                            <FastfoodIcon color="primary" />
-                          </ListItemIcon>
-                          <ListItemText
-                            key={i}
-                            primary={
-                              ingredient.charAt(0).toUpperCase() +
-                              ingredient.slice(1)
-                            }
-                          />
-                        </ListItem>
+                        ingredient && (
+                          <ListItem key={i}>
+                            <ListItemIcon>
+                              <FastfoodIcon color="primary" />
+                            </ListItemIcon>
+                            <ListItemText
+                              key={i}
+                              primary={
+                                ingredient.charAt(0).toUpperCase() +
+                                ingredient.slice(1)
+                              }
+                            />
+                          </ListItem>
+                        )
                       );
                     })}
                 </List>

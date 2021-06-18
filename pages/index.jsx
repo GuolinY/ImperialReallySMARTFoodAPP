@@ -163,7 +163,7 @@ export default function Home() {
           <Grid item>
             <Tooltip
               placement="top"
-              title={`You should have these basic things in your kitchen: ${PANTRY_INGREDIENTS.join(
+              title={`We are assuming you have these pantry items in your kitchen: ${PANTRY_INGREDIENTS.join(
                 ", "
               )}`}
               interactive
