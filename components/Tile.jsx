@@ -174,7 +174,7 @@ export default function Tile(props) {
             Learn More
           </Button>
         </Link>
-        <ReviewsModal recipe={recipe} />
+        <ReviewsModal recipe={recipe} size="small" />
       </CardActions>
     </Card>
   );
