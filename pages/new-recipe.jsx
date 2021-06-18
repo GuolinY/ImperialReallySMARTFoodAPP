@@ -99,6 +99,7 @@ export default function NewRecipe() {
           values.ingredients = values.ingredients.map((ing) =>
             ing.toLowerCase()
           );
+          values.ingredients = values.ingredients.join("_");
           axios
             .post(
               "https://smart-food-app-backend.herokuapp.com/recipes/submit",
