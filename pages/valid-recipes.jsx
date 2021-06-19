@@ -90,7 +90,7 @@ export default function ValidRecipes() {
   const [openFilter, setOpenFilter] = useState(false);
   const filters = useValidRecipeFilters();
   const setFilters = useValidRecipeFiltersUpdate();
-  const [sortBy, setSortBy] = useState("closest_match");
+  const [sortBy, setSortBy] = useState("most_using");
   const substitutions = useSubstitutions();
 
   const breakpoints = {
@@ -120,7 +120,8 @@ export default function ValidRecipes() {
   };
 
   const sortFunctions = {
-    closest_match: (first, second) =>
+    most_using: (first, second) => first.notUsed.length - second.notUsed.length,
+    least_missing: (first, second) =>
       first.missing.length - second.missing.length,
     rating: (first, second) => second.rating - first.rating,
     time_asc: (first, second) => first.cooking_time - second.cooking_time,
@@ -132,7 +133,11 @@ export default function ValidRecipes() {
   };
 
   const sortRecipes = (recipes, sortBy) => {
+    console.log("sorting recipes");
+    console.log(sortBy);
     if (sortBy) {
+      console.log("newly sorted");
+      console.log([...recipes].sort(sortFunctions[sortBy]));
       return [...recipes].sort(sortFunctions[sortBy]);
     }
     return recipes;
@@ -188,9 +193,7 @@ export default function ValidRecipes() {
     recipe.missing = recipe.ingredients.filter(
       (recipeIngredient) =>
         // not false if none of the ingredients are a substring of recipeIngredient
-        !ingredients.some((ingredient) =>
-          recipeIngredient.includes(ingredient)
-        )
+        !ingredients.some((ingredient) => recipeIngredient.includes(ingredient))
     );
     recipe.notUsed = ingredients.filter(
       (ingredient) => !containsIngredient(recipe.ingredients, ingredient)
@@ -203,12 +206,10 @@ export default function ValidRecipes() {
       )
       .map(
         (substitutionInUse) =>
-          `${substitutionInUse} with ${SUBSTITUTIONS.getSub(
-            substitutionInUse
-          )}`
+          `${substitutionInUse} with ${SUBSTITUTIONS.getSub(substitutionInUse)}`
       );
     return recipe;
-  }
+  };
 
   useEffect(async () => {
     setLoading(true);
@@ -228,6 +229,8 @@ export default function ValidRecipes() {
         });
       if (Array.isArray(newRecipes) && newRecipes.length > 0) {
         newRecipes.forEach((recipe) => calculateRecipeInfo(recipe));
+        console.log("new recipes");
+        console.log(newRecipes);
         setRecipes(newRecipes);
         setFilteredRecipes(newRecipes);
         setFilteredRecipes(
@@ -259,7 +262,10 @@ export default function ValidRecipes() {
   };
 
   const handleSelectSort = (event) => {
-    setFilteredRecipes(sortRecipes(filteredRecipes, event.target.value));
+    const newlySortedRecipes = sortRecipes(filteredRecipes, event.target.value);
+    console.log("sorting");
+    console.log(newlySortedRecipes);
+    setFilteredRecipes([...newlySortedRecipes]);
     setSortBy(event.target.value);
   };
 
@@ -298,7 +304,8 @@ export default function ValidRecipes() {
                 value={sortBy}
                 onChange={handleSelectSort}
               >
-                <MenuItem value="closest_match">Closest Match</MenuItem>
+                <MenuItem value="most_using">Most using</MenuItem>
+                <MenuItem value="least_missing">Least missing</MenuItem>
                 <MenuItem value="rating">Rating</MenuItem>
                 <MenuItem value="time_asc">Time ascending</MenuItem>
                 <MenuItem value="time_desc">Time descending</MenuItem>
@@ -341,7 +348,11 @@ export default function ValidRecipes() {
             columnClassName="my-masonry-grid_column"
           >
             {filteredRecipes.map((recipe, i) => (
-              <Tile recipe={recipe} key={i} calculateRecipeInfo={calculateRecipeInfo}/>
+              <Tile
+                recipe={recipe}
+                key={i}
+                calculateRecipeInfo={calculateRecipeInfo}
+              />
             ))}
           </Masonry>
         ) : hasValidRecipes ? (
