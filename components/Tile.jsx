@@ -76,7 +76,8 @@ export default function Tile(props) {
       .get(`http://smart-food-app-backend.herokuapp.com/recipes/${recipe.id}`)
       .then((result) => {
         if (result.data) {
-          setRecipe(result.data);
+          const newRecipe = props.calculateRecipeInfo(result.data);
+          setRecipe(newRecipe);
         }
       });
   };
@@ -196,4 +197,5 @@ export default function Tile(props) {
 
 Tile.propTypes = {
   recipe: PropTypes.object.isRequired,
+  calculateRecipeInfo: PropTypes.func.isRequired,
 };

@@ -183,6 +183,33 @@ export default function ValidRecipes() {
     );
   };
 
+  const calculateRecipeInfo = (recipe) => {
+    // Each ingredient in the recipe which doesn't appear in the user's ingredients
+    recipe.missing = recipe.ingredients.filter(
+      (recipeIngredient) =>
+        // not false if none of the ingredients are a substring of recipeIngredient
+        !ingredients.some((ingredient) =>
+          recipeIngredient.includes(ingredient)
+        )
+    );
+    recipe.notUsed = ingredients.filter(
+      (ingredient) => !containsIngredient(recipe.ingredients, ingredient)
+    );
+    recipe.substitutions = substitutions
+      .filter((substitution) =>
+        recipe.ingredients.some((ingredient) =>
+          ingredient.includes(substitution)
+        )
+      )
+      .map(
+        (substitutionInUse) =>
+          `${substitutionInUse} with ${SUBSTITUTIONS.getSub(
+            substitutionInUse
+          )}`
+      );
+    return recipe;
+  }
+
   useEffect(async () => {
     setLoading(true);
     if (ingredients?.length > 0) {
@@ -200,31 +227,7 @@ export default function ValidRecipes() {
           console.log(err);
         });
       if (Array.isArray(newRecipes) && newRecipes.length > 0) {
-        newRecipes.forEach((recipe) => {
-          // Each ingredient in the recipe which doesn't appear in the user's ingredients
-          recipe.missing = recipe.ingredients.filter(
-            (recipeIngredient) =>
-              // not false if none of the ingredients are a substring of recipeIngredient
-              !ingredients.some((ingredient) =>
-                recipeIngredient.includes(ingredient)
-              )
-          );
-          recipe.notUsed = ingredients.filter(
-            (ingredient) => !containsIngredient(recipe.ingredients, ingredient)
-          );
-          recipe.substitutions = substitutions
-            .filter((substitution) =>
-              recipe.ingredients.some((ingredient) =>
-                ingredient.includes(substitution)
-              )
-            )
-            .map(
-              (substitutionInUse) =>
-                `${substitutionInUse} with ${SUBSTITUTIONS.getSub(
-                  substitutionInUse
-                )}`
-            );
-        });
+        newRecipes.forEach((recipe) => calculateRecipeInfo(recipe));
         setRecipes(newRecipes);
         setFilteredRecipes(newRecipes);
         setFilteredRecipes(
@@ -338,7 +341,7 @@ export default function ValidRecipes() {
             columnClassName="my-masonry-grid_column"
           >
             {filteredRecipes.map((recipe, i) => (
-              <Tile recipe={recipe} key={i} />
+              <Tile recipe={recipe} key={i} calculateRecipeInfo={calculateRecipeInfo}/>
             ))}
           </Masonry>
         ) : hasValidRecipes ? (
