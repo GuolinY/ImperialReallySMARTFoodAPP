@@ -171,7 +171,7 @@ export default function Tile(props) {
           passHref
         >
           <Button color="primary" variant="contained">
-            Learn More
+            Let's Cook
           </Button>
         </Link>
         <ReviewsModal recipe={recipe} size="small" />

@@ -9,6 +9,7 @@ import {
   ListItemText,
   ListItemIcon,
   Button,
+  Paper,
 } from "@material-ui/core";
 import Image from "next/image";
 import Link from "next/link";
@@ -128,31 +129,33 @@ export default function Recipe() {
                 md={5}
                 lg={4}
               >
-                <Typography variant="h2" gutterBottom>
-                  Ingredients
-                </Typography>
-                <List>
-                  {recipe.ingredients
-                    .concat(recipe.pantry_ingredients)
-                    .map((ingredient, i) => {
-                      return (
-                        ingredient && (
-                          <ListItem key={i}>
-                            <ListItemIcon>
-                              <FastfoodIcon color="primary" />
-                            </ListItemIcon>
-                            <ListItemText
-                              key={i}
-                              primary={
-                                ingredient.charAt(0).toUpperCase() +
-                                ingredient.slice(1)
-                              }
-                            />
-                          </ListItem>
-                        )
-                      );
-                    })}
-                </List>
+                <Paper style={{ padding: "16px" }} elevation={5}>
+                  <Typography variant="h2" gutterBottom>
+                    Ingredients
+                  </Typography>
+                  <List>
+                    {recipe.ingredients
+                      .concat(recipe.pantry_ingredients)
+                      .map((ingredient, i) => {
+                        return (
+                          ingredient && (
+                            <ListItem key={i}>
+                              <ListItemIcon>
+                                <FastfoodIcon color="primary" />
+                              </ListItemIcon>
+                              <ListItemText
+                                key={i}
+                                primary={
+                                  ingredient.charAt(0).toUpperCase() +
+                                  ingredient.slice(1)
+                                }
+                              />
+                            </ListItem>
+                          )
+                        );
+                      })}
+                  </List>
+                </Paper>
               </Grid>
               <Grid
                 item
