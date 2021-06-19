@@ -101,12 +101,14 @@ const ratingMarks = [
   },
 ];
 
-export default function ReviewsModal({ recipe, size }) {
+export default function ReviewsModal({ recipe, size, refreshRating }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [loadingReviews, setLoadingReviews] = useState(true);
   const [reviews, setReviews] = useState([]);
 
   const refreshReviews = async () => {
+    setLoadingReviews(true);
     const res = await axios.get(
       `https://smart-food-app-backend.herokuapp.com/reviews/${recipe.id}`
     );
@@ -117,6 +119,8 @@ export default function ReviewsModal({ recipe, size }) {
     } else {
       setReviews([]);
     }
+    setLoadingReviews(false);
+    await refreshRating();
   };
 
   const handleOpen = async () => {
@@ -260,7 +264,13 @@ export default function ReviewsModal({ recipe, size }) {
               )}
             </Formik>
           </DialogContent>
-          {reviews?.length > 0 ? (
+          {loadingReviews ? (
+            <DialogContent>
+              <Typography variant="h5" style={{ marginBottom: 8 }}>
+                Loading...
+              </Typography>
+            </DialogContent>
+          ) : reviews?.length > 0 ? (
             reviews.map((r, i) => (
               <DialogContent key={i}>
                 <Card variant="outlined">
