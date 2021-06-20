@@ -59,9 +59,9 @@ const validationSchema = yup.object({
 });
 
 export default function NewRecipe() {
-  const [openSuccess, setOpenSuccess] = useState(true);
+  const [openSuccess, setOpenSuccess] = useState(false);
   const [openFailure, setOpenFailure] = useState(false);
-  const [newRecipe, setNewRecipe] = useState({ name: "asdas" });
+  const [newRecipe, setNewRecipe] = useState();
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
