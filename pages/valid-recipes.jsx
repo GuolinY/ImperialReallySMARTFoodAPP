@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
-import { useRouter } from "next/router";
 import {
   Grid,
   Typography,
   Container,
-  Modal,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
   InputLabel,
   Select,
   FormControl,
@@ -34,7 +26,6 @@ import {
   useSubstitutions,
   DEFAULT_FILTERS,
   SUBSTITUTIONS,
-  PANTRY_INGREDIENTS,
 } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Link from "next/link";
@@ -80,7 +71,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ValidRecipes() {
   const classes = useStyles();
-  const router = useRouter();
 
   const ingredients = useIngredients();
   const [loading, setLoading] = useState(true);
@@ -90,7 +80,7 @@ export default function ValidRecipes() {
   const [openFilter, setOpenFilter] = useState(false);
   const filters = useValidRecipeFilters();
   const setFilters = useValidRecipeFiltersUpdate();
-  const [sortBy, setSortBy] = useState("closest_match");
+  const [sortBy, setSortBy] = useState("most_using");
   const substitutions = useSubstitutions();
 
   const breakpoints = {
@@ -120,7 +110,8 @@ export default function ValidRecipes() {
   };
 
   const sortFunctions = {
-    closest_match: (first, second) =>
+    most_using: (first, second) => first.notUsed.length - second.notUsed.length,
+    least_missing: (first, second) =>
       first.missing.length - second.missing.length,
     rating: (first, second) => second.rating - first.rating,
     time_asc: (first, second) => first.cooking_time - second.cooking_time,
@@ -183,6 +174,29 @@ export default function ValidRecipes() {
     );
   };
 
+  const calculateRecipeInfo = (recipe) => {
+    // Each ingredient in the recipe which doesn't appear in the user's ingredients
+    recipe.missing = recipe.ingredients.filter(
+      (recipeIngredient) =>
+        // not false if none of the ingredients are a substring of recipeIngredient
+        !ingredients.some((ingredient) => recipeIngredient.includes(ingredient))
+    );
+    recipe.notUsed = ingredients.filter(
+      (ingredient) => !containsIngredient(recipe.ingredients, ingredient)
+    );
+    recipe.substitutions = substitutions
+      .filter((substitution) =>
+        recipe.ingredients.some((ingredient) =>
+          ingredient.includes(substitution)
+        )
+      )
+      .map(
+        (substitutionInUse) =>
+          `${substitutionInUse} with ${SUBSTITUTIONS.getSub(substitutionInUse)}`
+      );
+    return recipe;
+  };
+
   useEffect(async () => {
     setLoading(true);
     if (ingredients?.length > 0) {
@@ -200,31 +214,7 @@ export default function ValidRecipes() {
           console.log(err);
         });
       if (Array.isArray(newRecipes) && newRecipes.length > 0) {
-        newRecipes.forEach((recipe) => {
-          // Each ingredient in the recipe which doesn't appear in the user's ingredients
-          recipe.missing = recipe.ingredients.filter(
-            (recipeIngredient) =>
-              // not false if none of the ingredients are a substring of recipeIngredient
-              !ingredients.some((ingredient) =>
-                recipeIngredient.includes(ingredient)
-              )
-          );
-          recipe.notUsed = ingredients.filter(
-            (ingredient) => !containsIngredient(recipe.ingredients, ingredient)
-          );
-          recipe.substitutions = substitutions
-            .filter((substitution) =>
-              recipe.ingredients.some((ingredient) =>
-                ingredient.includes(substitution)
-              )
-            )
-            .map(
-              (substitutionInUse) =>
-                `${substitutionInUse} with ${SUBSTITUTIONS.getSub(
-                  substitutionInUse
-                )}`
-            );
-        });
+        newRecipes.forEach((recipe) => calculateRecipeInfo(recipe));
         setRecipes(newRecipes);
         setFilteredRecipes(newRecipes);
         setFilteredRecipes(
@@ -295,7 +285,8 @@ export default function ValidRecipes() {
                 value={sortBy}
                 onChange={handleSelectSort}
               >
-                <MenuItem value="closest_match">Closest Match</MenuItem>
+                <MenuItem value="most_using">Most using</MenuItem>
+                <MenuItem value="least_missing">Least missing</MenuItem>
                 <MenuItem value="rating">Rating</MenuItem>
                 <MenuItem value="time_asc">Time ascending</MenuItem>
                 <MenuItem value="time_desc">Time descending</MenuItem>

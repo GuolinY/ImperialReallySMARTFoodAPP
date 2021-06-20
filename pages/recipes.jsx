@@ -72,6 +72,7 @@ export default function Recipe() {
   const [recipe, setRecipe] = useState({ id: -1 });
 
   useEffect(async () => {
+    setLoading(true);
     let newRecipe = await axios
       .get(
         `https://smart-food-app-backend.herokuapp.com/recipes/${router.query.id}`
@@ -82,7 +83,9 @@ export default function Recipe() {
       .catch((err) => {
         console.log(err);
       });
-    setRecipe(newRecipe);
+    if (newRecipe) {
+      setRecipe(newRecipe);
+    }
     if (router.query.id) {
       setLoading(false);
     }
@@ -91,7 +94,7 @@ export default function Recipe() {
   return (
     <Layout title={recipe?.name || "Recipe"} recipe>
       {!loading ? (
-        recipe ? (
+        recipe && recipe.id && recipe.id !== -1 ? (
           <>
             <div
               style={{
@@ -121,7 +124,7 @@ export default function Recipe() {
               </div>
             </div>
             <div style={{ marginTop: "40px" }}>
-              <ReviewsModal recipe={recipe} />
+              <ReviewsModal recipe={recipe} size="small" />
             </div>
             <Grid container spacing={10} className={classes.container}>
               <Grid

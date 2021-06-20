@@ -1,6 +1,6 @@
 import React, { forwardRef, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import {
   Button,
   Card,
@@ -58,6 +58,14 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  reviewModal: {
+    width: "90%",
+    maxWidth: theme.spacing(100),
+    maxHeight: theme.spacing(80),
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
+  },
 }));
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -93,19 +101,29 @@ const ratingMarks = [
   },
 ];
 
-export default function ReviewsModal({ recipe, size }) {
+export default function ReviewsModal({ recipe, size = "small" }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [loadingReviews, setLoadingReviews] = useState(true);
   const [reviews, setReviews] = useState([]);
 
-  const handleOpen = async () => {
+  const refreshReviews = async () => {
+    setLoadingReviews(true);
     const res = await axios.get(
       `https://smart-food-app-backend.herokuapp.com/reviews/${recipe.id}`
     );
     console.log(res.data);
     if (res?.data) {
-      setReviews(res.data);
+      const newReviews = [...res.data];
+      setReviews(newReviews);
+    } else {
+      setReviews([]);
     }
+    setLoadingReviews(false);
+  };
+
+  const handleOpen = async () => {
+    refreshReviews();
     setOpen(true);
   };
 
@@ -121,10 +139,10 @@ export default function ReviewsModal({ recipe, size }) {
       <Dialog
         open={open}
         TransitionComponent={Transition}
-        keepMounted
         onClose={handleClose}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
+        PaperProps={{
+          className: classes.reviewModal,
+        }}
       >
         <Paper elevation={24} variant="outlined" style={{ padding: 16 }}>
           <Box
@@ -132,7 +150,7 @@ export default function ReviewsModal({ recipe, size }) {
             display="flex"
             justifyContent="space-between"
           >
-            <Typography variant="h6">Reviews</Typography>
+            <Typography variant="h6">Reviews for {recipe.name}</Typography>
             <IconButton onClick={handleClose}>
               <CloseIcon />
             </IconButton>
@@ -146,15 +164,18 @@ export default function ReviewsModal({ recipe, size }) {
                 user: "",
               }}
               validationSchema={validationSchema}
-              onSubmit={async (values, { resetForm, setFieldValue }) => {
-                axios
+              onSubmit={async (values, { resetForm }) => {
+                const res = await axios
                   .post(
                     "https://smart-food-app-backend.herokuapp.com/reviews/submit",
                     { ...values, recipe_id: recipe.id }
                   )
-                  .then((result) => console.log(result));
-                resetForm();
-                values = {};
+                  .then((result) => {
+                    console.log(result);
+                    resetForm();
+                    values = {};
+                    refreshReviews();
+                  });
               }}
             >
               {({ values, touched, errors, handleChange, setFieldValue }) => (
@@ -242,15 +263,20 @@ export default function ReviewsModal({ recipe, size }) {
               )}
             </Formik>
           </DialogContent>
-          {reviews?.length > 0 ? (
+          {loadingReviews ? (
+            <DialogContent>
+              <Typography variant="h5" style={{ marginBottom: 8 }}>
+                Loading...
+              </Typography>
+            </DialogContent>
+          ) : reviews?.length > 0 ? (
             reviews.map((r, i) => (
               <DialogContent key={i}>
                 <Card variant="outlined">
-                  <CardHeader
-                    title={r.title}
-                    avatar={<Avatar>{r.user.charAt(0)}</Avatar>}
-                  />
                   <CardContent>
+                    <Typography variant="h5" style={{ marginBottom: 8 }}>
+                      {r.title}
+                    </Typography>
                     <StyledRating
                       value={r.rating}
                       precision={0.5}
@@ -265,10 +291,17 @@ export default function ReviewsModal({ recipe, size }) {
               </DialogContent>
             ))
           ) : (
-            <Typography>There are no reviews for this recipe</Typography>
+            <Typography style={{ margin: "24px 0px" }}>
+              There are no reviews for this recipe
+            </Typography>
           )}
         </Paper>
       </Dialog>
     </div>
   );
 }
+
+ReviewsModal.propTypes = {
+  recipe: PropTypes.object.isRequired,
+  size: PropTypes.string.isRequired,
+};

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
@@ -26,9 +26,8 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import PersonIcon from "@material-ui/icons/Person";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import CollectionsBookmarkIcon from "@material-ui/icons/CollectionsBookmark";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { useIngredients } from "../contexts/ingredients";
 
 const drawerWidth = 240;
 
@@ -84,7 +83,8 @@ export default function Layout({
   const classes = useStyles();
   const theme = useTheme();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const ingredients = useIngredients();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -144,15 +144,6 @@ export default function Layout({
         </div>
         <Divider />
         <List>
-          {/* <Link href="/login" passHref>
-            <ListItem button component="a">
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              <ListItemText primary="Login" />
-            </ListItem>
-          </Link> */}
-
           <Link href="/new-recipe" passHref>
             <ListItem button component="a">
               <ListItemIcon>
@@ -185,7 +176,7 @@ export default function Layout({
             </>
           )}
 
-          {recipe && (
+          {recipe && ingredients?.length > 0 && (
             <Link href="/valid-recipes" passHref>
               <ListItem button component="a">
                 <ListItemIcon>
