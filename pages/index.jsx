@@ -140,15 +140,20 @@ export default function Home() {
 
   return (
     <Layout title="A Really Smart Food App" home>
-      <Grid container justify="center" alignItems="center">
-        <Grid item xs={12}>
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        alignItems="center"
+        style={{ minHeight: "80vh" }}
+      >
+        <Grid item>
           <Typography variant="h1" className={classes.title} gutterBottom>
             A Really Smart Food App
           </Typography>
         </Grid>
         <Grid
           item
-          xs={12}
           container
           direction="row"
           justify="center"
@@ -173,7 +178,7 @@ export default function Home() {
           </Grid>
         </Grid>
         <Grid item container direction="column" justify="center">
-          <Grid item xs={12}>
+          <Grid item>
             <TextField
               inputRef={inputRef}
               variant="outlined"

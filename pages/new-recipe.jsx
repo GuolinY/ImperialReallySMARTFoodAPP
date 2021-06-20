@@ -35,9 +35,8 @@ const validationSchema = yup.object({
     .matches(
       /((https?):\/\/)?(www.)?(i.imgur.com\/)[a-zA-Z0-9]+(.((png)|(jpg)|(jpeg)|(gif)))/,
       "Need an image of the finished product, your link should look something like https://i.imgur.com/<image_name> (image needs to be a png, jpeg, jpg, gif)"
-    )
-    .required("Please enter a link to an image hosted on imgur"),
-  ingredientsList: yup
+    ),
+  ingredients: yup
     .array()
     .of(yup.string().required("Ingredient cannnot be empty"))
     .min(1, "Ingredients are required"),
@@ -151,7 +150,7 @@ export default function NewRecipe() {
       >
         {({ values, touched, errors, handleChange, setFieldValue }) => (
           <Form autoComplete="off">
-            <Paper variant="outlined" elevation={20} style={{ padding: 16 }}>
+            <Paper variant="outlined" elevation={24} style={{ padding: 16 }}>
               <Grid
                 container
                 spacing={2}
