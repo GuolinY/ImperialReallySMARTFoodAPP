@@ -61,7 +61,7 @@ const validationSchema = yup.object({
 export default function NewRecipe() {
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openFailure, setOpenFailure] = useState(false);
-  const [newRecipe, setNewRecipe] = useState();
+  const [newRecipe, setNewRecipe] = useState({});
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -405,8 +405,8 @@ export default function NewRecipe() {
         <Alert onClose={handleCloseSnackbar} severity="success">
           New recipe{" "}
           <Link
-            href={{ pathname: `/recipes`, query: { id: newRecipe.id } }}
-          >{`"${newRecipe.name}"`}</Link>{" "}
+            href={{ pathname: `/recipes`, query: { id: newRecipe?.id } }}
+          >{`"${newRecipe?.name}"`}</Link>{" "}
           submitted!
         </Alert>
       </Snackbar>
