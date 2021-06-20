@@ -1,6 +1,6 @@
 import React, { forwardRef, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import {
   Button,
   Card,
@@ -101,7 +101,7 @@ const ratingMarks = [
   },
 ];
 
-export default function ReviewsModal({ recipe, size, refreshRating }) {
+export default function ReviewsModal({ recipe, size }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(true);
@@ -120,7 +120,6 @@ export default function ReviewsModal({ recipe, size, refreshRating }) {
       setReviews([]);
     }
     setLoadingReviews(false);
-    await refreshRating();
   };
 
   const handleOpen = async () => {
@@ -301,3 +300,8 @@ export default function ReviewsModal({ recipe, size, refreshRating }) {
     </div>
   );
 }
+
+ReviewsModal.propTypes = {
+  recipe: PropTypes.object.isRequired,
+  size: PropTypes.string.isRequired,
+};

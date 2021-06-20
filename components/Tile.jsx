@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Rating from "@material-ui/lab/Rating";
@@ -13,14 +13,10 @@ import {
   Button,
   Switch,
 } from "@material-ui/core";
-import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
-import WhatshotIcon from "@material-ui/icons/Whatshot";
 import Link from "next/link";
-import LocalDiningIcon from "@material-ui/icons/LocalDining";
-import RatingAndReviews from "./RatingAndReviews";
+
 import ReviewsModal from "./ReviewsModal";
-import axios from "axios";
 
 function secondsToHm(d) {
   d = Number(d);
@@ -69,18 +65,7 @@ export const PLACEHOLDER_IMAGE =
 
 export default function Tile(props) {
   const classes = useStyles();
-  const [recipe, setRecipe] = useState(props.recipe);
-
-  const refreshRating = async () => {
-    const res = axios
-      .get(`http://smart-food-app-backend.herokuapp.com/recipes/${recipe.id}`)
-      .then((result) => {
-        if (result.data) {
-          const newRecipe = props.calculateRecipeInfo(result.data);
-          setRecipe(newRecipe);
-        }
-      });
-  };
+  const { recipe } = props;
 
   function difficulty(level) {
     switch (level) {
@@ -185,11 +170,7 @@ export default function Tile(props) {
             Let's Cook
           </Button>
         </Link>
-        <ReviewsModal
-          recipe={recipe}
-          size="small"
-          refreshRating={refreshRating}
-        />
+        <ReviewsModal recipe={recipe} size="small" />
       </CardActions>
     </Card>
   );
@@ -197,5 +178,4 @@ export default function Tile(props) {
 
 Tile.propTypes = {
   recipe: PropTypes.object.isRequired,
-  calculateRecipeInfo: PropTypes.func.isRequired,
 };

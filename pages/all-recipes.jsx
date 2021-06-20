@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
 import { useRouter } from "next/router";
@@ -7,13 +6,8 @@ import {
   Grid,
   Typography,
   Container,
-  Modal,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
   InputLabel,
   Select,
   FormControl,
@@ -32,7 +26,6 @@ import {
   DEFAULT_FILTERS,
 } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
-import Link from "next/link";
 import Tile from "../components/Tile";
 import RecipeFilter from "../components/RecipeFilter";
 
@@ -174,7 +167,7 @@ export default function ValidRecipes() {
         `https://smart-food-app-backend.herokuapp.com/recipes/everyrecipe`,
         {
           page_no: 0,
-          page_size: 50,
+          page_size: 200,
         }
       )
       .then((res) => {

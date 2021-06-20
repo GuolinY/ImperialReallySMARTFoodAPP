@@ -262,10 +262,7 @@ export default function ValidRecipes() {
   };
 
   const handleSelectSort = (event) => {
-    const newlySortedRecipes = sortRecipes(filteredRecipes, event.target.value);
-    console.log("sorting");
-    console.log(newlySortedRecipes);
-    setFilteredRecipes([...newlySortedRecipes]);
+    setFilteredRecipes(sortRecipes(filteredRecipes, event.target.value));
     setSortBy(event.target.value);
   };
 
@@ -348,11 +345,7 @@ export default function ValidRecipes() {
             columnClassName="my-masonry-grid_column"
           >
             {filteredRecipes.map((recipe, i) => (
-              <Tile
-                recipe={recipe}
-                key={i}
-                calculateRecipeInfo={calculateRecipeInfo}
-              />
+              <Tile recipe={recipe} key={i} />
             ))}
           </Masonry>
         ) : hasValidRecipes ? (
