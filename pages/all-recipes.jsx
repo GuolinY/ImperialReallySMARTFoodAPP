@@ -12,7 +12,6 @@ import {
   MenuItem,
   Button,
   IconButton,
-  Tooltip,
 } from "@material-ui/core";
 import RestorePageIcon from "@material-ui/icons/RestorePage";
 import { makeStyles } from "@material-ui/core/styles";
@@ -22,13 +21,9 @@ import {
   useIngredients,
   useValidRecipeFilters,
   useValidRecipeFiltersUpdate,
-  useLoadingIngredients,
-  useSubstitutions,
   DEFAULT_FILTERS,
-  SUBSTITUTIONS,
 } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
-import Link from "next/link";
 import Tile from "../components/Tile";
 import RecipeFilter from "../components/RecipeFilter";
 
@@ -72,16 +67,13 @@ const useStyles = makeStyles((theme) => ({
 export default function ValidRecipes() {
   const classes = useStyles();
 
-  const ingredients = useIngredients();
   const [loading, setLoading] = useState(true);
-  const loadingIngredients = useLoadingIngredients();
   const [recipes, setRecipes] = useState({ id: -1 });
   const [filteredRecipes, setFilteredRecipes] = useState({ id: -1 });
   const [openFilter, setOpenFilter] = useState(false);
   const filters = useValidRecipeFilters();
   const setFilters = useValidRecipeFiltersUpdate();
-  const [sortBy, setSortBy] = useState("most_using");
-  const substitutions = useSubstitutions();
+  const [sortBy, setSortBy] = useState("rating");
 
   const breakpoints = {
     default: 4,
@@ -110,9 +102,6 @@ export default function ValidRecipes() {
   };
 
   const sortFunctions = {
-    most_using: (first, second) => first.notUsed.length - second.notUsed.length,
-    least_missing: (first, second) =>
-      first.missing.length - second.missing.length,
     rating: (first, second) => second.rating - first.rating,
     time_asc: (first, second) => first.cooking_time - second.cooking_time,
     time_desc: (first, second) => second.cooking_time - first.cooking_time,
@@ -168,63 +157,32 @@ export default function ValidRecipes() {
     return newRecipes.length == 0 ? { id: -1 } : newRecipes;
   };
 
-  const containsIngredient = (recipeIngredients, ingredient) => {
-    return recipeIngredients.some((recipeIngredient) =>
-      recipeIngredient.includes(ingredient)
-    );
-  };
-
-  const calculateRecipeInfo = (recipe) => {
-    // Each ingredient in the recipe which doesn't appear in the user's ingredients
-    recipe.missing = recipe.ingredients.filter(
-      (recipeIngredient) =>
-        // not false if none of the ingredients are a substring of recipeIngredient
-        !ingredients.some((ingredient) => recipeIngredient.includes(ingredient))
-    );
-    recipe.notUsed = ingredients.filter(
-      (ingredient) => !containsIngredient(recipe.ingredients, ingredient)
-    );
-    recipe.substitutions = substitutions
-      .filter((substitution) =>
-        recipe.ingredients.some((ingredient) =>
-          ingredient.includes(substitution)
-        )
-      )
-      .map(
-        (substitutionInUse) =>
-          `${substitutionInUse} with ${SUBSTITUTIONS.getSub(substitutionInUse)}`
-      );
-    return recipe;
-  };
-
   useEffect(async () => {
-    setLoading(true);
-    if (ingredients?.length > 0) {
-      let newRecipes = await axios
-        .post("https://smart-food-app-backend.herokuapp.com/recipes/partial", {
-          // .post("http://127.0.0.1:8000/recipes/partial", {
-          ingredients,
-          no_missing: Math.max(2, 3 * Math.floor(ingredients.length / 4)),
-        })
-        .then((res) => {
-          setLoading(false);
-          return res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      if (Array.isArray(newRecipes) && newRecipes.length > 0) {
-        newRecipes.forEach((recipe) => calculateRecipeInfo(recipe));
-        setRecipes(newRecipes);
-        setFilteredRecipes(newRecipes);
-        setFilteredRecipes(
-          sortRecipes(filterRecipes(newRecipes, filters), sortBy)
-        );
-      }
+    let newRecipes = await axios
+      .post(
+        `https://smart-food-app-backend.herokuapp.com/recipes/everyrecipe`,
+        {
+          page_no: 0,
+          page_size: 200,
+        }
+      )
+      .then((res) => {
+        setLoading(false);
+        return res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    if (Array.isArray(newRecipes) && newRecipes.length > 0) {
+      setRecipes(newRecipes);
+      setFilteredRecipes(newRecipes);
+      setFilteredRecipes(
+        sortRecipes(filterRecipes(newRecipes, filters), sortBy)
+      );
       console.log(newRecipes);
     }
     setLoading(false);
-  }, [ingredients]);
+  }, []);
 
   const hasValidRecipes = Array.isArray(recipes) && recipes.length > 0;
   const hasFilteredRecipes =
@@ -251,17 +209,17 @@ export default function ValidRecipes() {
   };
 
   return (
-    <Layout title="Recipes you can make..." validRecipes>
+    <Layout title="All Recipes" validRecipes>
       <Typography className={classes.title} variant="h1" gutterBottom>
-        {loading || loadingIngredients
-          ? "Finding some delicious recipes for you..."
+        {loading
+          ? "Finding our delicious recipes for you..."
           : hasValidRecipes
           ? hasFilteredRecipes
-            ? `Recipes you can make...`
+            ? `Our recipe collection`
             : "No recipes"
           : `No recipes found :(`}
       </Typography>
-      {!(loading || loadingIngredients) && hasValidRecipes && (
+      {!loading && hasValidRecipes && (
         <Grid container className={classes.filterSelect} spacing={2}>
           <Grid item xs={6}>
             <Button
@@ -270,11 +228,9 @@ export default function ValidRecipes() {
             >
               Filter
             </Button>
-            <Tooltip title="Reset Filter" placement="top">
-              <IconButton onClick={resetRecipeFilter} style={{ marginTop: 12 }}>
-                <RestorePageIcon />
-              </IconButton>
-            </Tooltip>
+            <IconButton onClick={resetRecipeFilter} style={{ marginTop: 12 }}>
+              <RestorePageIcon />
+            </IconButton>
           </Grid>
           <Grid item xs={6}>
             <FormControl className={classes.formControl}>
@@ -285,8 +241,6 @@ export default function ValidRecipes() {
                 value={sortBy}
                 onChange={handleSelectSort}
               >
-                <MenuItem value="most_using">Most using</MenuItem>
-                <MenuItem value="least_missing">Least missing</MenuItem>
                 <MenuItem value="rating">Rating</MenuItem>
                 <MenuItem value="time_asc">Time ascending</MenuItem>
                 <MenuItem value="time_desc">Time descending</MenuItem>
@@ -320,7 +274,7 @@ export default function ValidRecipes() {
         </DialogContent>
       </Dialog>
       <Container style={{ marginTop: 20 }}>
-        {loading || loadingIngredients ? (
+        {loading ? (
           <LoadingRecipe />
         ) : hasFilteredRecipes ? (
           <Masonry
@@ -335,15 +289,10 @@ export default function ValidRecipes() {
         ) : hasValidRecipes ? (
           `No recipes found matching filter you selected`
         ) : (
-          <>
-            <Typography>
-              Unfortunately, we weren't able to find recipes to suit your
-              ingredients this time.
-            </Typography>
-            <Link href="/" passHref>
-              <Button>Try again with other ingredients</Button>
-            </Link>
-          </>
+          <Typography>
+            Unfortunately, there seems to be an issue with fetching our recipes
+            right now. Please try again later.
+          </Typography>
         )}
       </Container>
     </Layout>

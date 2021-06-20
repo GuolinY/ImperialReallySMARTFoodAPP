@@ -1,34 +1,34 @@
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/core/styles";
 import React from "react";
+import PropTypes from "prop-types";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Rating from "@material-ui/lab/Rating";
-import { Grid, Typography } from "@material-ui/core";
-import Image from "next/image";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Grid,
+  Typography,
+  Button,
+  Switch,
+} from "@material-ui/core";
 import TimerIcon from "@material-ui/icons/Timer";
-import WhatshotIcon from "@material-ui/icons/Whatshot";
 import Link from "next/link";
-import LocalDiningIcon from "@material-ui/icons/LocalDining";
-import RatingAndReviews from "./RatingAndReviews";
+
+import ReviewsModal from "./ReviewsModal";
 
 function secondsToHm(d) {
   d = Number(d);
   var h = Math.floor(d / 3600);
   var m = Math.floor((d % 3600) / 60);
 
-  var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+  var hDisplay = h > 0 ? h + (h == 1 ? " hour " : " hours ") : "";
   var mDisplay = m > 0 ? m + (m == 1 ? " minute " : " minutes ") : "";
   return hDisplay + mDisplay;
 }
 
 const useStyles = makeStyles((theme) => ({
-  tile: {
-    outline: "3px solid black",
-    borderRadius: "5px",
-    color: theme.palette.text.primary,
-    margin: "2rem",
-    textAlign: "center",
-  },
   preview: {
     borderRadius: "50%",
     border: "2px solid black",
@@ -45,6 +45,10 @@ const useStyles = makeStyles((theme) => ({
   nutritionalData: {
     float: "right",
   },
+  media: {
+    height: 0,
+    paddingTop: "56.25%", // 16:9
+  },
 }));
 
 const StyledRating = withStyles({
@@ -60,54 +64,116 @@ export default function Tile(props) {
   const classes = useStyles();
   const { recipe } = props;
 
+  function difficulty(level) {
+    switch (level) {
+      case 1:
+        return "Easy";
+      case 2:
+        return "Medium";
+      case 3:
+        return "Hard";
+    }
+  }
+
   return (
-    <Link href={`recipes/${recipe.id}`}>
-      <Grid
-        className={classes.tile}
-        item
-        xs={11}
-        sm={6}
-        xl={4}
-        style={{ cursor: "pointer" }}
-      >
-        <Typography variant="h4">{recipe.name}</Typography>
-        <Image
-          src={recipe.image_link}
-          width={200}
-          height={200}
-          alt="balkan suprise"
-          className={classes.preview}
+    <Card variant="outlined">
+      <CardHeader
+        title={recipe.name}
+        titleTypographyProps={{ variant: "h4" }}
+      />
+      {recipe.image_link && (
+        <CardMedia
+          className={classes.media}
+          image={
+            recipe.image_link.includes("placeholder")
+              ? "/images/food.png"
+              : recipe.image_link
+          }
+          title={recipe.name}
         />
-        <RatingAndReviews recipe={recipe} />
+      )}
+      <CardContent>
         <Typography className={classes.iconsAndText} variant="h6">
-          <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp; |
-          &nbsp;
-          {Array(recipe.difficulty).fill(<WhatshotIcon />)}
+          <TimerIcon /> &nbsp; {secondsToHm(recipe.cooking_time)} &nbsp;
+          {recipe.difficulty >= 1 &&
+            recipe.difficulty <= 3 &&
+            `| ${difficulty(recipe.difficulty)}`}
         </Typography>
         <Typography variant="body1">{recipe.description}</Typography>
         <Typography className={classes.nutrition} variant="body2">
-          Calories:
-          <span className={classes.nutritionalData}>
-            {recipe.nutrition.calories}
-          </span>
-          <br />
-          Carbohyrdates:
-          <span className={classes.nutritionalData}>
-            {recipe.nutrition.carbohydrates}
-          </span>
-          <br />
-          Protein:
-          <span className={classes.nutritionalData}>
-            {recipe.nutrition.protein}
-          </span>
-          <br />
-          Fat:
-          <span className={classes.nutritionalData}>
-            {recipe.nutrition.fats}
-          </span>
+          {recipe.nutrition.calories >= 0 && (
+            <>
+              Calories:
+              <span className={classes.nutritionalData}>
+                {recipe.nutrition.calories}
+              </span>
+              <br />
+            </>
+          )}
+          {recipe.nutrition.calories >= 0 && (
+            <>
+              Carbohydrates:
+              <span className={classes.nutritionalData}>
+                {recipe.nutrition.carbohydrates}g
+              </span>
+              <br />
+            </>
+          )}
+          {recipe.nutrition.calories >= 0 && (
+            <>
+              Protein:
+              <span className={classes.nutritionalData}>
+                {recipe.nutrition.protein}g
+              </span>
+              <br />
+            </>
+          )}
+          {recipe.nutrition.calories >= 0 && (
+            <>
+              Fat:
+              <span className={classes.nutritionalData}>
+                {recipe.nutrition.fats}g
+              </span>
+            </>
+          )}
         </Typography>
-      </Grid>
-    </Link>
+        <div style={{ textAlign: "left", padding: "12px 0px" }}>
+          {recipe?.missing?.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <Typography variant="body1">You are missing:</Typography>
+              {recipe.missing.join(", ")}
+            </div>
+          )}
+          {recipe?.notUsed?.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <Typography variant="body1">Not using:</Typography>
+              {recipe.notUsed.join(", ")}
+            </div>
+          )}
+          {recipe?.substitutions?.length > 0 && (
+            <div>
+              <Typography variant="body1">You can substitute:</Typography>
+              {recipe.substitutions.map((sub, i) => (
+                <p style={{ margin: 0 }} key={i}>
+                  {sub}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+      </CardContent>
+      <CardActions>
+        <Link
+          href={{ pathname: `/recipes`, query: { id: recipe.id } }}
+          passHref
+        >
+          <Button color="primary" variant="contained">
+            Let's Cook
+          </Button>
+        </Link>
+        <ReviewsModal recipe={recipe} size="small" />
+      </CardActions>
+    </Card>
   );
 }
 
