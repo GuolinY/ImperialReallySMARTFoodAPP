@@ -96,7 +96,11 @@ export default function Recipe() {
             <div
               style={{
                 width: "100%",
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${recipe.image_link})`,
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${
+                  recipe.image_link.includes("placeholder")
+                    ? "/images/food.png"
+                    : recipe.image_link
+                })`,
                 height: "405px",
                 backgroundColor: "purple",
                 backgroundPosition: "center",

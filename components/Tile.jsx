@@ -64,9 +64,6 @@ const StyledRating = withStyles({
   },
 })(Rating);
 
-export const PLACEHOLDER_IMAGE =
-  "https://food.files.bbci.co.uk/kandl-food/3098/images/non-spriteable-images/bbc_placeholder.png";
-
 export default function Tile(props) {
   const classes = useStyles();
   const { recipe } = props;
@@ -88,10 +85,14 @@ export default function Tile(props) {
         title={recipe.name}
         titleTypographyProps={{ variant: "h4" }}
       />
-      {recipe.image_link && recipe.image_link !== PLACEHOLDER_IMAGE && (
+      {recipe.image_link && (
         <CardMedia
           className={classes.media}
-          image={recipe.image_link}
+          image={
+            recipe.image_link.includes("placeholder")
+              ? "/images/food.png"
+              : recipe.image_link
+          }
           title={recipe.name}
         />
       )}
