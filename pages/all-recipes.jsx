@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
-import { useRouter } from "next/router";
 import {
   Grid,
   Typography,
@@ -68,9 +66,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ValidRecipes() {
   const classes = useStyles();
-  const router = useRouter();
 
-  const ingredients = useIngredients();
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState({ id: -1 });
   const [filteredRecipes, setFilteredRecipes] = useState({ id: -1 });
@@ -177,18 +173,20 @@ export default function ValidRecipes() {
       .catch((err) => {
         console.log(err);
       });
-    if (Array.isArray(newRecipes)) {
+    if (Array.isArray(newRecipes) && newRecipes.length > 0) {
       setRecipes(newRecipes);
       setFilteredRecipes(newRecipes);
       setFilteredRecipes(
         sortRecipes(filterRecipes(newRecipes, filters), sortBy)
       );
+      console.log(newRecipes);
     }
     setLoading(false);
   }, []);
 
-  const hasValidRecipes = Array.isArray(recipes);
-  const hasFilteredRecipes = Array.isArray(filteredRecipes);
+  const hasValidRecipes = Array.isArray(recipes) && recipes.length > 0;
+  const hasFilteredRecipes =
+    Array.isArray(filteredRecipes) && filteredRecipes.length > 0;
 
   const closeFilter = () => setOpenFilter(false);
 

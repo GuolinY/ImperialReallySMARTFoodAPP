@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 import Layout from "../components/_Layout";
-import { useRouter } from "next/router";
 import {
   Grid,
   Typography,
   Container,
-  Modal,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
   InputLabel,
   Select,
   FormControl,
@@ -34,7 +26,6 @@ import {
   useSubstitutions,
   DEFAULT_FILTERS,
   SUBSTITUTIONS,
-  PANTRY_INGREDIENTS,
 } from "../contexts/ingredients";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Link from "next/link";
@@ -80,7 +71,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ValidRecipes() {
   const classes = useStyles();
-  const router = useRouter();
 
   const ingredients = useIngredients();
   const [loading, setLoading] = useState(true);
@@ -133,11 +123,7 @@ export default function ValidRecipes() {
   };
 
   const sortRecipes = (recipes, sortBy) => {
-    console.log("sorting recipes");
-    console.log(sortBy);
     if (sortBy) {
-      console.log("newly sorted");
-      console.log([...recipes].sort(sortFunctions[sortBy]));
       return [...recipes].sort(sortFunctions[sortBy]);
     }
     return recipes;
@@ -229,8 +215,6 @@ export default function ValidRecipes() {
         });
       if (Array.isArray(newRecipes) && newRecipes.length > 0) {
         newRecipes.forEach((recipe) => calculateRecipeInfo(recipe));
-        console.log("new recipes");
-        console.log(newRecipes);
         setRecipes(newRecipes);
         setFilteredRecipes(newRecipes);
         setFilteredRecipes(
