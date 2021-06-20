@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import axios from "axios";
-import { isJwtExpired } from "../../../constants/utils/UrlUtils";
-import { makeUrl } from "../../../constants/utils/JwtUtils";
+import makeUrl from "../../../constants/utils/UrlUtils";
+import isJwtExpired from "../../../constants/utils/JwtUtils";
 
 export const refreshToken = async function (refreshToken) {
   try {

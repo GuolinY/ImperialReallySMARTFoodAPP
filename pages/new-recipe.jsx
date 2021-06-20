@@ -1,7 +1,6 @@
-import React from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import * as yup from "yup";
-import { FieldArray, Form, Formik, Field } from "formik";
+import { FieldArray, Form, Formik } from "formik";
 import {
   Button,
   TextField,
@@ -16,11 +15,18 @@ import {
   Checkbox,
   RadioGroup,
   Radio,
+  Snackbar,
 } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import { DeleteOutlined } from "@material-ui/icons";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Layout from "../components/_Layout";
 import axios from "axios";
+import Link from "next/link";
+
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
 
 const validationSchema = yup.object({
   name: yup.string("Enter recipe name").required("Recipe name is required"),
@@ -31,7 +37,7 @@ const validationSchema = yup.object({
       "Need an image of the finished product, your link should look something like https://i.imgur.com/<image_name> (image needs to be a png, jpeg, jpg, gif)"
     )
     .required("Please enter a link to an image hosted on imgur"),
-  ingredients: yup
+  ingredientsList: yup
     .array()
     .of(yup.string().required("Ingredient cannnot be empty"))
     .min(1, "Ingredients are required"),
@@ -53,19 +59,26 @@ const validationSchema = yup.object({
 });
 
 export default function NewRecipe() {
-  function hMToS(hm) {
-    const a = ("" + hm).split(":");
-    const sec = +a[0] * 3600 + +a[1] * 60;
-    console.log(sec);
-    return sec;
-  }
+  const [openSuccess, setOpenSuccess] = useState(true);
+  const [openFailure, setOpenFailure] = useState(false);
+  const [newRecipe, setNewRecipe] = useState({ name: "asdas" });
 
-  function secondsToHm(d) {
-    d = Number(d);
-    var h = Math.floor(d / 3600);
-    var m = Math.floor((d % 3600) / 60);
-    return h + ":" + m;
-  }
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSuccess(false);
+    setOpenFailure(false);
+  };
+
+  const handleOpenSnackbar = (newRecipe) => {
+    setNewRecipe(newRecipe);
+    if (newRecipe?.id && newRecipe?.name) {
+      setOpenSuccess(true);
+    } else {
+      setOpenFailure(true);
+    }
+  };
 
   return (
     <Layout title="New Recipe" other>
@@ -80,7 +93,7 @@ export default function NewRecipe() {
         initialValues={{
           name: "",
           image_link: "",
-          ingredients: [""],
+          ingredientsList: [""],
           method: "",
           hours: 0,
           minutes: 0,
@@ -94,20 +107,46 @@ export default function NewRecipe() {
           extra_link: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={async (values, { resetForm, setFieldValue }) => {
+        onSubmit={async (values, { resetForm }) => {
+          values.name = values.name.trim();
           values.time = values.hours * 3600 + values.minutes * 60;
-          values.ingredients = values.ingredients.map((ing) =>
-            ing.toLowerCase()
+          values.method = values.method
+            .split("\n")
+            .map((s) => s.trim())
+            .filter((s) => s.length > 0)
+            .join("\n");
+          values.ingredientsList = values.ingredientsList.map((ing) =>
+            ing.trim().toLowerCase()
           );
-          values.ingredients = values.ingredients.join("_");
-          axios
+          values.ingredients = values.ingredientsList.join("_");
+          const newRecipeID = await axios
             .post(
               "https://smart-food-app-backend.herokuapp.com/recipes/submit",
               values
             )
-            .then((result) => console.log(result));
+            .then((result) => {
+              console.log(result);
+              return result.data;
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          if (newRecipeID?.success && newRecipeID?.new_recipe_id) {
+            const newRecipe = await axios
+              .get(
+                `https://smart-food-app-backend.herokuapp.com/recipes/${newRecipeID.new_recipe_id}`
+              )
+              .then((res) => {
+                return res.data;
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            handleOpenSnackbar(newRecipe);
+          } else {
+            handleOpenSnackbar({});
+          }
           resetForm();
-          alert("submitted new recipe");
         }}
       >
         {({ values, touched, errors, handleChange, setFieldValue }) => (
@@ -154,29 +193,22 @@ export default function NewRecipe() {
                     fullWidth
                   />
                 </Grid>
-                {/* <Grid item>
-                  <Image
-                    src={`${values.image_link}`}
-                    height={200}
-                    width={200}
-                  />
-                </Grid> */}
                 <Grid item style={{ textAlign: "left" }}>
                   <FormLabel>Ingredients</FormLabel>
                 </Grid>
 
                 <Grid item container direction="column" spacing={2}>
-                  <FieldArray name="ingredients">
+                  <FieldArray name="ingredientsList">
                     {({ push, remove }) => (
                       <>
-                        {values.ingredients.map((ingredient, i) => (
+                        {values.ingredientsList.map((ingredient, i) => (
                           <Grid item container key={i}>
                             <Grid item xs={9}>
                               <TextField
                                 variant="outlined"
                                 label="Ingredient"
-                                name={`ingredients[${i}]`}
-                                value={values.ingredients[i]}
+                                name={`ingredientsList[${i}]`}
+                                value={values.ingredientsList[i]}
                                 onChange={handleChange}
                                 fullWidth
                               />
@@ -365,6 +397,29 @@ export default function NewRecipe() {
           </Form>
         )}
       </Formik>
+      <Snackbar
+        open={openSuccess}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          New recipe{" "}
+          <Link
+            href={{ pathname: `/recipes`, query: { id: newRecipe.id } }}
+          >{`"${newRecipe.name}"`}</Link>{" "}
+          submitted!
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={openFailure}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error">
+          There has been an error submitting your recipe. Please try again with
+          a different recipe name
+        </Alert>
+      </Snackbar>
     </Layout>
   );
 }

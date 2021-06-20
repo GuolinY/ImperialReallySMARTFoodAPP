@@ -1,7 +1,6 @@
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/core/styles";
 import React from "react";
+import PropTypes from "prop-types";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Rating from "@material-ui/lab/Rating";
 import {
   Card,
@@ -14,12 +13,9 @@ import {
   Button,
   Switch,
 } from "@material-ui/core";
-import Image from "next/image";
 import TimerIcon from "@material-ui/icons/Timer";
-import WhatshotIcon from "@material-ui/icons/Whatshot";
 import Link from "next/link";
-import LocalDiningIcon from "@material-ui/icons/LocalDining";
-import RatingAndReviews from "./RatingAndReviews";
+
 import ReviewsModal from "./ReviewsModal";
 
 function secondsToHm(d) {
@@ -171,7 +167,7 @@ export default function Tile(props) {
           passHref
         >
           <Button color="primary" variant="contained">
-            Learn More
+            Let's Cook
           </Button>
         </Link>
         <ReviewsModal recipe={recipe} size="small" />
