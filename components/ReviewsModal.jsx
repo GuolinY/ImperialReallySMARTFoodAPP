@@ -101,7 +101,7 @@ const ratingMarks = [
   },
 ];
 
-export default function ReviewsModal({ recipe, size }) {
+export default function ReviewsModal({ recipe, size = "small" }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(true);
