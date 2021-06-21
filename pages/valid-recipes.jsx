@@ -204,7 +204,7 @@ export default function ValidRecipes() {
             return true;
           }
           thatWindow.shift();
-          thatWindow.push(thoseIngredients[thatLength + i]);
+          thatWindow.push(thoseIngredients[thisLength + i]);
         }
       }
       return false;
