@@ -109,12 +109,10 @@ class TwoWayMap {
     return this.reverseMap[key];
   }
   getSub(key) {
-    console.log("getSub");
     const keyIngredient = key
       .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
       .split(" ")
       .filter((s) => s.length > 0);
-    console.log(keyIngredient);
     const keyLength = keyIngredient.length;
     const matchedSub = this.allSubs()
       .map((sub) => {
@@ -138,20 +136,12 @@ class TwoWayMap {
         return null;
       })
       .filter((v) => v);
-    console.log(matchedSub[0]);
     return matchedSub[0];
-    // return matchedSub;
-    // if (key in this.map) {
-    //   return this.map[key];
-    // }
-    // return this.reverseMap[key];
   }
   isSub(key) {
-    console.log("isSub");
     const keyIngredient = key
       .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
       .split(" ");
-    console.log(keyIngredient);
     const keyLength = keyIngredient.length;
     const containsSub = this.allSubs().some((sub) => {
       const subIngredient = sub
@@ -172,10 +162,7 @@ class TwoWayMap {
       }
       return false;
     });
-    console.log(containsSub);
     return containsSub;
-    // return false;
-    // return key in this.map || key in this.reverseMap;
   }
 }
 

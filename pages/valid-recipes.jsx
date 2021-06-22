@@ -227,16 +227,11 @@ export default function ValidRecipes() {
     // Enter ... leek ... => recipes with ... onion(s) ... display "onion with leek"
     // Enter ... leeks ... => recipes with ... onion(s) ... display "onion with leeks"
     recipe.substitutions = substitutions
-      .filter(
-        (substitution) => {
-          console.log("subs");
-          console.log(substitutions);
-          if (substitution) {
-            console.log(containsIngredient(recipe.ingredients, substitution));
-            return containsIngredient(recipe.ingredients, substitution);
-          }
+      .filter((substitution) => {
+        if (substitution) {
+          return containsIngredient(recipe.ingredients, substitution);
         }
-      )
+      })
       .map(
         (substitutionInUse) =>
           `${substitutionInUse} with ${SUBSTITUTIONS.getSub(substitutionInUse)}`
