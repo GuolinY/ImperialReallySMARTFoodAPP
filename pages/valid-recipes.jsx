@@ -168,28 +168,70 @@ export default function ValidRecipes() {
     return newRecipes.length == 0 ? { id: -1 } : newRecipes;
   };
 
-  const containsIngredient = (recipeIngredients, ingredient) => {
-    return recipeIngredients.some((recipeIngredient) =>
-      recipeIngredient.includes(ingredient)
-    );
+  const containsIngredient = (ingredients, thatIngredient) => {
+    return ingredients.some((thisIngredient) => {
+      const theseIngredients = thisIngredient
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+        .split(" ")
+        .filter((s) => s.length > 0);
+      const thoseIngredients = thatIngredient
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+        .split(" ")
+        .filter((s) => s.length > 0);
+      const thisLength = theseIngredients.length;
+      const thatLength = thoseIngredients.length;
+      if (thisLength > thatLength) {
+        // thisIngredient contains sliding window of thatIngredient
+        const thisWindow = theseIngredients.slice(0, thatLength);
+        for (let i = 0; i < thisLength - thatLength + 1; i++) {
+          if (
+            thisWindow.join("_") === thoseIngredients.join("_") ||
+            thisWindow.join("_") === thoseIngredients.join("_").concat("s") ||
+            thisWindow.join("_").concat("s") === thoseIngredients.join("_")
+          ) {
+            return true;
+          }
+          thisWindow.shift();
+          thisWindow.push(theseIngredients[thatLength + i]);
+        }
+      } else {
+        // thatIngredient contains sliding window of thisIngredient
+        const thatWindow = thoseIngredients.slice(0, thisLength);
+        for (let i = 0; i < thatLength - thisLength + 1; i++) {
+          if (
+            thatWindow.join("_") === theseIngredients.join("_") ||
+            thatWindow.join("_") === theseIngredients.join("_").concat("s") ||
+            thatWindow.join("_").concat("s") === theseIngredients.join("_")
+          ) {
+            return true;
+          }
+          thatWindow.shift();
+          thatWindow.push(thoseIngredients[thisLength + i]);
+        }
+      }
+      return false;
+    });
   };
 
   const calculateRecipeInfo = (recipe) => {
     // Each ingredient in the recipe which doesn't appear in the user's ingredients
     recipe.missing = recipe.ingredients.filter(
-      (recipeIngredient) =>
-        // not false if none of the ingredients are a substring of recipeIngredient
-        !ingredients.some((ingredient) => recipeIngredient.includes(ingredient))
+      (recipeIngredient) => !containsIngredient(ingredients, recipeIngredient)
     );
     recipe.notUsed = ingredients.filter(
       (ingredient) => !containsIngredient(recipe.ingredients, ingredient)
     );
+    // Substitutions
+    // Enter ... onion ... => recipes with ... leek(s) ... display "leek with onion"
+    // Enter ... onions ... => recipes with ... leek(s) ... display "leek with onions"
+    // Enter ... leek ... => recipes with ... onion(s) ... display "onion with leek"
+    // Enter ... leeks ... => recipes with ... onion(s) ... display "onion with leeks"
     recipe.substitutions = substitutions
-      .filter((substitution) =>
-        recipe.ingredients.some((ingredient) =>
-          ingredient.includes(substitution)
-        )
-      )
+      .filter((substitution) => {
+        if (substitution) {
+          return containsIngredient(recipe.ingredients, substitution);
+        }
+      })
       .map(
         (substitutionInUse) =>
           `${substitutionInUse} with ${SUBSTITUTIONS.getSub(substitutionInUse)}`
