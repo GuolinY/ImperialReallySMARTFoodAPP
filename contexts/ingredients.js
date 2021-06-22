@@ -72,6 +72,36 @@ class TwoWayMap {
       this.reverseMap[value] = key;
     }
   }
+  allSubs() {
+    return [
+      "soy sauce",
+      "vinegar",
+      "milk",
+      "cream",
+      "mayonnaise",
+      "sour cream",
+      "onion",
+      "leek",
+      "sugar",
+      "honey",
+      "coriander",
+      "parsley",
+      "raisin",
+      "plum",
+      "starch",
+      "flour",
+      "agar",
+      "gelatin",
+      "quinoa",
+      "rice",
+      "cauliflower",
+      "potato",
+      "nutmeg",
+      "cinnamon",
+      "kale",
+      "spinach",
+    ];
+  }
   get(key) {
     return this.map[key];
   }
@@ -79,13 +109,73 @@ class TwoWayMap {
     return this.reverseMap[key];
   }
   getSub(key) {
-    if (key in this.map) {
-      return this.map[key];
-    }
-    return this.reverseMap[key];
+    console.log("getSub");
+    const keyIngredient = key
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+      .split(" ")
+      .filter((s) => s.length > 0);
+    console.log(keyIngredient);
+    const keyLength = keyIngredient.length;
+    const matchedSub = this.allSubs()
+      .map((sub) => {
+        const subIngredient = sub
+          .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+          .split(" ")
+          .filter((s) => s.length > 0);
+        const subLength = subIngredient.length;
+        const keyWindow = keyIngredient.slice(0, subLength);
+        for (let i = 0; i < keyLength - subLength + 1; i++) {
+          if (
+            keyWindow.join("_") === subIngredient.join("_") ||
+            keyWindow.join("_") === subIngredient.join("_").concat("s") ||
+            keyWindow.join("_").concat("s") === subIngredient.join("_")
+          ) {
+            return sub in this.map ? this.map[sub] : this.reverseMap[sub];
+          }
+          keyWindow.shift();
+          keyWindow.push(subIngredient[subLength + i]);
+        }
+        return null;
+      })
+      .filter((v) => v);
+    console.log(matchedSub[0]);
+    return matchedSub[0];
+    // return matchedSub;
+    // if (key in this.map) {
+    //   return this.map[key];
+    // }
+    // return this.reverseMap[key];
   }
   isSub(key) {
-    return key in this.map || key in this.reverseMap;
+    console.log("isSub");
+    const keyIngredient = key
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+      .split(" ");
+    console.log(keyIngredient);
+    const keyLength = keyIngredient.length;
+    const containsSub = this.allSubs().some((sub) => {
+      const subIngredient = sub
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+        .split(" ");
+      const subLength = subIngredient.length;
+      const keyWindow = keyIngredient.slice(0, subLength);
+      for (let i = 0; i < keyLength - subLength + 1; i++) {
+        if (
+          keyWindow.join("_") === subIngredient.join("_") ||
+          keyWindow.join("_") === subIngredient.join("_").concat("s") ||
+          keyWindow.join("_").concat("s") === subIngredient.join("_")
+        ) {
+          return true;
+        }
+        keyWindow.shift();
+        keyWindow.push(subIngredient[subLength + i]);
+      }
+      return false;
+    });
+    console.log(containsSub);
+    return containsSub;
+    // return false;
+    // return key in this.map || key in this.reverseMap;
   }
 }
 
@@ -128,7 +218,9 @@ export default function IngredientsProvider({ children }) {
   useEffect(() => {
     if (sessionStorage.getItem("ingredientList")) {
       console.log(sessionStorage.getItem("ingredientList"));
-      updateIngredientList(JSON.parse(sessionStorage.getItem("ingredientList")));
+      updateIngredientList(
+        JSON.parse(sessionStorage.getItem("ingredientList"))
+      );
     } else {
       console.log("no ingredient list");
       updateIngredientList([]);
