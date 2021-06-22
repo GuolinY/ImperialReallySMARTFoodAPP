@@ -172,10 +172,12 @@ export default function ValidRecipes() {
     return ingredients.some((thisIngredient) => {
       const theseIngredients = thisIngredient
         .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
-        .split(" ");
+        .split(" ")
+        .filter((s) => s.length > 0);
       const thoseIngredients = thatIngredient
         .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
-        .split(" ");
+        .split(" ")
+        .filter((s) => s.length > 0);
       const thisLength = theseIngredients.length;
       const thatLength = thoseIngredients.length;
       if (thisLength > thatLength) {
@@ -204,7 +206,7 @@ export default function ValidRecipes() {
             return true;
           }
           thatWindow.shift();
-          thatWindow.push(thoseIngredients[thatLength + i]);
+          thatWindow.push(thoseIngredients[thisLength + i]);
         }
       }
       return false;
@@ -219,12 +221,17 @@ export default function ValidRecipes() {
     recipe.notUsed = ingredients.filter(
       (ingredient) => !containsIngredient(recipe.ingredients, ingredient)
     );
+    // Substitutions
+    // Enter ... onion ... => recipes with ... leek(s) ... display "leek with onion"
+    // Enter ... onions ... => recipes with ... leek(s) ... display "leek with onions"
+    // Enter ... leek ... => recipes with ... onion(s) ... display "onion with leek"
+    // Enter ... leeks ... => recipes with ... onion(s) ... display "onion with leeks"
     recipe.substitutions = substitutions
-      .filter((substitution) =>
-        recipe.ingredients.some((ingredient) =>
-          ingredient.includes(substitution)
-        )
-      )
+      .filter((substitution) => {
+        if (substitution) {
+          return containsIngredient(recipe.ingredients, substitution);
+        }
+      })
       .map(
         (substitutionInUse) =>
           `${substitutionInUse} with ${SUBSTITUTIONS.getSub(substitutionInUse)}`
