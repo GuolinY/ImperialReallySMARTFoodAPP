@@ -140,8 +140,9 @@ export default function Tile(props) {
         <div style={{ textAlign: "left", padding: "12px 0px" }}>
           {recipe?.missing?.length > 0 && (
             <div style={{ marginBottom: 12 }}>
-              <Typography variant="body1">You are missing:</Typography>
-              {recipe.missing.join(", ")}
+              <Typography variant="body1">
+                Missing {recipe.missing.length} ingredient(s)
+              </Typography>
             </div>
           )}
           {recipe?.notUsed?.length > 0 && (
