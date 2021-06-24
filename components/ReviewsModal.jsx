@@ -145,16 +145,18 @@ export default function ReviewsModal({ recipe, size = "small" }) {
         }}
       >
         <Paper elevation={24} variant="outlined" style={{ padding: 16 }}>
-          <Box
-            className={classes.iconsAndText}
-            display="flex"
-            justifyContent="space-between"
-          >
-            <Typography variant="h6">Reviews for {recipe.name}</Typography>
-            <IconButton onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
+          <DialogContent>
+            <Box
+              className={classes.iconsAndText}
+              display="flex"
+              justifyContent="space-between"
+            >
+              <Typography variant="h5">Reviews for {recipe.name}</Typography>
+              <IconButton onClick={handleClose}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </DialogContent>
           <DialogContent>
             <Formik
               initialValues={{
@@ -291,9 +293,11 @@ export default function ReviewsModal({ recipe, size = "small" }) {
               </DialogContent>
             ))
           ) : (
-            <Typography style={{ margin: "24px 0px" }}>
-              There are no reviews for this recipe
-            </Typography>
+            <DialogContent>
+              <Typography variant="h5">
+                There are no reviews for this recipe
+              </Typography>
+            </DialogContent>
           )}
         </Paper>
       </Dialog>
