@@ -52,7 +52,6 @@ export const DEFAULT_FILTERS = {
 
 export const PANTRY_INGREDIENTS = [
   "oil",
-  "vinegar",
   "flour",
   "sugar",
   "yeast",
@@ -60,6 +59,7 @@ export const PANTRY_INGREDIENTS = [
   "baking powder",
   "salt",
   "pepper",
+  "garlic",
   "water",
 ];
 
