@@ -37,6 +37,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const convertToRealTime = (x) => (x > 3600 ? 3600 + (x - 3600) * 2 : x);
+export const convertToScaledTime = (x) =>
+  x > 3600 ? Math.floor((x + 3600) / 2) : x;
+
 export default function Filter({
   onSubmit = (values) => {
     console.log(JSON.stringify(values, null, 2));
@@ -216,11 +220,9 @@ export default function Filter({
                 max={9000}
                 aria-labelledby="prep-time-slider"
                 step={null}
+                value={values.cooking_time}
                 onChange={(event, value) => {
-                  setFieldValue(
-                    "cooking_time",
-                    value.map((x) => (x > 3600 ? x + (x - 3600) * 2 : x))
-                  );
+                  setFieldValue("cooking_time", value);
                 }}
                 valueLabelDisplay="off"
                 marks={time_marks}

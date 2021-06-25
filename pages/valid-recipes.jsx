@@ -30,7 +30,10 @@ import {
 import Skeleton from "@material-ui/lab/Skeleton";
 import Link from "next/link";
 import Tile from "../components/Tile";
-import RecipeFilter from "../components/RecipeFilter";
+import RecipeFilter, {
+  convertToRealTime,
+  convertToScaledTime,
+} from "../components/RecipeFilter";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -146,6 +149,7 @@ export default function ValidRecipes() {
       3: "hard",
     };
 
+    filters.cooking_time = filters.cooking_time.map(convertToRealTime);
     const newRecipes = recipes.filter((recipe) => {
       return (
         inRange(recipe.nutrition.calories, filters.calories, 5000) &&
@@ -165,6 +169,7 @@ export default function ValidRecipes() {
     if (sortBy) {
       newRecipes.sort(sortFunctions[sortBy]);
     }
+    filters.cooking_time = filters.cooking_time.map(convertToScaledTime);
     return newRecipes.length == 0 ? { id: -1 } : newRecipes;
   };
 
